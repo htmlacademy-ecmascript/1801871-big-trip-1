@@ -1,7 +1,7 @@
 # Проект «Большое путешествие»
 
 * Студент: [Виктор Беленов](https://up.htmlacademy.ru/ecmascript-individual/1/user/1801871).
-* Наставник: `Неизвестно`.
+* Наставник: `Раиль Сахавиев`(https://htmlacademy.ru/profile/id1331891).
 
 ---
 
