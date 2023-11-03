@@ -13,7 +13,6 @@ class EventsPresentor {
 
   constructor ({eventContainer}) {
     this.eventContainer = eventContainer;
-    console.log(eventContainer);
   }
 
 
