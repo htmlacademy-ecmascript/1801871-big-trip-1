@@ -6,9 +6,10 @@ import { SortView } from '../view/sort-view.js';
 import { TripPointView } from '../view/trip-point-view.js';
 import { TripPointEditView } from '../view/trip-point-edit-view.js';
 import { TripPointNewView } from '../view/trip-point-new-view.js';
+
 import { CreateEventsView } from '../view/trip-events-view.js';
 
-class EventsPresentor {
+class EventPresentor {
   EventComponent = new CreateEventsView();
 
   constructor ({eventContainer}) {
@@ -27,4 +28,4 @@ class EventsPresentor {
   }
 }
 
-export { EventsPresentor };
+export { EventPresentor };
