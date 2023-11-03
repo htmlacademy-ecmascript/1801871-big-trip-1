@@ -20,8 +20,8 @@ class EventPresentor {
   init () {
     render(this.EventComponent, this.eventContainer);
     render(new SortView(), this.EventComponent.getElement(), 'afterbegin');
-    render(new TripPointEditView(), this.EventComponent.getEventPointsList());
     render(new TripPointNewView(), this.EventComponent.getEventPointsList());
+    render(new TripPointEditView(), this.EventComponent.getEventPointsList());
     for (let i = 0; i < AMOUNT_OF_POINTS; i++) {
       render(new TripPointView(), this.EventComponent.getEventPointsList());
     }
