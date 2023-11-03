@@ -1,4 +1,4 @@
-import { render } from '../render.js';
+import { render, RenderPosition } from '../render.js';
 import { AMOUNT_OF_POINTS } from '../const.js';
 
 import { SortView } from '../view/sort-view.js';
@@ -19,7 +19,7 @@ class EventPresentor {
 
   init () {
     render(this.EventComponent, this.eventContainer);
-    render(new SortView(), this.EventComponent.getElement(), 'afterbegin');
+    render(new SortView(), this.EventComponent.getElement(), RenderPosition.AFTERBEGIN);
     render(new TripPointNewView(), this.EventComponent.getEventPointsList());
     render(new TripPointEditView(), this.EventComponent.getEventPointsList());
     for (let i = 0; i < AMOUNT_OF_POINTS; i++) {

@@ -1,4 +1,4 @@
-import { render } from './render.js';
+import { render, RenderPosition } from './render.js';
 import { FilterView } from './view/filter-view.js';
 import { TripInfoView } from './view/trip-info-view.js';
 
@@ -13,7 +13,7 @@ const tripEventsContainerElement = siteBodyElement.querySelector('.page-body__tr
 const eventPresentor = new EventPresentor({eventContainer: tripEventsContainerElement});
 
 render(new FilterView(), tripControlsfilterElement);
-render(new TripInfoView(), tripHeaderMainElement, 'afterbegin');
+render(new TripInfoView(), tripHeaderMainElement, RenderPosition.AFTERBEGIN);
 
 
 eventPresentor.init();
