@@ -10,7 +10,7 @@ import { TripPointNewView } from '../view/trip-point-new-view.js';
 import { CreateEventsView } from '../view/trip-events-view.js';
 
 class EventPresentor {
-  EventComponent = new CreateEventsView();
+  eventComponent = new CreateEventsView();
 
   constructor ({eventContainer}) {
     this.eventContainer = eventContainer;
@@ -18,12 +18,12 @@ class EventPresentor {
 
 
   init () {
-    render(this.EventComponent, this.eventContainer);
-    render(new SortView(), this.EventComponent.getElement(), RenderPosition.AFTERBEGIN);
-    render(new TripPointNewView(), this.EventComponent.getEventPointsList());
-    render(new TripPointEditView(), this.EventComponent.getEventPointsList());
+    render(this.eventComponent, this.eventContainer);
+    render(new SortView(), this.eventComponent.getElement(), RenderPosition.AFTERBEGIN);
+    render(new TripPointNewView(), this.eventComponent.getEventPointsList());
+    render(new TripPointEditView(), this.eventComponent.getEventPointsList());
     for (let i = 0; i < AMOUNT_OF_POINTS; i++) {
-      render(new TripPointView(), this.EventComponent.getEventPointsList());
+      render(new TripPointView(), this.eventComponent.getEventPointsList());
     }
   }
 }
