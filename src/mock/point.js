@@ -9,15 +9,15 @@ const mockPoints = [
     time: '10:30 — 11:00',
     isFavorite: 'true',
     city: 'Moscow',
-    offers: [1],
+    offersID: [1],
   },
   {
     type: getRandomArrayElement(POINT_TYPES),
     day:  'march 14',
     time: '11:30 — 12:00',
-    isFavorite: 'true',
+    isFavorite: 'false',
     city: 'Moscow',
-    offers: [1, 2],
+    offersID: [1, 2],
   },
   {
     type: getRandomArrayElement(POINT_TYPES),
@@ -25,7 +25,7 @@ const mockPoints = [
     time: '13:30 — 14:00',
     isFavorite: 'true',
     city: 'Moscow',
-    offers: [1, 2, 3],
+    offersID: [1, 2, 3],
   },
   {
     type: getRandomArrayElement(POINT_TYPES),
@@ -33,7 +33,7 @@ const mockPoints = [
     time: '10:30 — 11:00',
     isFavorite: 'true',
     city: 'Moscow',
-    offers: [3],
+    offersID: [3],
   },
 ];
 
