@@ -12,8 +12,9 @@ import { CreateEventsView } from '../view/trip-events-view.js';
 class EventPresentor {
   eventComponent = new CreateEventsView();
 
-  constructor ({eventContainer}) {
+  constructor ({eventContainer, tripPointModel}) {
     this.eventContainer = eventContainer;
+    this.tripPointModel = tripPointModel;
   }
 
 
