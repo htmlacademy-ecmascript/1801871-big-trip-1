@@ -1,40 +1,64 @@
 import { getRandomArrayElement } from '../utils.js';
-import { POINT_TYPES } from '../const.js';
 
 
 const mockPoints = [
   {
-    type: getRandomArrayElement(POINT_TYPES),
-    day:  'march 14',
-    time: '10:30 — 11:00',
-    isFavorite: 'true',
-    city: 'Moscow',
-    offersID: [1],
+    id: 'f6138082-e722-48cc-abd3-15716cc7d602',
+    type: 'train',
+    dateFrom: '2023-11-13T01:04:03.958Z',
+    dateTo: '2023-11-13T23:24:18.673Z',
+    destination: '3935a66e-c336-4242-b66e-27c93e35058b',
+    basePrice: 700,
+    isFavorite: false,
+    offers: [
+      'c56662ff-2587-4564-8bec-5bc56388ab61',
+      '0dc628ee-1ce6-4198-9ae0-6b094a3afb87',
+      '96fe2271-d5f5-47aa-8d00-e878e72368b5'
+    ]
   },
   {
-    type: getRandomArrayElement(POINT_TYPES),
-    day:  'march 14',
-    time: '11:30 — 12:00',
-    isFavorite: 'false',
-    city: 'Moscow',
-    offersID: [1, 2],
+    id: 'f6138082-e722-48cc-abd3-15716cc7d502',
+    type: 'train',
+    dateFrom: '2023-11-13T01:04:03.958Z',
+    dateTo: '2023-11-13T23:24:18.673Z',
+    destination: '3935a66e-c336-4242-b66e-27c93e35058b',
+    basePrice: 800,
+    isFavorite: false,
+    offers: [
+      'c56662ff-2587-4564-8bec-5bc56388ab61',
+      '0dc628ee-1ce6-4198-9ae0-6b094a3afb87',
+      '96fe2271-d5f5-47aa-8d00-e878e72368b5'
+    ]
   },
   {
-    type: getRandomArrayElement(POINT_TYPES),
-    day:  'march 14',
-    time: '13:30 — 14:00',
-    isFavorite: 'true',
-    city: 'Moscow',
-    offersID: [1, 2, 3],
+    id: 'f6138082-e722-48cc-abd3-13716cc7d602',
+    type: 'train',
+    dateFrom: '2023-11-13T01:04:03.958Z',
+    dateTo: '2023-11-13T23:24:18.673Z',
+    destination: '3935a66e-c336-4242-b66e-27c93e35058b',
+    basePrice: 300,
+    isFavorite: false,
+    offers: [
+      'c56662ff-2587-4564-8bec-5bc56388ab61',
+      '0dc628ee-1ce6-4198-9ae0-6b094a3afb87',
+      '96fe2271-d5f5-47aa-8d00-e878e72368b5'
+    ]
   },
   {
-    type: getRandomArrayElement(POINT_TYPES),
-    day:  'march 14',
-    time: '10:30 — 11:00',
-    isFavorite: 'true',
-    city: 'Moscow',
-    offersID: [3],
+    id: 'f6138082-e722-48cc-abe3-15716cc7d602',
+    type: 'train',
+    dateFrom: '2023-11-13T01:04:03.958Z',
+    dateTo: '2023-11-13T23:24:18.673Z',
+    destination: '3935a66e-c336-4242-b66e-27c93e35058b',
+    basePrice: 800,
+    isFavorite: false,
+    offers: [
+      'c56662ff-2587-4564-8bec-5bc56388ab61',
+      '0dc628ee-1ce6-4198-9ae0-6b094a3afb87',
+      '96fe2271-d5f5-47aa-8d00-e878e72368b5'
+    ]
   },
+
 ];
 
 function getRandomPoint() {

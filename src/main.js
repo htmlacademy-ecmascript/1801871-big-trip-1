@@ -13,7 +13,7 @@ const tripControlsfilterElement = siteBodyElement.querySelector('.trip-controls_
 const tripEventsContainerElement = siteBodyElement.querySelector('.page-body__trip-events-container');
 
 const tripPointModel = new TripPointModel();
-const eventPresentor = new EventPresentor({eventContainer: tripEventsContainerElement});
+const eventPresentor = new EventPresentor({eventContainer: tripEventsContainerElement,tripPointModel: tripPointModel});
 
 render(new FilterView(), tripControlsfilterElement);
 render(new TripInfoView(), tripHeaderMainElement, RenderPosition.AFTERBEGIN);
