@@ -26,7 +26,7 @@ class EventPresentor {
     this.pointsList = [...this.tripPointModel.getPoints()];
     this.destinationList = [...this.tripPointModel.getDestinations()];
     this.offersList = [...this.tripPointModel.getOfferse()];
-    // console.log(this.offersList);
+
     render(this.eventComponent, this.eventContainer);
     render(new SortView(), this.eventComponent.getElement(), RenderPosition.AFTERBEGIN);
     render(new TripPointNewView(), this.eventComponent.getEventPointsList());

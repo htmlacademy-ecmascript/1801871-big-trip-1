@@ -3,7 +3,6 @@ import {createElement} from '../render.js';
 function createSelectedOffersTemplate(offersList) {
   let template = '';
   offersList.forEach((element) => {
-    console.log(element);
     template = `${template}
     <li class="event__offer">
       <span class="event__offer-title">${element.title}</span>
@@ -12,7 +11,6 @@ function createSelectedOffersTemplate(offersList) {
     </li>
     `;
   });
-  console.log(template);
   return template;
 }
 
