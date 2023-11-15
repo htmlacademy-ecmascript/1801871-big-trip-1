@@ -1,15 +1,16 @@
 import {createElement} from '../render.js';
 
-function createNewTripPointTemplate(point) {
-  const { basePrice } = point;
+function createNewTripPointTemplate(point, destination) {
+  const { basePrice, type } = point;
+  const { name } = destination;
   return `
   <li class="trip-events__item">
     <div class="event">
       <time class="event__date" datetime="2019-03-18">MAR 18</time>
       <div class="event__type">
-        <img class="event__type-icon" width="42" height="42" src="img/icons/check-in.png" alt="Event type icon">
+        <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
       </div>
-      <h3 class="event__title">Check-in Chamonix</h3>
+      <h3 class="event__title">${type} ${name}</h3>
       <div class="event__schedule">
         <p class="event__time">
           <time class="event__start-time" datetime="2019-03-18T12:25">16:20</time>
@@ -44,12 +45,13 @@ function createNewTripPointTemplate(point) {
 }
 
 class TripPointView {
-  constructor({point}) {
+  constructor({point, destination}) {
     this.point = point;
+    this.destination = destination;
   }
 
   getTemplate() {
-    return createNewTripPointTemplate(this.point);
+    return createNewTripPointTemplate(this.point, this.destination);
   }
 
   getElement() {
