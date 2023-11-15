@@ -9,11 +9,11 @@ const mockPoints = [
     dateTo: '2023-11-13T23:24:18.673Z',
     destination: '1',
     basePrice: 700,
-    isFavorite: false,
+    isFavorite: true,
     offers: [
-      'c56662ff-2587-4564-8bec-5bc56388ab61',
-      '0dc628ee-1ce6-4198-9ae0-6b094a3afb87',
-      '96fe2271-d5f5-47aa-8d00-e878e72368b5'
+      '1',
+      '2',
+      '3'
     ]
   },
   {
@@ -25,9 +25,8 @@ const mockPoints = [
     basePrice: 800,
     isFavorite: false,
     offers: [
-      'c56662ff-2587-4564-8bec-5bc56388ab61',
-      '0dc628ee-1ce6-4198-9ae0-6b094a3afb87',
-      '96fe2271-d5f5-47aa-8d00-e878e72368b5'
+      '1',
+      '2'
     ]
   },
   {
@@ -37,11 +36,9 @@ const mockPoints = [
     dateTo: '2023-11-13T23:24:18.673Z',
     destination: '3',
     basePrice: 300,
-    isFavorite: false,
+    isFavorite: true,
     offers: [
-      'c56662ff-2587-4564-8bec-5bc56388ab61',
-      '0dc628ee-1ce6-4198-9ae0-6b094a3afb87',
-      '96fe2271-d5f5-47aa-8d00-e878e72368b5'
+      '1',
     ]
   },
   {
@@ -53,9 +50,7 @@ const mockPoints = [
     basePrice: 800,
     isFavorite: false,
     offers: [
-      'c56662ff-2587-4564-8bec-5bc56388ab61',
-      '0dc628ee-1ce6-4198-9ae0-6b094a3afb87',
-      '96fe2271-d5f5-47aa-8d00-e878e72368b5'
+      '2'
     ]
   },
 
