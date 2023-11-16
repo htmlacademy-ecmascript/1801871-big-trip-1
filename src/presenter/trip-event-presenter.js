@@ -8,7 +8,7 @@ import { TripPointNewView } from '../view/trip-point-new-view.js';
 
 import { CreateEventsView } from '../view/trip-events-view.js';
 
-const getCurrentOffersList = (point, offers) => {
+const getActiveOffersList = (point, offers) => {
   const offersOftheRightType = offers.find((element) => element.type === point.type).offers;
   return point.offers.map((element) => offersOftheRightType.find((offer) => offer.id === element));
 };
@@ -37,7 +37,7 @@ class EventPresentor {
       render(new TripPointView({
         point: this.pointsList[i],
         destination: destination,
-        offersList: getCurrentOffersList(this.pointsList[i], this.offersList) }),this.eventComponent.getEventPointsList());
+        offersList: getActiveOffersList(this.pointsList[i], this.offersList) }),this.eventComponent.getEventPointsList());
     }
   }
 }
