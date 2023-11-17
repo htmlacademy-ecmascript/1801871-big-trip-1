@@ -1,5 +1,5 @@
 import { createElement } from '../render.js';
-import { DATE_FORMAT , DATE_FORMAT_FOR_TIME_ATTRIBUTE, TIME_FORMAT } from '../const.js';
+import { TIME_DATE_FORMAT } from '../const.js';
 import { timeDateChanger, dateDiffInMinuts } from '../utils.js';
 
 function createSelectedOffersTemplate(offersList) {
@@ -30,16 +30,16 @@ function createNewTripPointTemplate(point, destination, offersList) {
   return `
   <li class="trip-events__item">
     <div class="event">
-      <time class="event__date" datetime="${timeDateChanger(dateFrom, DATE_FORMAT_FOR_TIME_ATTRIBUTE)}">${timeDateChanger(dateFrom, DATE_FORMAT)}</time>
+      <time class="event__date" datetime="${timeDateChanger(dateFrom, TIME_DATE_FORMAT.DATE_FORMAT_FOR_TIME_ATTRIBUTE)}">${timeDateChanger(dateFrom, TIME_DATE_FORMAT.DATE_FORMAT)}</time>
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
       </div>
       <h3 class="event__title">${type} ${name}</h3>
       <div class="event__schedule">
         <p class="event__time">
-          <time class="event__start-time" datetime="${dateFrom}">${timeDateChanger(dateFrom, TIME_FORMAT)}</time>
+          <time class="event__start-time" datetime="${dateFrom}">${timeDateChanger(dateFrom, TIME_DATE_FORMAT.TIME_FORMAT)}</time>
           &mdash;
-          <time class="event__end-time" datetime="${dateTo}">${timeDateChanger(dateTo, TIME_FORMAT)}</time>
+          <time class="event__end-time" datetime="${dateTo}">${timeDateChanger(dateTo, TIME_DATE_FORMAT.TIME_FORMAT)}</time>
         </p>
         <p class="event__duration">${dateDiffInMinuts(dateFrom, dateTo)}</p>
       </div>

@@ -1,6 +1,12 @@
 import {createElement} from '../render.js';
 
-function createNewTripPointEditTemplate() {
+function createNewTripPointEditTemplate(point, destination, activeOffersList, offersList) {
+
+  console.log(point);
+  console.log(destination);
+  console.log(offersList);
+  console.log(activeOffersList);
+
   return `
   <li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
@@ -161,9 +167,15 @@ function createNewTripPointEditTemplate() {
 }
 
 class TripPointEditView {
+  constructor({point, destination, activeOffersList, offersList}) {
+    this.point = point;
+    this.destination = destination;
+    this.activeOffersList = activeOffersList;
+    this.offersList = offersList;
+  }
 
   getTemplate() {
-    return createNewTripPointEditTemplate();
+    return createNewTripPointEditTemplate(this.point, this.destination, this.activeOffersList, this.offersList);
   }
 
   getElement() {

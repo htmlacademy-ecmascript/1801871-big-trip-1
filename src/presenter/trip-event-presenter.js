@@ -13,12 +13,15 @@ const getActiveOffersList = (point, offers) => {
   return point.offers.map((element) => offersOftheRightType.find((offer) => offer.id === element));
 };
 
+const getOffersList = (point, offers) => offers.find((element) => element.type === point.type).offers;
+
 class EventPresentor {
   eventComponent = new CreateEventsView();
 
-  constructor ({eventContainer, tripPointModel}) {
+  constructor ({eventContainer, tripPointModel, tripEditPointModel}) {
     this.eventContainer = eventContainer;
     this.tripPointModel = tripPointModel;
+    this.tripEditPointModel = tripEditPointModel;
   }
 
 
@@ -27,10 +30,22 @@ class EventPresentor {
     this.destinationList = [...this.tripPointModel.getDestinations()];
     this.offersList = [...this.tripPointModel.getOfferse()];
 
+
+    this.pointEdit = this.tripEditPointModel.getPoint();
+
+
     render(this.eventComponent, this.eventContainer);
     render(new SortView(), this.eventComponent.getElement(), RenderPosition.AFTERBEGIN);
     render(new TripPointNewView(), this.eventComponent.getEventPointsList());
-    render(new TripPointEditView(), this.eventComponent.getEventPointsList());
+
+    const destinationEditPoint = this.destinationList.find((element) => element.id === this.pointEdit.destination);
+    render(new TripPointEditView({
+      point: this.pointEdit,
+      destination: destinationEditPoint,
+      activeOffersList: getActiveOffersList(this.pointEdit, this.offersList),
+      offersList: getOffersList(this.pointEdit, this.offersList)
+    }), this.eventComponent.getEventPointsList());
+
     for (let i = 0; i < this.pointsList.length; i++) {
       const destination = this.destinationList.find((element) => element.id === this.pointsList[i].destination);
 
