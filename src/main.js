@@ -5,7 +5,7 @@ import { TripInfoView } from './view/trip-info-view.js';
 import { EventPresentor } from './presenter/trip-event-presenter.js';
 
 import { TripPointModel } from './model/trip-point-model.js';
-import { TripEditPointModel } from './model/trip-edit-point-model.js';
+import { TripPointEditModel } from './model/trip-point-edit-model.js';
 
 
 const siteBodyElement = document.querySelector('.page-body');
@@ -17,9 +17,9 @@ const tripEventsContainerElement = siteBodyElement.querySelector('.page-body__tr
 
 const tripPointModel = new TripPointModel();
 
-const tripEditPointModel = new TripEditPointModel();
+const tripPointEditModel = new TripPointEditModel();
 
-const eventPresentor = new EventPresentor({eventContainer: tripEventsContainerElement,tripPointModel: tripPointModel, tripEditPointModel: tripEditPointModel});
+const eventPresentor = new EventPresentor({eventContainer: tripEventsContainerElement,tripPointModel: tripPointModel, tripPointEditModel: tripPointEditModel});
 
 render(new FilterView(), tripControlsfilterElement);
 render(new TripInfoView(), tripHeaderMainElement, RenderPosition.AFTERBEGIN);

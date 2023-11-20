@@ -3,7 +3,7 @@ import { mockDestination } from '../mock/destination.js';
 import { mockOffers } from '../mock/offers.js';
 
 
-class TripEditPointModel {
+class TripPointEditModel {
   points = getRandomPoint();
 
   getPoint() {
@@ -21,4 +21,4 @@ class TripEditPointModel {
   }
 }
 
-export { TripEditPointModel };
+export { TripPointEditModel };

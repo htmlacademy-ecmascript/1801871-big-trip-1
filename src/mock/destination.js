@@ -29,7 +29,7 @@ const mockDestination = [
   {
     id: '2',
     name: 'Monix',
-    description: 'Chamonix, is a beautiful city, a true asian pearl, with a beautiful old town.',
+    description: 'Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis.',
     pictures: [
       {
         src: 'https://20.ecmascript.pages.academy/static/destinations/4.jpg',
@@ -56,7 +56,7 @@ const mockDestination = [
   {
     id: '3',
     name: 'Amonix',
-    description: 'Chamonix, is a beautiful city, a true asian pearl, with a beautiful old town.',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis.',
     pictures: [
       {
         src: 'https://20.ecmascript.pages.academy/static/destinations/4.jpg',
@@ -83,7 +83,7 @@ const mockDestination = [
   {
     id: '4',
     name: 'Preonix',
-    description: 'Chamonix, is a beautiful city, a true asian pearl, with a beautiful old town.',
+    description: 'Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis.',
     pictures: [
       {
         src: 'https://20.ecmascript.pages.academy/static/destinations/4.jpg',
