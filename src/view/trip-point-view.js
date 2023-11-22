@@ -1,6 +1,6 @@
 import { createElement } from '../render.js';
 import { TIME_DATE_FORMAT } from '../const.js';
-import { timeDateChanger, dateDiffInMinuts } from '../utils.js';
+import { timeDateChanger, getDateDiff } from '../utils.js';
 
 function createSelectedOffersTemplate(offersList) {
   let template = '';
@@ -41,7 +41,7 @@ function createNewTripPointTemplate(point, destination, offersList) {
           &mdash;
           <time class="event__end-time" datetime="${dateTo}">${timeDateChanger(dateTo, TIME_DATE_FORMAT.TIME_FORMAT)}</time>
         </p>
-        <p class="event__duration">${dateDiffInMinuts(dateFrom, dateTo)}</p>
+        <p class="event__duration">${getDateDiff(dateFrom, dateTo)}</p>
       </div>
       <p class="event__price">
         &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
