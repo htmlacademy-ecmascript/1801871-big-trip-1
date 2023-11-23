@@ -32,4 +32,5 @@ const TYPES = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'S
 const TRUE_FALSE = [true,false];
 
 const OFFERS_TITLE = ['Upgrade to a business class', 'drink', 'meal', 'phone', 'pils', 'cat'];
+
 export { PICTURES, CITES, DESCRIPTIONS, AMOUNT_DESTINATION, TYPES, TRUE_FALSE, OFFERS_TITLE};
