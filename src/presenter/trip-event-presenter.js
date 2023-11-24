@@ -9,6 +9,7 @@ import { CreateEventsView } from '../view/trip-events-view.js';
 
 
 const getPointOffers = (point, offers) => offers.find((element) => element.type === point.type).offers;
+const getPointDestination = (point, destinations) => destinations.find((element) => element.id === point.destination);
 
 class EventPresentor {
   eventComponent = new CreateEventsView();
@@ -31,20 +32,19 @@ class EventPresentor {
     render(this.eventComponent, this.eventContainer);
     render(new SortView(), this.eventComponent.getElement(), RenderPosition.AFTERBEGIN);
 
-    const destinationEditPoint = this.destinations.find((element) => element.id === this.pointEdit.destination);
+
     render(new TripPointEditView({
       point: this.pointEdit,
-      destination: destinationEditPoint,
+      destination: getPointDestination(this.pointEdit, this.destinations),
       offers: getPointOffers(this.pointEdit, this.offers),
 
     }), this.eventComponent.getEventPointsList());
 
     for (let i = 0; i < this.points.length; i++) {
-      const destination = this.destinations.find((element) => element.id === this.points[i].destination);
 
       render(new TripPointView({
         point: this.points[i],
-        destination: destination,
+        destination: getPointDestination(this.points[i], this.destinations),
         offers: getPointOffers(this.points[i], this.offers) }),this.eventComponent.getEventPointsList());
     }
   }
