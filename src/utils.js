@@ -19,10 +19,6 @@ function getRandomInteger(max) {
 }
 
 
-function timeDateChanger(date, dateFormat) {
-  return date ? dayjs(date).format(dateFormat) : '';
-}
-
 function getDateDiff(dateFrom, dateTo) {
   const startDate = dayjs(dateFrom);
   const endDate = dayjs(dateTo);
@@ -45,13 +41,5 @@ function getDateDiff(dateFrom, dateTo) {
   return `${minutes}M`;
 }
 
-function getRandomDate(dayMin = 20, dayMax = 21, mounthMin = 10, mounthMax = 10) {
-  const start = new Date(2023, mounthMin, dayMin);
-  const end = new Date(2023, mounthMax, dayMax);
 
-  const randomTime = start.getTime() + Math.random() * (end.getTime() - start.getTime());
-  return dayjs(new Date(randomTime)).format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
-}
-
-
-export { getRandomArrayElement, getRandomArrayPart, timeDateChanger, getDateDiff , getRandomInteger , getRandomDate};
+export { getRandomArrayElement, getRandomArrayPart, getDateDiff , getRandomInteger };

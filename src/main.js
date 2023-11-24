@@ -19,7 +19,11 @@ const tripPointModel = new TripPointModel();
 
 const tripPointEditModel = new TripPointEditModel();
 
-const eventPresentor = new EventPresentor({eventContainer: tripEventsContainerElement,tripPointModel: tripPointModel, tripPointEditModel: tripPointEditModel});
+const eventPresentor = new EventPresentor({
+  eventContainer: tripEventsContainerElement,
+  tripPointModel: tripPointModel,
+  tripPointEditModel: tripPointEditModel
+});
 
 render(new FilterView(), tripControlsfilterElement);
 render(new TripInfoView(), tripHeaderMainElement, RenderPosition.AFTERBEGIN);

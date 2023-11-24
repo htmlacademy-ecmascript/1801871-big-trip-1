@@ -1,56 +1,40 @@
 import { createElement } from '../render.js';
-import { TIME_DATE_FORMAT } from '../const.js';
-import { timeDateChanger, getDateDiff } from '../utils.js';
+import { DATE_YEAR_MOUNTH_DAY_FORMAT, DATE_MOUNTH_DAY_FORMAT, DATE_HOURS_MINUTE_FORMAT } from '../const.js';
+import { getDateDiff } from '../utils.js';
+import dayjs from 'dayjs';
 
-function createSelectedOffersTemplate(offersList) {
-  let template = '';
-  offersList.forEach((element) => {
-    template = `${template}
-    <li class="event__offer">
-      <span class="event__offer-title">${element.title}</span>
-      &plus;&euro;&nbsp;
-      <span class="event__offer-price">${element.price}</span>
-    </li>
-    `;
-  });
-  return template;
-}
 
-function createNewTripPointTemplate(point, destination, offersList) {
-  const { basePrice, type, isFavorite } = point;
-  const { name } = destination;
-  const dateFrom = point.dateFrom.slice(0, -5);
-  const dateTo = point.dateTo.slice(0, -5);
-
-  let favorite = 'event__favorite-btn--active';
-
-  if (!isFavorite) {
-    favorite = '';
-  }
-  return `
+const createTripPointTemplate = (point, destination, offers) =>
+  `
   <li class="trip-events__item">
     <div class="event">
-      <time class="event__date" datetime="${timeDateChanger(dateFrom, TIME_DATE_FORMAT.DATE_FORMAT_FOR_TIME_ATTRIBUTE)}">${timeDateChanger(dateFrom, TIME_DATE_FORMAT.DATE_FORMAT)}</time>
+      <time class="event__date" datetime="${dayjs(new Date(point.dateFrom)).format(DATE_YEAR_MOUNTH_DAY_FORMAT)}">${dayjs(new Date(point.dateFrom)).format(DATE_MOUNTH_DAY_FORMAT)}</time>
       <div class="event__type">
-        <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
+        <img class="event__type-icon" width="42" height="42" src="img/icons/${point.type}.png" alt="Event type icon">
       </div>
-      <h3 class="event__title">${type} ${name}</h3>
+      <h3 class="event__title">${point.type} ${destination.name}</h3>
       <div class="event__schedule">
         <p class="event__time">
-          <time class="event__start-time" datetime="${dateFrom}">${timeDateChanger(dateFrom, TIME_DATE_FORMAT.TIME_FORMAT)}</time>
+          <time class="event__start-time" datetime="${point.dateFrom}">${dayjs(new Date(point.dateFrom)).format(DATE_HOURS_MINUTE_FORMAT)}</time>
           &mdash;
-          <time class="event__end-time" datetime="${dateTo}">${timeDateChanger(dateTo, TIME_DATE_FORMAT.TIME_FORMAT)}</time>
+          <time class="event__end-time" datetime="${point.dateTo}">${dayjs(new Date(point.dateTo)).format(DATE_HOURS_MINUTE_FORMAT)}</time>
         </p>
-        <p class="event__duration">${getDateDiff(dateFrom, dateTo)}</p>
+        <p class="event__duration">${getDateDiff(point.dateFrom, point.dateTo)}</p>
       </div>
       <p class="event__price">
-        &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
+        &euro;&nbsp;<span class="event__price-value">${point.basePrice}</span>
       </p>
       <h4 class="visually-hidden">Offers:</h4>
       <ul class="event__selected-offers">
-        ${createSelectedOffersTemplate(offersList)}
+        ${offers.filter((offer)=> point.offers.includes(offer.id)).map((offer) => `
+        <li class="event__offer">
+          <span class="event__offer-title">${offer.title}</span>
+          &plus;&euro;&nbsp;
+          <span class="event__offer-price">${offer.price}</span>
+        </li>
+        `).join('')}
       </ul>
-      <button class="event__favorite-btn ${favorite}" type="button">
+      <button class="event__favorite-btn ${point.isFavorite ? 'event__favorite-btn--active' : ''}" type="button">
         <span class="visually-hidden">Add to favorite</span>
         <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
           <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
@@ -62,17 +46,17 @@ function createNewTripPointTemplate(point, destination, offersList) {
     </div>
   </li>
 `;
-}
+
 
 class TripPointView {
-  constructor({point, destination, offersList}) {
+  constructor({point, destination, offers}) {
     this.point = point;
     this.destination = destination;
-    this.offersList = offersList;
+    this.offers = offers;
   }
 
   getTemplate() {
-    return createNewTripPointTemplate(this.point, this.destination, this.offersList);
+    return createTripPointTemplate(this.point, this.destination, this.offers);
   }
 
   getElement() {

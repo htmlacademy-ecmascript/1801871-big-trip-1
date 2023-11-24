@@ -1,5 +1,5 @@
-import { getRandomPoint } from '../mock/point.js';
-import { mockDestination } from '../mock/destination.js';
+import { getRandomPoint } from '../mock/points.js';
+import { mockDestinations } from '../mock/destinations.js';
 import { mockOffers } from '../mock/offers.js';
 import { AMOUNT_OF_POINTS } from '../const.js';
 
@@ -11,13 +11,13 @@ class TripPointModel {
   }
 
   getDestinations() {
-    this.mockDestination = mockDestination;
-    return this.mockDestination;
+    this.destinations = mockDestinations;
+    return this.destinations;
   }
 
-  getOfferse() {
-    this.mockOffers = mockOffers;
-    return this.mockOffers;
+  getOffers() {
+    this.offers = mockOffers;
+    return this.offers;
   }
 }
 
