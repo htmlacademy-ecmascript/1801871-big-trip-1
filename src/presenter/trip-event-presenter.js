@@ -24,9 +24,6 @@ class EventPresentor {
     this.points = [...this.tripPointModel.getPoints()];
     this.destinations = [...this.tripPointModel.getDestinations()];
     this.offers = [...this.tripPointModel.getOffers()];
-    // console.log(this.points);
-    // console.log(this.destinations);
-    // console.log(this.offers);
 
     this.pointEdit = this.tripPointEditModel.getPoint();
 
