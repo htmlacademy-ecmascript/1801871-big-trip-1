@@ -4,13 +4,26 @@ import { TripInfoView } from './view/trip-info-view.js';
 
 import { EventPresentor } from './presenter/trip-event-presenter.js';
 
+import { TripPointModel } from './model/trip-point-model.js';
+import { TripPointEditModel } from './model/trip-point-edit-model.js';
+
+
 const siteBodyElement = document.querySelector('.page-body');
 const tripHeaderMainElement = siteBodyElement.querySelector('.trip-main');
 const tripControlsfilterElement = siteBodyElement.querySelector('.trip-controls__filters');
 
 const tripEventsContainerElement = siteBodyElement.querySelector('.page-body__trip-events-container');
 
-const eventPresentor = new EventPresentor({eventContainer: tripEventsContainerElement});
+
+const tripPointModel = new TripPointModel();
+
+const tripPointEditModel = new TripPointEditModel();
+
+const eventPresentor = new EventPresentor({
+  eventContainer: tripEventsContainerElement,
+  tripPointModel: tripPointModel,
+  tripPointEditModel: tripPointEditModel
+});
 
 render(new FilterView(), tripControlsfilterElement);
 render(new TripInfoView(), tripHeaderMainElement, RenderPosition.AFTERBEGIN);
