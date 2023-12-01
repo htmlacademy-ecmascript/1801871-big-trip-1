@@ -9,16 +9,6 @@ function getRandomArrayElement(items) {
   return items[Math.floor(Math.random() * items.length)];
 }
 
-function getRandomArrayPart(items) {
-  return items.slice(Math.floor(Math.random() * items.length));
-
-}
-
-function getRandomInteger(max) {
-  return Math.floor(Math.random() * max);
-}
-
-
 function getDateDiff(dateFrom, dateTo) {
   const startDate = dayjs(dateFrom);
   const endDate = dayjs(dateTo);
@@ -42,4 +32,4 @@ function getDateDiff(dateFrom, dateTo) {
 }
 
 
-export { getRandomArrayElement, getRandomArrayPart, getDateDiff , getRandomInteger };
+export { getRandomArrayElement, getDateDiff };
