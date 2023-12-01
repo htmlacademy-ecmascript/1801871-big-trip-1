@@ -73,4 +73,4 @@ function getRandomPoint() {
   return getRandomArrayElement(mockPoints);
 }
 
-export { getRandomPoint };
+export { getRandomPoint, mockPoints };
