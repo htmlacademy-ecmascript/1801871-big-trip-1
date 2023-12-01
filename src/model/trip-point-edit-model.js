@@ -1,13 +1,13 @@
-import { getRandomPoint } from '../mock/points.js';
+import { mockPoints } from '../mock/points.js';
 import { mockDestinations } from '../mock/destinations.js';
 import { mockOffers } from '../mock/offers.js';
 
 
 class TripPointEditModel {
-  points = getRandomPoint();
+  point = mockPoints[0];
 
   getPoint() {
-    return this.points;
+    return this.point;
   }
 
   getDestinations() {

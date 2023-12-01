@@ -1,6 +1,3 @@
-import { getRandomArrayElement } from '../utils.js';
-
-
 const mockPoints = [
   {
     id: 'f6138082-e722-48cc-abd3-15716cc7d602',
@@ -69,8 +66,4 @@ const mockPoints = [
 ];
 
 
-function getRandomPoint() {
-  return getRandomArrayElement(mockPoints);
-}
-
-export { getRandomPoint };
+export { mockPoints };
