@@ -7,9 +7,9 @@ class DestinationsModel {
     return this.destinations;
   }
 
-  convertDestinations() {
+  convertDestinations(destinations = this.destinations) {
     const convertDestinations = {};
-    this.destinations.forEach((destination) => {
+    destinations.forEach((destination) => {
       convertDestinations[destination.id] = {
         name: destination.name,
         description: destination.description,
