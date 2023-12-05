@@ -4,11 +4,6 @@ import dayjs from 'dayjs';
 const duration = require('dayjs/plugin/duration');
 dayjs.extend(duration);
 
-
-function getRandomArrayElement(items) {
-  return items[Math.floor(Math.random() * items.length)];
-}
-
 function getDateDiff(dateFrom, dateTo) {
   const startDate = dayjs(dateFrom);
   const endDate = dayjs(dateTo);
@@ -32,4 +27,4 @@ function getDateDiff(dateFrom, dateTo) {
 }
 
 
-export { getRandomArrayElement, getDateDiff };
+export { getDateDiff };

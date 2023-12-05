@@ -1,5 +1,4 @@
 import { mockPoints } from '../mock/points.js';
-import { mockDestinations } from '../mock/destinations.js';
 import { mockOffers } from '../mock/offers.js';
 
 
@@ -8,11 +7,6 @@ class TripPointEditModel {
 
   getPoint() {
     return this.point;
-  }
-
-  getDestinations() {
-    this.destinations = mockDestinations;
-    return this.destinations;
   }
 
   getOffers() {
