@@ -8,26 +8,25 @@ import { TripPointEditView } from '../view/trip-point-edit-view.js';
 import { CreateEventsView } from '../view/trip-events-view.js';
 
 
-const getPointOffers = (point, offers) => offers.find((element) => element.type === point.type).offers;
-
 class EventPresentor {
   eventComponent = new CreateEventsView();
 
-  constructor ({eventContainer, tripPointModel, tripPointEditModel, destinationsModel}) {
+  constructor ({eventContainer, tripPointModel, tripPointEditModel, destinationsModel, offersModel}) {
     this.eventContainer = eventContainer;
     this.tripPointModel = tripPointModel;
     this.tripPointEditModel = tripPointEditModel;
     this.destinationsModel = destinationsModel;
+    this.offersModel = offersModel;
   }
 
 
   init () {
     this.points = [...this.tripPointModel.getPoints()];
     this.destinations = this.destinationsModel.convertDestinations();
-    this.offers = [...this.tripPointModel.getOffers()];
+    this.offers = this.offersModel.convertOffers();
+
 
     this.pointEdit = this.tripPointEditModel.getPoint();
-
 
     render(this.eventComponent, this.eventContainer);
     render(new SortView(), this.eventComponent.getElement(), RenderPosition.AFTERBEGIN);
@@ -36,7 +35,7 @@ class EventPresentor {
     render(new TripPointEditView({
       point: this.pointEdit,
       destination: this.destinations[this.pointEdit.destination],
-      offers: getPointOffers(this.pointEdit, this.offers),
+      offers: this.offers[this.pointEdit.type]
 
     }), this.eventComponent.getEventPointsList());
 
@@ -45,7 +44,7 @@ class EventPresentor {
       render(new TripPointView({
         point: this.points[i],
         destination: this.destinations[this.points[i].destination],
-        offers: getPointOffers(this.points[i], this.offers) }),this.eventComponent.getEventPointsList());
+        offers: this.offers[this.points[i].type] }),this.eventComponent.getEventPointsList());
     }
   }
 }
