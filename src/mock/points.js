@@ -9,8 +9,7 @@ const mockPoints = [
     isFavorite: true,
     offers: [
       '1',
-      '2',
-      '3'
+      '2'
     ]
   },
   {

@@ -6,6 +6,8 @@ import { EventPresentor } from './presenter/trip-event-presenter.js';
 
 import { TripPointModel } from './model/trip-point-model.js';
 import { TripPointEditModel } from './model/trip-point-edit-model.js';
+import { DestinationsModel } from './model/destination-model.js';
+import { OffersModel } from './model/offers-model.js';
 
 
 const siteBodyElement = document.querySelector('.page-body');
@@ -19,10 +21,17 @@ const tripPointModel = new TripPointModel();
 
 const tripPointEditModel = new TripPointEditModel();
 
+const destinationsModel = new DestinationsModel();
+
+const offersModel = new OffersModel();
+
+
 const eventPresentor = new EventPresentor({
   eventContainer: tripEventsContainerElement,
   tripPointModel: tripPointModel,
-  tripPointEditModel: tripPointEditModel
+  tripPointEditModel: tripPointEditModel,
+  destinationsModel: destinationsModel,
+  offersModel: offersModel
 });
 
 render(new FilterView(), tripControlsfilterElement);

@@ -8,26 +8,25 @@ import { TripPointEditView } from '../view/trip-point-edit-view.js';
 import { CreateEventsView } from '../view/trip-events-view.js';
 
 
-const getPointOffers = (point, offers) => offers.find((element) => element.type === point.type).offers;
-const getPointDestination = (point, destinations) => destinations.find((element) => element.id === point.destination);
-
 class EventPresentor {
   eventComponent = new CreateEventsView();
 
-  constructor ({eventContainer, tripPointModel, tripPointEditModel}) {
+  constructor ({eventContainer, tripPointModel, tripPointEditModel, destinationsModel, offersModel}) {
     this.eventContainer = eventContainer;
     this.tripPointModel = tripPointModel;
     this.tripPointEditModel = tripPointEditModel;
+    this.destinationsModel = destinationsModel;
+    this.offersModel = offersModel;
   }
 
 
   init () {
     this.points = [...this.tripPointModel.getPoints()];
-    this.destinations = [...this.tripPointModel.getDestinations()];
-    this.offers = [...this.tripPointModel.getOffers()];
+    this.destinations = this.destinationsModel.convertDestinations();
+    this.offers = this.offersModel.convertOffers();
+
 
     this.pointEdit = this.tripPointEditModel.getPoint();
-
 
     render(this.eventComponent, this.eventContainer);
     render(new SortView(), this.eventComponent.getElement(), RenderPosition.AFTERBEGIN);
@@ -35,8 +34,8 @@ class EventPresentor {
 
     render(new TripPointEditView({
       point: this.pointEdit,
-      destination: getPointDestination(this.pointEdit, this.destinations),
-      offers: getPointOffers(this.pointEdit, this.offers),
+      destination: this.destinations[this.pointEdit.destination],
+      offers: this.offers[this.pointEdit.type]
 
     }), this.eventComponent.getEventPointsList());
 
@@ -44,8 +43,8 @@ class EventPresentor {
 
       render(new TripPointView({
         point: this.points[i],
-        destination: getPointDestination(this.points[i], this.destinations),
-        offers: getPointOffers(this.points[i], this.offers) }),this.eventComponent.getEventPointsList());
+        destination: this.destinations[this.points[i].destination],
+        offers: this.offers[this.points[i].type] }),this.eventComponent.getEventPointsList());
     }
   }
 }
