@@ -2,15 +2,15 @@ import { mockPoints } from '../mock/points.js';
 import { mockOffers } from '../mock/offers.js';
 
 class TripPointModel {
-  points = Array.from(mockPoints);
+  #points = Array.from(mockPoints);
+  #offers = mockOffers;
 
   getPoints() {
-    return this.points;
+    return this.#points;
   }
 
   getOffers() {
-    this.offers = mockOffers;
-    return this.offers;
+    return this.#offers;
   }
 }
 

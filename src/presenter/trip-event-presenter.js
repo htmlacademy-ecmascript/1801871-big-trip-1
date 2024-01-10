@@ -3,7 +3,7 @@ import { render, RenderPosition } from '../framework/render.js';
 import { SortView } from '../view/sort-view.js';
 
 import { TripPointView } from '../view/trip-point-view.js';
-import { TripPointEditView } from '../view/trip-point-edit-view.js';
+// import { TripPointEditView } from '../view/trip-point-edit-view.js';
 
 import { CreateEventsView } from '../view/trip-events-view.js';
 

@@ -1,13 +1,13 @@
 import { mockOffers } from '../mock/offers';
 
 class OffersModel {
-  offers = mockOffers;
+  #offers = mockOffers;
 
   getOffers() {
-    return this.offers;
+    return this.#offers;
   }
 
-  convertOffers(offers = this.offers) {
+  convertOffers(offers = this.#offers) {
     const convertOffers = {};
     offers.forEach((offer) => {
       convertOffers[offer.type] = offer.offers;

@@ -3,15 +3,15 @@ import { mockOffers } from '../mock/offers.js';
 
 
 class TripPointEditModel {
-  point = mockPoints[0];
+  #point = mockPoints[0];
+  #offers = mockOffers;
 
   getPoint() {
-    return this.point;
+    return this.#point;
   }
 
   getOffers() {
-    this.offers = mockOffers;
-    return this.offers;
+    return this.#offers;
   }
 }
 
