@@ -19,6 +19,14 @@ class EventPresentor {
     this.offersModel = offersModel;
   }
 
+  #renderPoint(point, destinations, offers) {
+    const pointComponent = new TripPointView({
+      point: point,
+      destination: destinations[point.destination],
+      offers: offers[point.type] });
+    render(pointComponent ,this.eventComponent.getEventPointsList());
+  }
+
 
   init () {
     this.points = [...this.tripPointModel.getPoints()];
@@ -39,13 +47,14 @@ class EventPresentor {
 
     // }), this.eventComponent.getEventPointsList());
 
-    for (let i = 0; i < this.points.length; i++) {
+    // for (let i = 0; i < this.points.length; i++) {
 
-      render(new TripPointView({
-        point: this.points[i],
-        destination: this.destinations[this.points[i].destination],
-        offers: this.offers[this.points[i].type] }),this.eventComponent.getEventPointsList());
-    }
+    //   render(new TripPointView({
+    //     point: this.points[i],
+    //     destination: this.destinations[this.points[i].destination],
+    //     offers: this.offers[this.points[i].type] }),this.eventComponent.getEventPointsList());
+    // }
+    this.#renderPoint(this.points[0],this.destinations, this.offers);
   }
 }
 
