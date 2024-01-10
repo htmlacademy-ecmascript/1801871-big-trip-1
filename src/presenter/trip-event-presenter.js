@@ -1,4 +1,4 @@
-import { render, RenderPosition } from '../render.js';
+import { render, RenderPosition } from '../framework/render.js';
 
 import { SortView } from '../view/sort-view.js';
 
@@ -29,15 +29,15 @@ class EventPresentor {
     this.pointEdit = this.tripPointEditModel.getPoint();
 
     render(this.eventComponent, this.eventContainer);
-    render(new SortView(), this.eventComponent.getElement(), RenderPosition.AFTERBEGIN);
+    render(new SortView(), this.eventComponent.element, RenderPosition.AFTERBEGIN);
 
 
-    render(new TripPointEditView({
-      point: this.pointEdit,
-      destination: this.destinations[this.pointEdit.destination],
-      offers: this.offers[this.pointEdit.type]
+    // render(new TripPointEditView({
+    //   point: this.pointEdit,
+    //   destination: this.destinations[this.pointEdit.destination],
+    //   offers: this.offers[this.pointEdit.type]
 
-    }), this.eventComponent.getEventPointsList());
+    // }), this.eventComponent.getEventPointsList());
 
     for (let i = 0; i < this.points.length; i++) {
 

@@ -1,4 +1,4 @@
-import {createElement} from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import dayjs from 'dayjs';
 import { DATE_DAY_MOUNTH_YEAR_HOUR_MINUTE_FORMAT } from '../const.js';
 
@@ -111,27 +111,16 @@ const createTripPointEditTemplate = (point, destination, offers) =>
 `;
 
 
-class TripPointEditView {
+class TripPointEditView extends AbstractView {
   constructor({point, destination, offers}) {
+    super();
     this.point = point;
     this.destination = destination;
     this.offers = offers;
   }
 
-  getTemplate() {
+  get template() {
     return createTripPointEditTemplate(this.point, this.destination, this.offers);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }
 

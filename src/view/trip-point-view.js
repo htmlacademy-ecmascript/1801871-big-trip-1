@@ -1,6 +1,6 @@
-import { createElement } from '../render.js';
 import { DATE_YEAR_MOUNTH_DAY_FORMAT, DATE_MOUNTH_DAY_FORMAT, DATE_HOURS_MINUTE_FORMAT } from '../const.js';
 import { getDateDiff } from '../utils.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import dayjs from 'dayjs';
 
 
@@ -48,28 +48,18 @@ const createTripPointTemplate = (point, destination, offers) =>
 `;
 
 
-class TripPointView {
+class TripPointView extends AbstractView {
   constructor({point, destination, offers}) {
+    super();
     this.point = point;
     this.destination = destination;
     this.offers = offers;
   }
 
-  getTemplate() {
+  get template() {
     return createTripPointTemplate(this.point, this.destination, this.offers);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
 }
 
 export { TripPointView };
