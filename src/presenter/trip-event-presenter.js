@@ -47,14 +47,9 @@ class EventPresentor {
 
     // }), this.eventComponent.getEventPointsList());
 
-    // for (let i = 0; i < this.points.length; i++) {
-
-    //   render(new TripPointView({
-    //     point: this.points[i],
-    //     destination: this.destinations[this.points[i].destination],
-    //     offers: this.offers[this.points[i].type] }),this.eventComponent.getEventPointsList());
-    // }
-    this.#renderPoint(this.points[0],this.destinations, this.offers);
+    for (let i = 0; i < this.points.length; i++) {
+      this.#renderPoint(this.points[i],this.destinations, this.offers);
+    }
   }
 }
 
