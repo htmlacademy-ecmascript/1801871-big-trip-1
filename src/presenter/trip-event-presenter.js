@@ -33,6 +33,7 @@ class EventPresentor {
       offers: offers[point.type]
     });
     pointEditComponent.setCloseButtonClickHandler(replaceEditToViewPoint);
+    pointEditComponent.setSubmiteFormHandler(onSubmitePoint);
 
 
     render(pointComponent ,this.eventComponent.getEventPointsList());
@@ -43,6 +44,11 @@ class EventPresentor {
     }
     function replaceEditToViewPoint () {
       replace(pointComponent, pointEditComponent);
+    }
+
+    function onSubmitePoint (evt) {
+      evt.preventDefault();
+      replaceEditToViewPoint();
     }
 
     function escKeyDownHandler (evt) {
@@ -65,14 +71,6 @@ class EventPresentor {
 
     render(this.eventComponent, this.eventContainer);
     render(new SortView(), this.eventComponent.element, RenderPosition.AFTERBEGIN);
-
-
-    // render(new TripPointEditView({
-    //   point: this.pointEdit,
-    //   destination: this.destinations[this.pointEdit.destination],
-    //   offers: this.offers[this.pointEdit.type]
-
-    // }), this.eventComponent.getEventPointsList());
 
     for (let i = 0; i < this.points.length; i++) {
       this.#renderPoint(this.points[i],this.destinations, this.offers);

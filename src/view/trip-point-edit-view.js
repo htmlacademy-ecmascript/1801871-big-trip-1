@@ -132,6 +132,11 @@ class TripPointEditView extends AbstractView {
     this.element.querySelector('.event__rollup-btn').addEventListener('click', callback);
   }
 
+  setSubmiteFormHandler (callback) {
+    this.#callbacks.SubmiteForm = callback;
+    this.element.querySelector('form').addEventListener('submit', callback);
+  }
+
 }
 
 export { TripPointEditView };
