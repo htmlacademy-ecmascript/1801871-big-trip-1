@@ -48,11 +48,11 @@ class EventPresentor {
     function escKeyDownHandler (evt) {
       if (evt.key === 'Escape') {
         evt.preventDefault();
-        replaceEditToViewPoint ();
+        replaceEditToViewPoint();
         document.removeEventListener('keydown', escKeyDownHandler);
       }
     }
-}
+  }
 
 
   init () {
