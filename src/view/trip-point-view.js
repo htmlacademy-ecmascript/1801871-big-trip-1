@@ -52,6 +52,7 @@ class TripPointView extends AbstractView {
   #point = null;
   #destination = null;
   #offers = null;
+  #callbacks = {};
   constructor({point, destination, offers}) {
     super();
     this.#point = point;
@@ -61,6 +62,11 @@ class TripPointView extends AbstractView {
 
   get template() {
     return createTripPointTemplate(this.#point, this.#destination, this.#offers);
+  }
+
+  setOpenButtonClickHandler(callback) {
+    this.#callbacks.openButtonClickHandler = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', callback);
   }
 
 }

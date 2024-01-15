@@ -1,9 +1,9 @@
-import { render, RenderPosition } from '../framework/render.js';
+import { render, replace, RenderPosition } from '../framework/render.js';
 
 import { SortView } from '../view/sort-view.js';
 
 import { TripPointView } from '../view/trip-point-view.js';
-// import { TripPointEditView } from '../view/trip-point-edit-view.js';
+import { TripPointEditView } from '../view/trip-point-edit-view.js';
 
 import { CreateEventsView } from '../view/trip-events-view.js';
 
@@ -23,8 +23,25 @@ class EventPresentor {
     const pointComponent = new TripPointView({
       point: point,
       destination: destinations[point.destination],
-      offers: offers[point.type] });
+      offers: offers[point.type]
+    });
+    pointComponent.setOpenButtonClickHandler(replaceViewToEditPoint);
+
+    const pointEditComponent = new TripPointEditView({
+      point: point,
+      destination: destinations[point.destination],
+      offers: offers[point.type]
+    });
+    pointEditComponent.setCloseButtonClickHandler(replaceEditToViewPoint);
+
     render(pointComponent ,this.eventComponent.getEventPointsList());
+
+    function replaceViewToEditPoint () {
+      replace(pointEditComponent, pointComponent);
+    }
+    function replaceEditToViewPoint () {
+      replace(pointComponent, pointEditComponent);
+    }
   }
 
 
