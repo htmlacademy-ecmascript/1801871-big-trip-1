@@ -34,15 +34,25 @@ class EventPresentor {
     });
     pointEditComponent.setCloseButtonClickHandler(replaceEditToViewPoint);
 
+
     render(pointComponent ,this.eventComponent.getEventPointsList());
 
     function replaceViewToEditPoint () {
       replace(pointEditComponent, pointComponent);
+      document.addEventListener('keydown', escKeyDownHandler);
     }
     function replaceEditToViewPoint () {
       replace(pointComponent, pointEditComponent);
     }
-  }
+
+    function escKeyDownHandler (evt) {
+      if (evt.key === 'Escape') {
+        evt.preventDefault();
+        replaceEditToViewPoint ();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
+    }
+}
 
 
   init () {

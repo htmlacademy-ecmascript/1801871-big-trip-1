@@ -131,6 +131,7 @@ class TripPointEditView extends AbstractView {
     this.#callbacks.closeButtonClickHandler = callback;
     this.element.querySelector('.event__rollup-btn').addEventListener('click', callback);
   }
+
 }
 
 export { TripPointEditView };
