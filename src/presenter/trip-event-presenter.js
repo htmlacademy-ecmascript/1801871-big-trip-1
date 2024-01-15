@@ -49,6 +49,7 @@ class EventPresentor {
     function onSubmitePoint (evt) {
       evt.preventDefault();
       replaceEditToViewPoint();
+      document.removeEventListener('keydown', escKeyDownHandler);
     }
 
     function escKeyDownHandler (evt) {
