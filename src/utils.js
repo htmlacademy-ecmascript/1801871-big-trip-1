@@ -26,5 +26,4 @@ function getDateDiff(dateFrom, dateTo) {
   return `${minutes}M`;
 }
 
-
 export { getDateDiff };

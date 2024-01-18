@@ -1,22 +1,23 @@
 import AbstractView from '../framework/view/abstract-view.js';
 
-function createNewFilterTemplate() {
+function createNewFilterTemplate(filterState) {
   return `
 <form class="trip-filters" action="#" method="get">
   <div class="trip-filters__filter">
-    <input id="filter-everything" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="everything" checked>
+    <input id="filter-everything" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="everything" checked
+    ${filterState.EVERETHYNG ? '' : 'disabled'}>
     <label class="trip-filters__filter-label" for="filter-everything">Everything</label>
   </div>
   <div class="trip-filters__filter">
-    <input id="filter-future" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="future">
+    <input id="filter-future" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="future" ${filterState.FUTURE ? '' : 'disabled'}>
     <label class="trip-filters__filter-label" for="filter-future">Future</label>
   </div>
   <div class="trip-filters__filter">
-    <input id="filter-present" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="present">
+    <input id="filter-present" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="present" ${filterState.PRESENT ? '' : 'disabled'}>
     <label class="trip-filters__filter-label" for="filter-present">Present</label>
   </div>
   <div class="trip-filters__filter">
-    <input id="filter-past" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="past">
+    <input id="filter-past" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="past" ${filterState.PAST ? '' : 'disabled'}>
     <label class="trip-filters__filter-label" for="filter-past">Past</label>
   </div>
   <button class="visually-hidden" type="submit">Accept filter</button>
@@ -24,9 +25,15 @@ function createNewFilterTemplate() {
 }
 
 class FilterView extends AbstractView {
+  #filterState = null;
+
+  constructor({filterState}) {
+    super();
+    this.#filterState = filterState;
+  }
 
   get template() {
-    return createNewFilterTemplate();
+    return createNewFilterTemplate(this.#filterState);
   }
 }
 

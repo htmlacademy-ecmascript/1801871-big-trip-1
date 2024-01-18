@@ -1,8 +1,8 @@
 import { render, RenderPosition } from './framework/render.js';
-import { FilterView } from './view/filter-view.js';
 import { TripInfoView } from './view/trip-info-view.js';
 
 import { EventPresentor } from './presenter/trip-event-presenter.js';
+import { FilterPresentor } from './presenter/filter-presenter.js';
 
 import { TripPointModel } from './model/trip-point-model.js';
 import { TripPointEditModel } from './model/trip-point-edit-model.js';
@@ -12,7 +12,7 @@ import { OffersModel } from './model/offers-model.js';
 
 const siteBodyElement = document.querySelector('.page-body');
 const tripHeaderMainElement = siteBodyElement.querySelector('.trip-main');
-const tripControlsfilterElement = siteBodyElement.querySelector('.trip-controls__filters');
+const tripControlsFilterElement = siteBodyElement.querySelector('.trip-controls__filters');
 
 const tripEventsContainerElement = siteBodyElement.querySelector('.page-body__trip-events-container');
 
@@ -34,8 +34,13 @@ const eventPresentor = new EventPresentor({
   offersModel: offersModel
 });
 
-render(new FilterView(), tripControlsfilterElement);
+const filterPresentor = new FilterPresentor ({
+  tripPointModel: tripPointModel,
+  tripControlsFilterElement: tripControlsFilterElement
+});
+
 render(new TripInfoView(), tripHeaderMainElement, RenderPosition.AFTERBEGIN);
 
 
 eventPresentor.init();
+filterPresentor.init();
