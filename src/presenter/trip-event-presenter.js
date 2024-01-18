@@ -4,6 +4,7 @@ import { SortView } from '../view/sort-view.js';
 
 import { TripPointView } from '../view/trip-point-view.js';
 import { TripPointEditView } from '../view/trip-point-edit-view.js';
+import { ZeroPointView } from '../view/zero-points-view.js';
 
 import { CreateEventsView } from '../view/trip-events-view.js';
 
@@ -72,7 +73,9 @@ class EventPresentor {
 
     render(this.eventComponent, this.eventContainer);
     render(new SortView(), this.eventComponent.element, RenderPosition.AFTERBEGIN);
-
+    if (this.points.length === 0) {
+      render(new ZeroPointView(), this.eventComponent.getEventPointsList());
+    }
     for (let i = 0; i < this.points.length; i++) {
       this.#renderPoint(this.points[i],this.destinations, this.offers);
     }
