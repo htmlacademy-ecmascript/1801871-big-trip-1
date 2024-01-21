@@ -110,12 +110,12 @@ const createTripPointEditTemplate = (point, destination, offers) =>
 </li>
 `;
 
-
 class TripPointEditView extends AbstractView {
   #point = null;
   #destination = null;
   #offers = null;
   #callbacks = {};
+
   constructor({point, destination, offers}) {
     super();
     this.#point = point;
@@ -127,14 +127,19 @@ class TripPointEditView extends AbstractView {
     return createTripPointEditTemplate(this.#point, this.#destination, this.#offers);
   }
 
+  #submitFormHandler = (evt) => {
+    evt.preventDefault();
+    this.#callbacks.submitFormHandler();
+  };
+
   setCloseButtonClickHandler(callback) {
     this.#callbacks.closeButtonClickHandler = callback;
     this.element.querySelector('.event__rollup-btn').addEventListener('click', callback);
   }
 
-  setSubmiteFormHandler (callback) {
-    this.#callbacks.SubmiteForm = callback;
-    this.element.querySelector('form').addEventListener('submit', callback);
+  setSubmitFormHandler (callback) {
+    this.#callbacks.submitFormHandler = callback;
+    this.element.querySelector('form').addEventListener('submit', this.#submitFormHandler);
   }
 
 }

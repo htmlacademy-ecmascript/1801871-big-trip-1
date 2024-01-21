@@ -1,7 +1,7 @@
 import { render, RenderPosition } from './framework/render.js';
 import { TripInfoView } from './view/trip-info-view.js';
 
-import { EventPresentor } from './presenter/trip-event-presenter.js';
+import { EventPresenter } from './presenter/trip-event-presenter.js';
 import { FilterPresentor } from './presenter/filter-presenter.js';
 
 import { TripPointModel } from './model/trip-point-model.js';
@@ -26,7 +26,7 @@ const destinationsModel = new DestinationsModel();
 const offersModel = new OffersModel();
 
 
-const eventPresentor = new EventPresentor({
+const eventPresenter = new EventPresenter({
   eventContainer: tripEventsContainerElement,
   tripPointModel: tripPointModel,
   tripPointEditModel: tripPointEditModel,
@@ -34,7 +34,7 @@ const eventPresentor = new EventPresentor({
   offersModel: offersModel
 });
 
-const filterPresentor = new FilterPresentor ({
+const filterPresenter = new FilterPresentor ({
   tripPointModel: tripPointModel,
   tripControlsFilterElement: tripControlsFilterElement
 });
@@ -42,5 +42,5 @@ const filterPresentor = new FilterPresentor ({
 render(new TripInfoView(), tripHeaderMainElement, RenderPosition.AFTERBEGIN);
 
 
-eventPresentor.init();
-filterPresentor.init();
+eventPresenter.init();
+filterPresenter.init();

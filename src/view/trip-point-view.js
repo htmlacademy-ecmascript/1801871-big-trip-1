@@ -64,9 +64,14 @@ class TripPointView extends AbstractView {
     return createTripPointTemplate(this.#point, this.#destination, this.#offers);
   }
 
+  #handleOpenButtonClick = (evt) => {
+    evt.preventDefault();
+    this.#callbacks.openButtonClickHandler(this.#point);
+  };
+
   setOpenButtonClickHandler(callback) {
     this.#callbacks.openButtonClickHandler = callback;
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', callback);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#handleOpenButtonClick);
   }
 
 }

@@ -9,7 +9,11 @@ import { ZeroPointView } from '../view/zero-points-view.js';
 import { CreateEventsView } from '../view/trip-events-view.js';
 
 
-class EventPresentor {
+class EventPresenter {
+  #points = new Map();
+  #editingPoint = null;
+  #pointEditComponent = null;
+
   eventComponent = new CreateEventsView();
 
   constructor ({eventContainer, tripPointModel, tripPointEditModel, destinationsModel, offersModel}) {
@@ -20,66 +24,84 @@ class EventPresentor {
     this.offersModel = offersModel;
   }
 
-  #renderPoint(point, destinations, offers) {
-    const pointComponent = new TripPointView({
+  #createPoint(point, destinations, offers) {
+    const pointComponent = new TripPointView ({
       point: point,
       destination: destinations[point.destination],
       offers: offers[point.type]
     });
-    pointComponent.setOpenButtonClickHandler(replaceViewToEditPoint);
+    pointComponent.setOpenButtonClickHandler(this.#openEditingMode);
+
+    return pointComponent;
+  }
+
+  #createEditPoint(point) {
+    const destinations = this.destinationsModel.convertDestinations();
+    const offers = this.offersModel.convertOffers();
 
     const pointEditComponent = new TripPointEditView({
       point: point,
       destination: destinations[point.destination],
       offers: offers[point.type]
     });
-    pointEditComponent.setCloseButtonClickHandler(replaceEditToViewPoint);
-    pointEditComponent.setSubmiteFormHandler(onSubmitePoint);
+    pointEditComponent.setCloseButtonClickHandler(this.#closeEditingMode);
+    pointEditComponent.setSubmitFormHandler(this.#onEditPointSubmit);
 
-
-    render(pointComponent ,this.eventComponent.getEventPointsList());
-
-    function replaceViewToEditPoint () {
-      replace(pointEditComponent, pointComponent);
-      document.addEventListener('keydown', escKeyDownHandler);
-    }
-    function replaceEditToViewPoint () {
-      replace(pointComponent, pointEditComponent);
-    }
-
-    function onSubmitePoint (evt) {
-      evt.preventDefault();
-      replaceEditToViewPoint();
-      document.removeEventListener('keydown', escKeyDownHandler);
-    }
-
-    function escKeyDownHandler (evt) {
-      if (evt.key === 'Escape') {
-        evt.preventDefault();
-        replaceEditToViewPoint();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    }
+    return pointEditComponent;
   }
 
+  #onEscKeyDown = (evt) => {
+    if (evt.key === 'Escape') {
+      evt.preventDefault();
+      this.#closeEditingMode();
+      document.removeEventListener('keydown', this.#onEscKeyDown);
+    }
+  };
 
-  init () {
-    this.points = [...this.tripPointModel.getPoints()];
-    this.destinations = this.destinationsModel.convertDestinations();
-    this.offers = this.offersModel.convertOffers();
+  #onEditPointSubmit = ()=> {
+    this.#closeEditingMode();
+    document.removeEventListener('keydown', this.#onEscKeyDown);
+  };
 
+  #closeEditingMode = () => {
+    if (this.#editingPoint) {
+      replace(this.points.get(this.#editingPoint.id), this.#pointEditComponent);
+      this.#pointEditComponent.removeElement();
+      this.#pointEditComponent = null;
+      this.#editingPoint = null;
+    }
+  };
 
-    this.pointEdit = this.tripPointEditModel.getPoint();
+  #openEditingMode = (point) => {
+    this.#closeEditingMode();
 
-    render(this.eventComponent, this.eventContainer);
-    render(new SortView(), this.eventComponent.element, RenderPosition.AFTERBEGIN);
-    if (this.points.length === 0) {
+    this.#editingPoint = point;
+    this.#pointEditComponent = this.#createEditPoint(point);
+
+    replace(this.#pointEditComponent, this.points.get(point.id));
+    document.addEventListener('keydown', this.#onEscKeyDown);
+  };
+
+  #renderPoints = () => {
+    const points = this.tripPointModel.getPoints();
+    const destinations = this.destinationsModel.convertDestinations();
+    const offers = this.offersModel.convertOffers();
+
+    if (points.length === 0) {
       render(new ZeroPointView(), this.eventComponent.getEventPointsList());
     }
-    for (let i = 0; i < this.points.length; i++) {
-      this.#renderPoint(this.points[i],this.destinations, this.offers);
+
+    for (let i = 0; i < points.length; i++) {
+      this.#points.set(points[i].id, this.#createPoint(points[i], destinations, offers));
+      render(this.#points.get(points[i].id) ,this.eventComponent.getEventPointsList());
     }
+  };
+
+  init () {
+    render(this.eventComponent, this.eventContainer);
+    render(new SortView(), this.eventComponent.element, RenderPosition.AFTERBEGIN);
+    this.#renderPoints();
   }
 }
 
-export { EventPresentor };
+export { EventPresenter };
