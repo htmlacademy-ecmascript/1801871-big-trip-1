@@ -1,4 +1,4 @@
-import {createElement} from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 function createEventsTemplate() {
   return `
@@ -10,26 +10,16 @@ function createEventsTemplate() {
   </section>`;
 }
 
-class CreateEventsView {
-  getTemplate() {
+class CreateEventsView extends AbstractView{
+  get template() {
     return createEventsTemplate();
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
   getEventPointsList() {
-    return this.getElement().querySelector('.trip-events__list');
+    return this.element.querySelector('.trip-events__list');
   }
 
-  removeElement() {
-    this.element = null;
-  }
+
 }
 
 export { CreateEventsView };

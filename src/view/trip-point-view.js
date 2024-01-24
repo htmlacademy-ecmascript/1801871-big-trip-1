@@ -1,6 +1,6 @@
-import { createElement } from '../render.js';
 import { DATE_YEAR_MOUNTH_DAY_FORMAT, DATE_MOUNTH_DAY_FORMAT, DATE_HOURS_MINUTE_FORMAT } from '../const.js';
 import { getDateDiff } from '../utils.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import dayjs from 'dayjs';
 
 
@@ -48,28 +48,32 @@ const createTripPointTemplate = (point, destination, offers) =>
 `;
 
 
-class TripPointView {
+class TripPointView extends AbstractView {
+  #point = null;
+  #destination = null;
+  #offers = null;
+  #callbacks = {};
   constructor({point, destination, offers}) {
-    this.point = point;
-    this.destination = destination;
-    this.offers = offers;
+    super();
+    this.#point = point;
+    this.#destination = destination;
+    this.#offers = offers;
   }
 
-  getTemplate() {
-    return createTripPointTemplate(this.point, this.destination, this.offers);
+  get template() {
+    return createTripPointTemplate(this.#point, this.#destination, this.#offers);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
+  #handleOpenButtonClick = (evt) => {
+    evt.preventDefault();
+    this.#callbacks.openButtonClickHandler(this.#point);
+  };
 
-    return this.element;
+  setOpenButtonClickHandler(callback) {
+    this.#callbacks.openButtonClickHandler = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#handleOpenButtonClick);
   }
 
-  removeElement() {
-    this.element = null;
-  }
 }
 
 export { TripPointView };

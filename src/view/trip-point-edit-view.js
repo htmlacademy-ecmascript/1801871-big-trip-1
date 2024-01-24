@@ -1,4 +1,4 @@
-import {createElement} from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import dayjs from 'dayjs';
 import { DATE_DAY_MOUNTH_YEAR_HOUR_MINUTE_FORMAT } from '../const.js';
 
@@ -110,29 +110,38 @@ const createTripPointEditTemplate = (point, destination, offers) =>
 </li>
 `;
 
+class TripPointEditView extends AbstractView {
+  #point = null;
+  #destination = null;
+  #offers = null;
+  #callbacks = {};
 
-class TripPointEditView {
   constructor({point, destination, offers}) {
-    this.point = point;
-    this.destination = destination;
-    this.offers = offers;
+    super();
+    this.#point = point;
+    this.#destination = destination;
+    this.#offers = offers;
   }
 
-  getTemplate() {
-    return createTripPointEditTemplate(this.point, this.destination, this.offers);
+  get template() {
+    return createTripPointEditTemplate(this.#point, this.#destination, this.#offers);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
+  #submitFormHandler = (evt) => {
+    evt.preventDefault();
+    this.#callbacks.submitFormHandler();
+  };
 
-    return this.element;
+  setCloseButtonClickHandler(callback) {
+    this.#callbacks.closeButtonClickHandler = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', callback);
   }
 
-  removeElement() {
-    this.element = null;
+  setSubmitFormHandler (callback) {
+    this.#callbacks.submitFormHandler = callback;
+    this.element.querySelector('form').addEventListener('submit', this.#submitFormHandler);
   }
+
 }
 
 export { TripPointEditView };

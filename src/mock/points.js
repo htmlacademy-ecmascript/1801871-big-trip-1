@@ -9,8 +9,7 @@ const mockPoints = [
     isFavorite: true,
     offers: [
       '1',
-      '2',
-      '3'
+      '2'
     ]
   },
   {
@@ -65,5 +64,5 @@ const mockPoints = [
 
 ];
 
-
-export { mockPoints };
+const currentDate = '2023-11-23T09:04:46.633Z';
+export { mockPoints, currentDate };

@@ -1,23 +1,17 @@
 import { mockPoints } from '../mock/points.js';
-import { mockDestinations } from '../mock/destinations.js';
 import { mockOffers } from '../mock/offers.js';
 
 
 class TripPointEditModel {
-  point = mockPoints[0];
+  #point = mockPoints[0];
+  #offers = mockOffers;
 
   getPoint() {
-    return this.point;
-  }
-
-  getDestinations() {
-    this.destinations = mockDestinations;
-    return this.destinations;
+    return this.#point;
   }
 
   getOffers() {
-    this.offers = mockOffers;
-    return this.offers;
+    return this.#offers;
   }
 }
 

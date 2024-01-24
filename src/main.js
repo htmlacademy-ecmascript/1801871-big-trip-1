@@ -1,16 +1,18 @@
-import { render, RenderPosition } from './render.js';
-import { FilterView } from './view/filter-view.js';
+import { render, RenderPosition } from './framework/render.js';
 import { TripInfoView } from './view/trip-info-view.js';
 
-import { EventPresentor } from './presenter/trip-event-presenter.js';
+import { EventPresenter } from './presenter/trip-event-presenter.js';
+import { FilterPresentor } from './presenter/filter-presenter.js';
 
 import { TripPointModel } from './model/trip-point-model.js';
 import { TripPointEditModel } from './model/trip-point-edit-model.js';
+import { DestinationsModel } from './model/destination-model.js';
+import { OffersModel } from './model/offers-model.js';
 
 
 const siteBodyElement = document.querySelector('.page-body');
 const tripHeaderMainElement = siteBodyElement.querySelector('.trip-main');
-const tripControlsfilterElement = siteBodyElement.querySelector('.trip-controls__filters');
+const tripControlsFilterElement = siteBodyElement.querySelector('.trip-controls__filters');
 
 const tripEventsContainerElement = siteBodyElement.querySelector('.page-body__trip-events-container');
 
@@ -19,14 +21,26 @@ const tripPointModel = new TripPointModel();
 
 const tripPointEditModel = new TripPointEditModel();
 
-const eventPresentor = new EventPresentor({
+const destinationsModel = new DestinationsModel();
+
+const offersModel = new OffersModel();
+
+
+const eventPresenter = new EventPresenter({
   eventContainer: tripEventsContainerElement,
   tripPointModel: tripPointModel,
-  tripPointEditModel: tripPointEditModel
+  tripPointEditModel: tripPointEditModel,
+  destinationsModel: destinationsModel,
+  offersModel: offersModel
 });
 
-render(new FilterView(), tripControlsfilterElement);
+const filterPresenter = new FilterPresentor ({
+  tripPointModel: tripPointModel,
+  tripControlsFilterElement: tripControlsFilterElement
+});
+
 render(new TripInfoView(), tripHeaderMainElement, RenderPosition.AFTERBEGIN);
 
 
-eventPresentor.init();
+eventPresenter.init();
+filterPresenter.init();
