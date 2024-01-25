@@ -1,17 +1,15 @@
 import { render } from '../framework/render';
 import { FilterView } from '../view/filter-view.js';
-import { currentDate } from '../mock/points.js';
-import dayjs from 'dayjs';
 
-class FilterPresentor {
+
+class FilterPresenter {
   #filterState = {
-    EVERETHYNG: false,
+    EVERYTHING: false,
     FUTURE: false,
     PRESENT: false,
     PAST: false
   };
 
-  #currentDate = dayjs(new Date(currentDate));
 
   constructor ({tripPointModel, tripControlsFilterElement}) {
     this.tripPointModel = tripPointModel;
@@ -19,29 +17,30 @@ class FilterPresentor {
     this.points = [...this.tripPointModel.getPoints()];
   }
 
-  #upadateFilterState (points, date) {
+  #updateFilterState (points) {
+    const date = new Date().toISOString();
 
-    if(points.length > 0) {
-      this.#filterState.EVERETHYNG = true;
+    if (points.length > 0) {
+      this.#filterState.EVERYTHING = true;
     }
 
-    if(points.some((point)=>dayjs(new Date(point.dateFrom)) > date)) {
+    if (points.some((point) => point.dateFrom > date)) {
       this.#filterState.FUTURE = true;
     }
 
-    if(points.some((point)=>dayjs(new Date(point.dateTo)) < date)) {
+    if (points.some((point)=> point.dateTo < date)) {
       this.#filterState.PAST = true;
     }
 
-    if(points.some((point)=>dayjs(new Date(point.dateTo)) > date && dayjs(new Date(point.dateFrom)) < date)) {
+    if (points.some((point)=> point.dateTo > date && point.dateFrom < date)) {
       this.#filterState.PRESENT = true;
     }
   }
 
   init () {
-    this.#upadateFilterState(this.points, this.#currentDate);
+    this.#updateFilterState(this.points);
     render(new FilterView({filterState: this.#filterState}), this.tripControlsFilterElement);
   }
 }
 
-export { FilterPresentor };
+export { FilterPresenter };
