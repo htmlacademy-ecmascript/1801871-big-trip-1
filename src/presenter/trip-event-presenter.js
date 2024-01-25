@@ -105,5 +105,4 @@ class EventPresenter {
     this.#renderPoints();
   }
 }
-
 export { EventPresenter };
