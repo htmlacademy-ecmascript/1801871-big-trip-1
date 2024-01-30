@@ -2,7 +2,7 @@ import { render, RenderPosition } from './framework/render.js';
 import { TripInfoView } from './view/trip-info-view.js';
 
 import { EventPresenter } from './presenter/trip-event-presenter.js';
-import { FilterPresentor } from './presenter/filter-presenter.js';
+import { FilterPresenter } from './presenter/filter-presenter.js';
 
 import { TripPointModel } from './model/trip-point-model.js';
 import { TripPointEditModel } from './model/trip-point-edit-model.js';
@@ -34,7 +34,7 @@ const eventPresenter = new EventPresenter({
   offersModel: offersModel
 });
 
-const filterPresenter = new FilterPresentor ({
+const filterPresenter = new FilterPresenter ({
   tripPointModel: tripPointModel,
   tripControlsFilterElement: tripControlsFilterElement
 });

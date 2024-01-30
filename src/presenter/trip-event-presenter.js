@@ -13,6 +13,7 @@ class EventPresenter {
   #points = new Map();
   #editingPoint = null;
   #pointEditComponent = null;
+  #zeroPointComponent = null;
 
   eventComponent = new CreateEventsView();
 
@@ -22,6 +23,7 @@ class EventPresenter {
     this.tripPointEditModel = tripPointEditModel;
     this.destinationsModel = destinationsModel;
     this.offersModel = offersModel;
+    this.#zeroPointComponent = new ZeroPointView();
   }
 
   #createPoint(point, destinations, offers) {
@@ -88,7 +90,7 @@ class EventPresenter {
     const offers = this.offersModel.convertOffers();
 
     if (points.length === 0) {
-      render(new ZeroPointView(), this.eventComponent.getEventPointsList());
+      render(this.#zeroPointComponent, this.eventComponent.getEventPointsList());
     }
 
     for (let i = 0; i < points.length; i++) {
@@ -103,5 +105,4 @@ class EventPresenter {
     this.#renderPoints();
   }
 }
-
 export { EventPresenter };
