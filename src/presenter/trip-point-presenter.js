@@ -27,6 +27,7 @@ class TripPointPresenter {
       offers: offers[point.type]
     });
     pointComponent.setOpenButtonClickHandler(this.#openEditingMode);
+    pointComponent.setFavoriteButtonClickHandler(this.#addToFavorite);
 
     return pointComponent;
   }
@@ -76,6 +77,14 @@ class TripPointPresenter {
 
     replace(this.#pointEditComponent, this.#points.get(point.id));
     document.addEventListener('keydown', this.#onEscKeyDown);
+  };
+
+  #addToFavorite = (point) => {
+    console.log(point);
+    if(point.isFavorite === true) {
+      return
+    }
+    console.log('я не в избранном');
   };
 
   #renderPoints = () => {
