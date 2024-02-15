@@ -67,7 +67,7 @@ class EventPresenter {
 
   #closeEditingMode = () => {
     if (this.#editingPoint) {
-      replace(this.points.get(this.#editingPoint.id), this.#pointEditComponent);
+      replace(this.#points.get(this.#editingPoint.id), this.#pointEditComponent);
       this.#pointEditComponent.removeElement();
       this.#pointEditComponent = null;
       this.#editingPoint = null;
@@ -80,7 +80,7 @@ class EventPresenter {
     this.#editingPoint = point;
     this.#pointEditComponent = this.#createEditPoint(point);
 
-    replace(this.#pointEditComponent, this.points.get(point.id));
+    replace(this.#pointEditComponent, this.#points.get(point.id));
     document.addEventListener('keydown', this.#onEscKeyDown);
   };
 
@@ -105,4 +105,5 @@ class EventPresenter {
     this.#renderPoints();
   }
 }
+
 export { EventPresenter };
