@@ -50,7 +50,7 @@ const mockPoints = [
     ]
   },
   {
-    id: 'f6138082-e722-48cc-abe3-15716cc7d642',
+    id: 'f6138082-e722-48cc-abe3-15716cc7d602',
     type: 'train',
     dateFrom: '2023-11-23T08:04:46.633Z',
     dateTo: '2023-11-23T09:50:32.367Z',
