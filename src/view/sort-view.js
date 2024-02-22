@@ -47,8 +47,7 @@ class SortView extends AbstractView {
   setSortTypeHandler = (callback) => {
     this.#callbacks.sortTypeHandler = callback;
     this.element.addEventListener('click', this.sortType);
-      };
-
+  };
 }
 
 
