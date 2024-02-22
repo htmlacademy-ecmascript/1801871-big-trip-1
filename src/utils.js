@@ -26,4 +26,18 @@ function getDateDiff(dateFrom, dateTo) {
   return `${minutes}M`;
 }
 
-export { getDateDiff };
+function sortMoneyUp (pointA, pointB) {
+  return pointB.basePrice - pointA.basePrice;
+}
+function sortDurationUp(pointA, pointB) {
+  const durationA = new Date(pointA.dateTo) - new Date(pointA.dateFrom);
+  const durationB = new Date(pointB.dateTo) - new Date(pointB.dateFrom);
+
+  return durationB - durationA;
+}
+
+function sortDayUp (pointA, pointB) {
+  return new Date(pointA.dateTo) - new Date(pointB.dateTo);
+}
+
+export { getDateDiff, sortMoneyUp, sortDurationUp, sortDayUp };

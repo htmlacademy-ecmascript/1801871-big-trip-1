@@ -1,4 +1,5 @@
-import { render, replace, RenderPosition } from '../framework/render.js';
+import { render, replace, RenderPosition, remove } from '../framework/render.js';
+import { sortMoneyUp, sortDurationUp, sortDayUp} from '../utils.js'
 
 import { SortView } from '../view/sort-view.js';
 
@@ -10,10 +11,13 @@ import { CreateEventsView } from '../view/trip-events-view.js';
 
 
 class EventPresenter {
-  #points = new Map();
+  #pointsComponents = new Map();
+  #points = null;
   #editingPoint = null;
   #pointEditComponent = null;
   #zeroPointComponent = null;
+  #sortComponent = null;
+  #lastSortType = null;
 
   eventComponent = new CreateEventsView();
 
@@ -33,6 +37,7 @@ class EventPresenter {
       offers: offers[point.type]
     });
     pointComponent.setOpenButtonClickHandler(this.#openEditingMode);
+    pointComponent.setFavoriteButtonClickHandler(this.#changeFavorite);
 
     return pointComponent;
   }
@@ -67,7 +72,7 @@ class EventPresenter {
 
   #closeEditingMode = () => {
     if (this.#editingPoint) {
-      replace(this.#points.get(this.#editingPoint.id), this.#pointEditComponent);
+      replace(this.#pointsComponents.get(this.#editingPoint.id), this.#pointEditComponent);
       this.#pointEditComponent.removeElement();
       this.#pointEditComponent = null;
       this.#editingPoint = null;
@@ -80,28 +85,79 @@ class EventPresenter {
     this.#editingPoint = point;
     this.#pointEditComponent = this.#createEditPoint(point);
 
-    replace(this.#pointEditComponent, this.#points.get(point.id));
+    replace(this.#pointEditComponent, this.#pointsComponents.get(point.id));
     document.addEventListener('keydown', this.#onEscKeyDown);
   };
 
+  #changeFavorite = (point) => {
+    point.isFavorite = !point.isFavorite;
+    this.#updatePoint(point);
+  };
+
+  #renderSort = () => {
+    this.#sortComponent = new SortView();
+    this.#sortComponent.setSortTypeHandler(this.#handleSortType);
+    render(this.#sortComponent, this.eventComponent.element, RenderPosition.AFTERBEGIN);
+  }
+
+  #handleSortType = (type) => {
+    if(type === this.#lastSortType) {
+      return;
+    }
+    this.#lastSortType = type;
+    switch(type) {
+      case 'time':
+        this.#points.sort(sortDurationUp);
+        break;
+      case 'day':
+        this.#points.sort(sortDayUp);
+        break;
+      case 'price':
+        this.#points.sort(sortMoneyUp);
+      break;
+    }
+
+    this.#clearPoints();
+    this.#renderPoints();
+
+  };
+
+
+  #updatePoint = (point) => {
+    const destinations = this.destinationsModel.convertDestinations();
+    const offers = this.offersModel.convertOffers();
+    const oldPoint = this.#pointsComponents.get(point.id);
+
+    this.#pointsComponents.set(point.id, this.#createPoint(point, destinations, offers));
+    replace(this.#pointsComponents.get(point.id), oldPoint);
+
+  };
+
   #renderPoints = () => {
-    const points = this.tripPointModel.getPoints();
     const destinations = this.destinationsModel.convertDestinations();
     const offers = this.offersModel.convertOffers();
 
-    if (points.length === 0) {
+    if (this.#points.length === 0) {
       render(this.#zeroPointComponent, this.eventComponent.getEventPointsList());
     }
 
-    for (let i = 0; i < points.length; i++) {
-      this.#points.set(points[i].id, this.#createPoint(points[i], destinations, offers));
-      render(this.#points.get(points[i].id) ,this.eventComponent.getEventPointsList());
+    for (let i = 0; i < this.#points.length; i++) {
+      this.#pointsComponents.set(this.#points[i].id, this.#createPoint(this.#points[i], destinations, offers));
+      render(this.#pointsComponents.get(this.#points[i].id) ,this.eventComponent.getEventPointsList());
     }
   };
 
+  #clearPoints = () => {
+    this.#pointsComponents.forEach((component)=>{
+      remove(component);
+    })
+  }
+
+
   init () {
+    this.#points = this.tripPointModel.getPoints();
     render(this.eventComponent, this.eventContainer);
-    render(new SortView(), this.eventComponent.element, RenderPosition.AFTERBEGIN);
+    this.#renderSort();
     this.#renderPoints();
   }
 }
