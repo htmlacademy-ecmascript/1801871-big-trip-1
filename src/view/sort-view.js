@@ -42,12 +42,12 @@ class SortView extends AbstractView {
 
     evt.preventDefault();
     this.#callbacks.sortTypeHandler(evt.target.dataset.sortType);
-  }
+  };
 
   setSortTypeHandler = (callback) => {
     this.#callbacks.sortTypeHandler = callback;
     this.element.addEventListener('click', this.sortType);
-    };
+      };
 
 }
 

@@ -1,5 +1,5 @@
 import { render, replace, RenderPosition, remove } from '../framework/render.js';
-import { sortMoneyUp, sortDurationUp, sortDayUp} from '../utils.js'
+import { sortMoneyUp, sortDurationUp, sortDayUp} from '../utils.js';
 
 import { SortView } from '../view/sort-view.js';
 
@@ -98,7 +98,7 @@ class EventPresenter {
     this.#sortComponent = new SortView();
     this.#sortComponent.setSortTypeHandler(this.#handleSortType);
     render(this.#sortComponent, this.eventComponent.element, RenderPosition.AFTERBEGIN);
-  }
+  };
 
   #handleSortType = (type) => {
     if(type === this.#lastSortType) {
@@ -114,7 +114,7 @@ class EventPresenter {
         break;
       case 'price':
         this.#points.sort(sortMoneyUp);
-      break;
+        break;
     }
 
     this.#clearPoints();
@@ -150,8 +150,8 @@ class EventPresenter {
   #clearPoints = () => {
     this.#pointsComponents.forEach((component)=>{
       remove(component);
-    })
-  }
+    });
+  };
 
 
   init () {
