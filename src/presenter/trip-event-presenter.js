@@ -12,12 +12,11 @@ import { CreateEventsView } from '../view/trip-events-view.js';
 
 class EventPresenter {
   #pointsComponents = new Map();
-  #points = null;
   #editingPoint = null;
   #pointEditComponent = null;
   #zeroPointComponent = null;
   #sortComponent = null;
-  #lastSortType = null;
+  #lastSortType = 'price';
 
   eventComponent = new CreateEventsView();
 
@@ -95,35 +94,47 @@ class EventPresenter {
   };
 
   #renderSort = () => {
-    this.#sortComponent = new SortView();
+    if (this.#sortComponent) {
+      const lastSortComponent = this.#sortComponent;
+      this.#sortComponent = new SortView(this.#lastSortType);
+      replace(lastSortComponent, this.#sortComponent);
+    }
+    this.#sortComponent = new SortView(this.#lastSortType);
     this.#sortComponent.setSortTypeHandler(this.#handleSortType);
     render(this.#sortComponent, this.eventComponent.element, RenderPosition.AFTERBEGIN);
   };
 
+
   #handleSortType = (type) => {
+    const points = this.tripPointModel.getPoints();
+
     if(type === this.#lastSortType) {
       return;
     }
     this.#lastSortType = type;
     switch(type) {
       case 'time':
-        this.#points.sort(sortDurationUp);
+        points.sort(sortDurationUp);
         break;
       case 'day':
-        this.#points.sort(sortDayUp);
+        points.sort(sortDayUp);
         break;
       case 'price':
-        this.#points.sort(sortMoneyUp);
+        points.sort(sortMoneyUp);
         break;
     }
 
     this.#clearPoints();
-    this.#renderPoints();
+    this.#renderPoints(points);
+    this.#renderSort();
+
 
   };
 
 
   #updatePoint = (point) => {
+    this.tripPointModel.updatePoints(point);
+
     const destinations = this.destinationsModel.convertDestinations();
     const offers = this.offersModel.convertOffers();
     const oldPoint = this.#pointsComponents.get(point.id);
@@ -133,17 +144,17 @@ class EventPresenter {
 
   };
 
-  #renderPoints = () => {
+  #renderPoints = (points) => {
     const destinations = this.destinationsModel.convertDestinations();
     const offers = this.offersModel.convertOffers();
 
-    if (this.#points.length === 0) {
+    if (points.length === 0) {
       render(this.#zeroPointComponent, this.eventComponent.getEventPointsList());
     }
 
-    for (let i = 0; i < this.#points.length; i++) {
-      this.#pointsComponents.set(this.#points[i].id, this.#createPoint(this.#points[i], destinations, offers));
-      render(this.#pointsComponents.get(this.#points[i].id) ,this.eventComponent.getEventPointsList());
+    for (let i = 0; i < points.length; i++) {
+      this.#pointsComponents.set(points[i].id, this.#createPoint(points[i], destinations, offers));
+      render(this.#pointsComponents.get(points[i].id) ,this.eventComponent.getEventPointsList());
     }
   };
 
@@ -151,14 +162,15 @@ class EventPresenter {
     this.#pointsComponents.forEach((component)=>{
       remove(component);
     });
+    this.#pointsComponents.clear();
   };
 
 
   init () {
-    this.#points = this.tripPointModel.getPoints();
+    const points = this.tripPointModel.getPoints();
     render(this.eventComponent, this.eventContainer);
     this.#renderSort();
-    this.#renderPoints();
+    this.#renderPoints(points);
   }
 }
 

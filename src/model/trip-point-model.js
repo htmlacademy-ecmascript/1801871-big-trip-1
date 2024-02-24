@@ -1,17 +1,22 @@
 import { mockPoints } from '../mock/points.js';
-import { mockOffers } from '../mock/offers.js';
+
 
 class TripPointModel {
   #points = Array.from(mockPoints);
-  #offers = mockOffers;
+
 
   getPoints() {
     return this.#points;
   }
 
-  getOffers() {
-    return this.#offers;
+  updatePoints (update) {
+
+    return this.#points.map((point)=> point.id === update.id ? update : point);
+
   }
 }
+
+
+
 
 export { TripPointModel };
