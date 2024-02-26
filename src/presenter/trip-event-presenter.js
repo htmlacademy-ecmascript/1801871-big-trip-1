@@ -43,7 +43,7 @@ class EventPresenter {
 
   #createEditPoint(point) {
     const destinations = this.destinationsModel.convertDestinations();
-    const offers = this.offersModel.convertOffers();
+    const offers = this.offersModel.getConvertedOffers();
 
     const pointEditComponent = new TripPointEditView({
       point: point,
@@ -136,7 +136,7 @@ class EventPresenter {
     this.tripPointModel.updatePoints(point);
 
     const destinations = this.destinationsModel.convertDestinations();
-    const offers = this.offersModel.convertOffers();
+    const offers = this.offersModel.getConvertedOffers;
     const oldPoint = this.#pointsComponents.get(point.id);
 
     this.#pointsComponents.set(point.id, this.#createPoint(point, destinations, offers));
@@ -146,7 +146,7 @@ class EventPresenter {
 
   #renderPoints = (points) => {
     const destinations = this.destinationsModel.convertDestinations();
-    const offers = this.offersModel.convertOffers();
+    const offers = this.offersModel.getConvertedOffers();
 
     if (points.length === 0) {
       render(this.#zeroPointComponent, this.eventComponent.getEventPointsList());
