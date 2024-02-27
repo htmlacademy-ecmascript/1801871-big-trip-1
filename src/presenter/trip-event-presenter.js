@@ -136,7 +136,7 @@ class EventPresenter {
     this.tripPointModel.updatePoints(point);
 
     const destinations = this.destinationsModel.convertDestinations();
-    const offers = this.offersModel.getConvertedOffers;
+    const offers = this.offersModel.getConvertedOffers();
     const oldPoint = this.#pointsComponents.get(point.id);
 
     this.#pointsComponents.set(point.id, this.#createPoint(point, destinations, offers));
