@@ -5,6 +5,7 @@ import { SortView } from '../view/sort-view.js';
 
 import { TripPointView } from '../view/trip-point-view.js';
 import { TripPointEditView } from '../view/trip-point-edit-view.js';
+import { TripPointNewView } from '../view/trip-point-new-view.js';
 import { ZeroPointView } from '../view/zero-points-view.js';
 
 import { CreateEventsView } from '../view/trip-events-view.js';
@@ -42,13 +43,15 @@ class EventPresenter {
   }
 
   #createEditPoint(point) {
+    const points = this.tripPointModel.getPoints();
     const destinations = this.destinationsModel.convertDestinations();
     const offers = this.offersModel.getConvertedOffers();
 
     const pointEditComponent = new TripPointEditView({
       point: point,
-      destination: destinations[point.destination],
-      offers: offers[point.type]
+      destinations: destinations,
+      offers: offers,
+      points: points
     });
     pointEditComponent.setCloseButtonClickHandler(this.#closeEditingMode);
     pointEditComponent.setSubmitFormHandler(this.#onEditPointSubmit);
@@ -147,6 +150,8 @@ class EventPresenter {
   #renderPoints = (points) => {
     const destinations = this.destinationsModel.convertDestinations();
     const offers = this.offersModel.getConvertedOffers();
+
+    // render(new TripPointNewView(), this.eventComponent.getEventPointsList());
 
     if (points.length === 0) {
       render(this.#zeroPointComponent, this.eventComponent.getEventPointsList());
