@@ -7,9 +7,9 @@ class OffersModel {
     return this.#offers;
   }
 
-  convertOffers(offers = this.#offers) {
+  getConvertedOffers() {
     const convertOffers = {};
-    offers.forEach((offer) => {
+    this.#offers.forEach((offer) => {
       convertOffers[offer.type] = offer.offers;
     });
     return convertOffers;

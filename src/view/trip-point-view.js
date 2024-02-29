@@ -74,6 +74,16 @@ class TripPointView extends AbstractView {
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#handleOpenButtonClick);
   }
 
+  #favoriteButtonClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#callbacks.favoriteButtonClickHandler(this.#point);
+  };
+
+  setFavoriteButtonClickHandler(callback) {
+    this.#callbacks.favoriteButtonClickHandler = callback;
+    this.element.querySelector('.event__favorite-btn').addEventListener('click', this.#favoriteButtonClickHandler);
+  }
+
 }
 
 export { TripPointView };
