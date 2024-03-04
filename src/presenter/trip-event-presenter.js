@@ -43,15 +43,13 @@ class EventPresenter {
   }
 
   #createEditPoint(point) {
-    const points = this.tripPointModel.getPoints();
     const destinations = this.destinationsModel.convertDestinations();
     const offers = this.offersModel.getConvertedOffers();
 
     const pointEditComponent = new TripPointEditView({
       point: point,
       destinations: destinations,
-      offers: offers,
-      points: points
+      offers: offers
     });
     pointEditComponent.setCloseButtonClickHandler(this.#closeEditingMode);
     pointEditComponent.setSubmitFormHandler(this.#onEditPointSubmit);
@@ -67,17 +65,18 @@ class EventPresenter {
     }
   };
 
-  #onEditPointSubmit = ()=> {
-    this.#closeEditingMode();
+  #onEditPointSubmit = (point)=> {
+    this.#closeEditingMode(point);
     document.removeEventListener('keydown', this.#onEscKeyDown);
   };
 
-  #closeEditingMode = () => {
+  #closeEditingMode = (point) => {
     if (this.#editingPoint) {
       replace(this.#pointsComponents.get(this.#editingPoint.id), this.#pointEditComponent);
       this.#pointEditComponent.removeElement();
       this.#pointEditComponent = null;
       this.#editingPoint = null;
+      this.#updatePoint(point);
     }
   };
 
@@ -97,11 +96,6 @@ class EventPresenter {
   };
 
   #renderSort = () => {
-    if (this.#sortComponent) {
-      const lastSortComponent = this.#sortComponent;
-      this.#sortComponent = new SortView(this.#lastSortType);
-      replace(lastSortComponent, this.#sortComponent);
-    }
     this.#sortComponent = new SortView(this.#lastSortType);
     this.#sortComponent.setSortTypeHandler(this.#handleSortType);
     render(this.#sortComponent, this.eventComponent.element, RenderPosition.AFTERBEGIN);
@@ -129,9 +123,6 @@ class EventPresenter {
 
     this.#clearPoints();
     this.#renderPoints(points);
-    this.#renderSort();
-
-
   };
 
 
