@@ -5,7 +5,6 @@ import { SortView } from '../view/sort-view.js';
 
 import { TripPointView } from '../view/trip-point-view.js';
 import { TripPointEditView } from '../view/trip-point-edit-view.js';
-import { TripPointNewView } from '../view/trip-point-new-view.js';
 import { ZeroPointView } from '../view/zero-points-view.js';
 
 import { CreateEventsView } from '../view/trip-events-view.js';
@@ -100,7 +99,6 @@ class EventPresenter {
     this.#sortComponent.setSortTypeHandler(this.#handleSortType);
     render(this.#sortComponent, this.eventComponent.element, RenderPosition.AFTERBEGIN);
   };
-
 
   #handleSortType = (type) => {
     const points = this.tripPointModel.getPoints();

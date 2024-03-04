@@ -101,7 +101,7 @@ class TripPointEditView extends AbstractStatefulView {
 
   get template() {
     return createTripPointEditTemplate(this._state);
-  };
+  }
 
   removeElement() {
     super.removeElement();
@@ -118,12 +118,6 @@ class TripPointEditView extends AbstractStatefulView {
   }
 
   static parseDataToState(point, destinations, offers) {
-    let a = {
-      point,
-      destinations,
-      offers
-    };
-    // console.log(a);
     return {
       point,
       destinations,
@@ -132,8 +126,8 @@ class TripPointEditView extends AbstractStatefulView {
   }
 
   parseStateToData = () => {
-    return this._state.point
-  }
+    return this._state.point;
+  };
 
   #submitFormHandler = (evt) => {
     evt.preventDefault();
