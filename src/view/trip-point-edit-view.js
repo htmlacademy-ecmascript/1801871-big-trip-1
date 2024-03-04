@@ -125,9 +125,8 @@ class TripPointEditView extends AbstractStatefulView {
     };
   }
 
-  parseStateToData = () => {
-    return this._state.point;
-  };
+  parseStateToData = () => this._state.point;
+
 
   #submitFormHandler = (evt) => {
     evt.preventDefault();
@@ -136,16 +135,16 @@ class TripPointEditView extends AbstractStatefulView {
   };
 
   setDatePickers = () => {
-    this.#dateFromPicker = flatpickr(this.element.querySelector("#event-start-time-1"), {
+    this.#dateFromPicker = flatpickr(this.element.querySelector('#event-start-time-1'), {
       dateFormat: 'd/m/y H:i',
-      altFormat: "Y-m-d",
+      altFormat: 'Y-m-d',
       defaultDate: this._state.point.dateFrom,
       onClose: this.#dateCloseHandlerTo,
       enableTime: true
     },);
-    this.#dateToPicker = flatpickr(this.element.querySelector("#event-end-time-1"),{
+    this.#dateToPicker = flatpickr(this.element.querySelector('#event-end-time-1'),{
       dateFormat: 'd/m/y H:i',
-      altFormat: "Y-m-d",
+      altFormat: 'Y-m-d',
       defaultDate: this._state.point.dateTo,
       onClose: this.#dateCloseHandlerFrom,
       enableTime: true
@@ -153,24 +152,24 @@ class TripPointEditView extends AbstractStatefulView {
   };
 
   #dateCloseHandlerTo = ([date]) => {
-    let updateDate = new Date(date).toISOString();
+    const updateDate = new Date(date).toISOString();
     this.updateElement({
       point: {
         ...this._state.point,
         dateTo: updateDate
       }
-    })
-  }
+    });
+  };
 
   #dateCloseHandlerFrom = ([date]) => {
-    let updateDate = new Date(date).toISOString();
+    const updateDate = new Date(date).toISOString();
     this.updateElement({
       point: {
         ...this._state.point,
         dateFrom: updateDate
       }
-    })
-  }
+    });
+  };
 
   tripTypeHandler = (evt) => {
     evt.preventDefault();
@@ -181,7 +180,7 @@ class TripPointEditView extends AbstractStatefulView {
         type: evt.target.value,
         offers: []
       }
-    })
+    });
   };
 
   destinationHandler = (evt) => {
@@ -194,16 +193,16 @@ class TripPointEditView extends AbstractStatefulView {
             ...this._state.point,
             destination: optionList[i].dataset.destinationId
           }
-        })
+        });
       }
     }
 
   };
 
 
-  updateSelectedOffersInState= () => {
-    let offers = [];
-    this.element.querySelectorAll('.event__offer-checkbox:checked').forEach(input => offers.push(input.dataset.offerId));
+  updateSelectedOffersInState = () => {
+    const offers = [];
+    this.element.querySelectorAll('.event__offer-checkbox:checked').forEach((input) => offers.push(input.dataset.offerId));
 
     this._setState({
       point: {
@@ -211,7 +210,7 @@ class TripPointEditView extends AbstractStatefulView {
         offers: offers
 
       }
-    })
+    });
   };
 
   _restoreHandlers() {
@@ -225,7 +224,7 @@ class TripPointEditView extends AbstractStatefulView {
   setDestinationHandler = (callback) => {
     this.#callbacks.destinationHandler = callback;
     this.element.querySelector('#event-destination-1').addEventListener('input', this.#callbacks.destinationHandler);
-  }
+  };
 
   setTripTypeHandler(callback) {
     this.#callbacks.tripTypeHandler = callback;
@@ -241,9 +240,6 @@ class TripPointEditView extends AbstractStatefulView {
     this.#callbacks.submitFormHandler = callback;
     this.element.querySelector('form').addEventListener('submit', this.#submitFormHandler);
   }
-
-
-
 }
 
 export { TripPointEditView };
