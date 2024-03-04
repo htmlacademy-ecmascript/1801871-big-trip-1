@@ -65,17 +65,21 @@ class EventPresenter {
   };
 
   #onEditPointSubmit = (point)=> {
-    this.#closeEditingMode(point);
+    this.tripPointModel.updatePoints(point);
+    const destinations = this.destinationsModel.convertDestinations();
+    const offers = this.offersModel.getConvertedOffers();
+
+    this.#pointsComponents.set(point.id, this.#createPoint(point, destinations, offers));
+    this.#closeEditingMode();
     document.removeEventListener('keydown', this.#onEscKeyDown);
   };
 
-  #closeEditingMode = (point) => {
+  #closeEditingMode = () => {
     if (this.#editingPoint) {
       replace(this.#pointsComponents.get(this.#editingPoint.id), this.#pointEditComponent);
       this.#pointEditComponent.removeElement();
       this.#pointEditComponent = null;
       this.#editingPoint = null;
-      this.#updatePoint(point);
     }
   };
 

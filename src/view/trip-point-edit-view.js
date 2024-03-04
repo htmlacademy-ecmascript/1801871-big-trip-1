@@ -134,6 +134,11 @@ class TripPointEditView extends AbstractStatefulView {
     this.#callbacks.submitFormHandler(this.parseStateToData());
   };
 
+  #closeButtonClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#callbacks.closeButtonClickHandler();
+  }
+
   setDatePickers = () => {
     this.#dateFromPicker = flatpickr(this.element.querySelector('#event-start-time-1'), {
       dateFormat: 'd/m/y H:i',
@@ -233,7 +238,7 @@ class TripPointEditView extends AbstractStatefulView {
 
   setCloseButtonClickHandler(callback) {
     this.#callbacks.closeButtonClickHandler = callback;
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', callback);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#closeButtonClickHandler);
   }
 
   setSubmitFormHandler (callback) {
