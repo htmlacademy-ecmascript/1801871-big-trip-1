@@ -137,7 +137,7 @@ class TripPointEditView extends AbstractStatefulView {
   #closeButtonClickHandler = (evt) => {
     evt.preventDefault();
     this.#callbacks.closeButtonClickHandler();
-  }
+  };
 
   setDatePickers = () => {
     this.#dateFromPicker = flatpickr(this.element.querySelector('#event-start-time-1'), {
