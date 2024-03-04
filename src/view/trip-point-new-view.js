@@ -1,4 +1,4 @@
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 
 function createTripPointNewTemplate() {
   return `
@@ -146,7 +146,7 @@ function createTripPointNewTemplate() {
 `;
 }
 
-class TripPointNewView extends AbstractView {
+class TripPointNewView extends AbstractStatefulView{
   get template() {
     return createTripPointNewTemplate();
   }

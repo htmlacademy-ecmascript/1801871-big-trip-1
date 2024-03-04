@@ -1,6 +1,6 @@
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 
-function createNewSortTemplate(type) {
+function createNewSortTemplate({type}) {
   return `
   <form class="trip-events__trip-sort  trip-sort" action="#" method="get">
     <div class="trip-sort__item  trip-sort__item--day">
@@ -29,27 +29,41 @@ function createNewSortTemplate(type) {
 }
 
 
-class SortView extends AbstractView {
-  #type = null;
+class SortView extends AbstractStatefulView {
   #callbacks = {};
 
   constructor (type) {
     super();
-    this.#type = type;
+    this._setState(SortView.parseDataToState(type));
   }
 
   get template() {
-    return createNewSortTemplate(this.#type);
+    return createNewSortTemplate(this._state);
+  }
+
+  static parseDataToState(type) {
+    return {
+      type: type
+    };
   }
 
   sortType = (evt) => {
     if (evt.target.tagName !== 'INPUT') {
       return;
     }
-    this.#type = evt.target.dataset.sortType;
     evt.preventDefault();
+
+    this.updateElement({
+      type:evt.target.dataset.sortType
+    });
+
     this.#callbacks.sortTypeHandler(evt.target.dataset.sortType);
+
   };
+
+  _restoreHandlers() {
+    this.setSortTypeHandler(this.#callbacks.sortTypeHandler);
+  }
 
   setSortTypeHandler = (callback) => {
     this.#callbacks.sortTypeHandler = callback;

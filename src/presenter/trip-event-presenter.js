@@ -47,8 +47,8 @@ class EventPresenter {
 
     const pointEditComponent = new TripPointEditView({
       point: point,
-      destination: destinations[point.destination],
-      offers: offers[point.type]
+      destinations: destinations,
+      offers: offers
     });
     pointEditComponent.setCloseButtonClickHandler(this.#closeEditingMode);
     pointEditComponent.setSubmitFormHandler(this.#onEditPointSubmit);
@@ -64,7 +64,12 @@ class EventPresenter {
     }
   };
 
-  #onEditPointSubmit = ()=> {
+  #onEditPointSubmit = (point)=> {
+    this.tripPointModel.updatePoints(point);
+    const destinations = this.destinationsModel.convertDestinations();
+    const offers = this.offersModel.getConvertedOffers();
+
+    this.#pointsComponents.set(point.id, this.#createPoint(point, destinations, offers));
     this.#closeEditingMode();
     document.removeEventListener('keydown', this.#onEscKeyDown);
   };
@@ -94,16 +99,10 @@ class EventPresenter {
   };
 
   #renderSort = () => {
-    if (this.#sortComponent) {
-      const lastSortComponent = this.#sortComponent;
-      this.#sortComponent = new SortView(this.#lastSortType);
-      replace(lastSortComponent, this.#sortComponent);
-    }
     this.#sortComponent = new SortView(this.#lastSortType);
     this.#sortComponent.setSortTypeHandler(this.#handleSortType);
     render(this.#sortComponent, this.eventComponent.element, RenderPosition.AFTERBEGIN);
   };
-
 
   #handleSortType = (type) => {
     const points = this.tripPointModel.getPoints();
@@ -126,9 +125,6 @@ class EventPresenter {
 
     this.#clearPoints();
     this.#renderPoints(points);
-    this.#renderSort();
-
-
   };
 
 
@@ -147,6 +143,8 @@ class EventPresenter {
   #renderPoints = (points) => {
     const destinations = this.destinationsModel.convertDestinations();
     const offers = this.offersModel.getConvertedOffers();
+
+    // render(new TripPointNewView(), this.eventComponent.getEventPointsList());
 
     if (points.length === 0) {
       render(this.#zeroPointComponent, this.eventComponent.getEventPointsList());
