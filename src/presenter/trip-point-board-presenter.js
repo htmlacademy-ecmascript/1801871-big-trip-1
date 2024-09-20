@@ -1,7 +1,7 @@
 import { render } from '../render';
 
-import TripPointEditView from '../view/trip-point/trip-point-edit-view';
-import TripPointView from '../view/trip-point/trip-point-view';
+import TripPointEditView from '../view/trip-point-edit-view';
+import TripPointView from '../view/trip-point-view';
 
 
 export default class TripPointBoardPresenter{
