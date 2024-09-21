@@ -41,6 +41,10 @@ const createTripPointTemplate = () =>
   `;
 
 export default class TripPointView {
+  constructor () {
+
+  }
+
   getTemplate() {
     return createTripPointTemplate();
   }
