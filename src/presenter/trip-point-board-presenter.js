@@ -29,16 +29,7 @@ export default class TripPointBoardPresenter{
     render(new TripPointEditView({point:this.points.get('4'), offers:this.offers, destination:this.destinations[this.points.get('4').destination]}), this.tripEventsListContainer);
 
     for (const point of this.points.entries()) {
-      // console.log(this.destinations[point[1].destination]);
       render(new TripPointView({point:point[1],offers:this.offers, destination:this.destinations[point[1].destination]}), this.tripEventsListContainer);
     }
-
-    // console.log(this.offers);
-    // console.log(this.destinations);
-
-
-    // render(new TripPointView(), this.tripEventsListContainer);
-
   }
-
 }
