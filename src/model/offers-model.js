@@ -6,13 +6,8 @@ export default class OffersModel {
   getOffers () {
     const convertedOffers = {};
     this.offers.forEach((offer)=>{
-      convertedOffers[offer.type] = {};
-      offer.offers.forEach((singleOffer)=> {
-        convertedOffers[offer.type][singleOffer.id] = {
-          title:singleOffer.title,
-          price:singleOffer.price,
-        };
-      });
+      convertedOffers[offer.type] = offer.offers;
+
     });
     return convertedOffers;
   }

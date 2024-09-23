@@ -7,7 +7,7 @@ const mockDestination = [
   },
   {
     'id': '2ce7b3bb-ee15-4f13-95f0-550b57a9426f',
-    'description': 'Amsterdam - with a beautiful old town',
+    'description': 'Amsterdam - with a beautiful old town, Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque dolor massa, malesuada eget elit vitae, sollicitudin rutrum nisi. Praesent ut gravida purus, nec commodo odio. Interdum et malesuada fames ac ante ipsum primis in faucibus.',
     'name': 'Amsterdam',
     'pictures': [
       {
