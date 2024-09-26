@@ -23,9 +23,13 @@ export default class TripPointBoardPresenter{
     this.offers = offersModel.getOffers();
     this.destinations = destinationsModel.getDestinations();
 
+    this.blankPoint = this.tripPointsModel.getBlankPoint();
+
   }
 
   init() {
+    render(new TripPointEditView({point:this.blankPoint, offers:this.offers, destination:this.destinations[this.blankPoint.destination], isNewPoint:true}), this.tripEventsListContainer);
+
     render(new TripPointEditView({point:this.points.get('4'), offers:this.offers, destination:this.destinations[this.points.get('4').destination]}), this.tripEventsListContainer);
 
     for (const point of this.points.entries()) {
