@@ -145,18 +145,23 @@ const createTripEditTemplate = (point, offers, destination, isNewPoint) =>
   `;
 
 export default class TripPointEditView extends AbstractView {
+  #point = null;
+  #offers = null;
+  #destination = null;
+  #isNewPoint = null;
+
   constructor (
     {point, offers, destination, isNewPoint = false}
   ) {
     super();
-    this.point = point;
-    this.offers = offers;
-    this.destination = destination;
-    this.isNewPoint = isNewPoint;
+    this.#point = point;
+    this.#offers = offers;
+    this.#destination = destination;
+    this.#isNewPoint = isNewPoint;
   }
 
   get template() {
-    return createTripEditTemplate(this.point, this.offers[this.point.type], this.destination, this.isNewPoint);
+    return createTripEditTemplate(this.#point, this.#offers[this.#point.type], this.#destination, this.#isNewPoint);
   }
 
 }

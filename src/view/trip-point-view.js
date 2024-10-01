@@ -44,17 +44,21 @@ const createTripPointTemplate = (point, offers, destination,) =>
   `;
 
 export default class TripPointView extends AbstractView{
+  #point = null;
+  #offers = null;
+  #destination = null;
+
   constructor (
     {point, offers, destination}
   ) {
     super();
-    this.point = point;
-    this.offers = offers;
-    this.destinaion = destination;
+    this.#point = point;
+    this.#offers = offers;
+    this.#destination = destination;
   }
 
   get template() {
-    return createTripPointTemplate(this.point, this.offers[this.point.type], this.destinaion);
+    return createTripPointTemplate(this.#point, this.#offers[this.#point.type], this.#destination);
   }
 
 }

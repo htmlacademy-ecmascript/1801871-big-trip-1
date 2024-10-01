@@ -7,20 +7,22 @@ import InfoView from '../view/info-view';
 
 
 export default class FilterPresenter{
+  #tripFilterCategoryContainer = null;
+  #tripHeaderContainer = null;
   constructor(
     {
       tripFilterCategoryContainer,
       tripHeaderContainer
     }
   ){
-    this.tripFilterCategoryContainer = tripFilterCategoryContainer;
-    this.tripHeaderContainer = tripHeaderContainer;
+    this.#tripFilterCategoryContainer = tripFilterCategoryContainer;
+    this.#tripHeaderContainer = tripHeaderContainer;
   }
 
   init() {
-    render(new FilterCategoryView(), this.tripFilterCategoryContainer);
-    render(new InfoView(), this.tripHeaderContainer);
-    render(new FilterTimeView(), this.tripHeaderContainer);
-    render(new AddNewTripButtonView(), this.tripHeaderContainer);
+    render(new FilterCategoryView(), this.#tripFilterCategoryContainer);
+    render(new InfoView(), this.#tripHeaderContainer);
+    render(new FilterTimeView(), this.#tripHeaderContainer);
+    render(new AddNewTripButtonView(), this.#tripHeaderContainer);
   }
 }
