@@ -1,4 +1,4 @@
-import { render } from '../render';
+import { render } from '../framework/render';
 
 import FilterCategoryView from '../view/filter-category-view';
 import FilterTimeView from '../view/filter-time-view';

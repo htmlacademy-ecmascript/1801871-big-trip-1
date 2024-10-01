@@ -1,4 +1,4 @@
-import { render } from '../render';
+import { render } from '../framework/render';
 
 import TripPointEditView from '../view/trip-point-edit-view';
 import TripPointView from '../view/trip-point-view';
@@ -28,12 +28,11 @@ export default class TripPointBoardPresenter{
   }
 
   init() {
-    render(new TripPointEditView({point:this.blankPoint, offers:this.offers, destination:this.destinations[this.blankPoint.destination], isNewPoint:true}), this.tripEventsListContainer);
-
-    render(new TripPointEditView({point:this.points.get('4'), offers:this.offers, destination:this.destinations[this.points.get('4').destination]}), this.tripEventsListContainer);
-
     for (const point of this.points.entries()) {
       render(new TripPointView({point:point[1],offers:this.offers, destination:this.destinations[point[1].destination]}), this.tripEventsListContainer);
+    }
+    for (const point of this.points.entries()) {
+      render(new TripPointEditView({point:point[1],offers:this.offers, destination:this.destinations[point[1].destination]}), this.tripEventsListContainer);
     }
   }
 }

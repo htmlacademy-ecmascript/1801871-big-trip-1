@@ -1,6 +1,5 @@
-import { createElement } from '../render.js';
-
 import { formatDate } from '../utils.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 
 const createOffesTemplate = (point, offers) =>
@@ -145,29 +144,19 @@ const createTripEditTemplate = (point, offers, destination, isNewPoint) =>
   </li>
   `;
 
-export default class TripPointEditView {
+export default class TripPointEditView extends AbstractView {
   constructor (
     {point, offers, destination, isNewPoint = false}
   ) {
+    super();
     this.point = point;
     this.offers = offers;
     this.destination = destination;
     this.isNewPoint = isNewPoint;
   }
 
-  getTemplate() {
+  get template() {
     return createTripEditTemplate(this.point, this.offers[this.point.type], this.destination, this.isNewPoint);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
 }
