@@ -5,6 +5,7 @@ import TripPointView from '../view/trip-point-view';
 
 
 export default class TripPointBoardPresenter{
+  #componentList = new Map();
   #tripEventsListContainer = null;
 
   #tripPointsModel = null;
@@ -16,6 +17,12 @@ export default class TripPointBoardPresenter{
   #destinations = null;
 
   #blankPoint = null;
+
+
+  #clickHandler = () => {
+    console.log(this);
+  };
+
   constructor(
     {
       tripEventsListContainer,
@@ -40,10 +47,15 @@ export default class TripPointBoardPresenter{
 
   init() {
     for (const point of this.#points.entries()) {
-      render(new TripPointView({point:point[1],offers:this.#offers, destination:this.#destinations[point[1].destination]}), this.#tripEventsListContainer);
-    }
-    for (const point of this.#points.entries()) {
-      render(new TripPointEditView({point:point[1],offers:this.#offers, destination:this.#destinations[point[1].destination]}), this.#tripEventsListContainer);
+      this.#renderPoint(point, this.#offers, this.#destinations);
     }
   }
+
+  #renderPoint (point,offers,destinations) {
+    const pointComponent = new TripPointView({point:point[1],offers:offers, destination:destinations[point[1].destination], onEditClick:this.#clickHandler});
+    this.#componentList.set(point[0], pointComponent);
+    render(pointComponent, this.#tripEventsListContainer);
+  }
+
+
 }
