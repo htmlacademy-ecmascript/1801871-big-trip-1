@@ -1,4 +1,4 @@
-import { render } from '../framework/render';
+import { render, replace } from '../framework/render';
 
 import TripPointEditView from '../view/trip-point-edit-view';
 import TripPointView from '../view/trip-point-view';
@@ -18,10 +18,6 @@ export default class TripPointBoardPresenter{
 
   #blankPoint = null;
 
-
-  #clickHandler = () => {
-    console.log(this);
-  };
 
   constructor(
     {
@@ -51,8 +47,31 @@ export default class TripPointBoardPresenter{
     }
   }
 
+  #onEditClick = (point) => {
+    this.#replaceToEdit(point);
+  };
+
+  #onCloseClick = (point) => {
+    this.#replaceToEdit(point);
+  };
+
+
+  #replaceToEdit(point) {
+    let newPointComnponent;
+    if(this.#componentList.get(point[0]) instanceof TripPointView) {
+      newPointComnponent = new TripPointEditView({point:point,offers:this.#offers, destination:this.#destinations, onCloseClick:this.#onCloseClick});
+    }
+    if(this.#componentList.get(point[0]) instanceof TripPointEditView) {
+      newPointComnponent = new TripPointView({point:point,offers:this.#offers, destination:this.#destinations, onEditClick:this.#onEditClick});
+    }
+    replace(newPointComnponent, this.#componentList.get(point[0]));
+
+    this.#componentList.set(point[0], newPointComnponent);
+  }
+
+
   #renderPoint (point,offers,destinations) {
-    const pointComponent = new TripPointView({point:point[1],offers:offers, destination:destinations[point[1].destination], onEditClick:this.#clickHandler});
+    const pointComponent = new TripPointView({point:point, offers:offers, destination:destinations, onEditClick:this.#onEditClick});
     this.#componentList.set(point[0], pointComponent);
     render(pointComponent, this.#tripEventsListContainer);
   }

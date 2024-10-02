@@ -65,14 +65,12 @@ export default class TripPointView extends AbstractView{
   }
 
   get template() {
-    return createTripPointTemplate(this.#point, this.#offers[this.#point.type], this.#destination);
+    return createTripPointTemplate(this.#point[1], this.#offers[this.#point[1].type], this.#destination[this.#point[1].destination]);
   }
 
   #clickHandler = (evt) => {
     evt.preventDefault();
-    console.log('click');
-    console.log(evt.target);
-    this.#onEditClick();
+    this.#onEditClick(this.#point);
   };
 
 
