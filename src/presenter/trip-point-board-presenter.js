@@ -58,14 +58,24 @@ export default class TripPointBoardPresenter{
 
   #replaceToEdit(point) {
     let newPointComnponent;
+
+    const escKeyDownHandler = (evt) => {
+      if (evt.key === 'Escape') {
+        evt.preventDefault();
+        this.#replaceToEdit(point);
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
+    };
+
     if(this.#componentList.get(point[0]) instanceof TripPointView) {
       newPointComnponent = new TripPointEditView({point:point,offers:this.#offers, destination:this.#destinations, onCloseClick:this.#onCloseClick});
+      document.addEventListener('keydown', escKeyDownHandler);
     }
     if(this.#componentList.get(point[0]) instanceof TripPointEditView) {
       newPointComnponent = new TripPointView({point:point,offers:this.#offers, destination:this.#destinations, onEditClick:this.#onEditClick});
+      document.removeEventListener('keydown', escKeyDownHandler);
     }
     replace(newPointComnponent, this.#componentList.get(point[0]));
-
     this.#componentList.set(point[0], newPointComnponent);
   }
 
