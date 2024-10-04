@@ -48,21 +48,21 @@ export default class TripPointBoardPresenter{
   }
 
   #onEditClick = (point) => {
-    this.#replaceToEdit(point);
+    this.#replacePoint(point);
   };
 
   #onCloseClick = (point) => {
-    this.#replaceToEdit(point);
+    this.#replacePoint(point);
   };
 
 
-  #replaceToEdit(point) {
+  #replacePoint(point) {
     let newPointComnponent;
 
     const escKeyDownHandler = (evt) => {
       if (evt.key === 'Escape') {
         evt.preventDefault();
-        this.#replaceToEdit(point);
+        this.#replacePoint(point);
         document.removeEventListener('keydown', escKeyDownHandler);
       }
     };
