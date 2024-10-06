@@ -3,6 +3,8 @@ import { render, replace } from '../framework/render';
 import TripPointEditView from '../view/trip-point-edit-view';
 import TripPointView from '../view/trip-point-view';
 
+import TripPointZeroView from '../view/zero-point-view';
+
 
 export default class TripPointBoardPresenter{
   #componentList = new Map();
@@ -42,8 +44,13 @@ export default class TripPointBoardPresenter{
   }
 
   init() {
-    for (const point of this.#points.entries()) {
-      this.#renderPoint(point, this.#offers, this.#destinations);
+    if(this.#points.size === 0) {
+
+      render(new TripPointZeroView(), this.#tripEventsListContainer);
+    } else {
+      for (const point of this.#points.entries()) {
+        this.#renderPoint(point, this.#offers, this.#destinations);
+      }
     }
   }
 

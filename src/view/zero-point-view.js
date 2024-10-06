@@ -5,7 +5,7 @@ const createZeroTemplate = () =>
   `;
 
 export default class TripPointZeroView extends AbstractView{
-  get templateemplate() {
+  get template() {
     return createZeroTemplate();
   }
 }
