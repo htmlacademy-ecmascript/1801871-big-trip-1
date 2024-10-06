@@ -1,8 +1,33 @@
-import { createElement } from '../render.js';
+import { formatDate } from '../utils.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
-import dayjs from 'dayjs';
 
-const createTripEditTemplate = (point, offers, destination) =>
+const createOffesTemplate = (point, offers) =>
+  `
+  ${offers.map((offer) =>
+    `<div class="event__offer-selector">
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.title}-1" type="checkbox" name="event-offer-${offer.title}"
+           ${point.offers.includes(offer.id) ? 'checked' : ''}>
+        <label class="event__offer-label" for="event-offer-${offer.title}-1">
+          <span class="event__offer-title">${offer.title}</span>
+          &plus;&euro;&nbsp;
+          <span class="event__offer-price">${offer.price}</span>
+        </label>
+      </div>`).join('')}
+`;
+
+const createGaleryTemplate = (destinaion) =>
+  `<div class="event__photos-container">
+    <div class="event__photos-tape">
+    ${destinaion.pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">
+      `).join('')}
+    </div>
+  </div>
+
+
+`;
+
+const createTripEditTemplate = (point, offers, destination, isNewPoint) =>
   `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
       <header class="event__header">
@@ -79,10 +104,10 @@ const createTripEditTemplate = (point, offers, destination) =>
 
         <div class="event__field-group  event__field-group--time">
           <label class="visually-hidden" for="event-start-time-1">From</label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dayjs(new Date(point.date_from)).format('DD/MM/YY HH:mm')}">
+          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${formatDate(point.date_from,'DD/MM/YY HH:mm')}">
           &mdash;
           <label class="visually-hidden" for="event-end-time-1">To</label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dayjs(new Date(point.date_to)).format('DD/MM/YY HH:mm')}">
+          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${formatDate(point.date_to,'DD/MM/YY HH:mm')}">
         </div>
 
         <div class="event__field-group  event__field-group--price">
@@ -103,16 +128,8 @@ const createTripEditTemplate = (point, offers, destination) =>
         <section class="event__section  event__section--offers">
           <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
-          <div class="event__available-offers">
-        ${offers.map((offer) => `<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.title}-1" type="checkbox" name="event-offer-${offer.title}"
-           ${point.offers.includes(offer.id) ? 'checked' : ''}>
-        <label class="event__offer-label" for="event-offer-${offer.title}-1">
-          <span class="event__offer-title">${offer.title}</span>
-          &plus;&euro;&nbsp;
-          <span class="event__offer-price">${offer.price}</span>
-        </label>
-      </div>`).join('')}
+        <div class="event__available-offers">
+          ${createOffesTemplate(point, offers)}
         </div>
 
         </section>
@@ -120,35 +137,44 @@ const createTripEditTemplate = (point, offers, destination) =>
         <section class="event__section  event__section--destination">
           <h3 class="event__section-title  event__section-title--destination">Destination</h3>
           <p class="event__destination-description">${destination.description}</p>
+          ${isNewPoint ? createGaleryTemplate(destination) : ''}
         </section>
       </section>
     </form>
   </li>
   `;
 
-export default class TripPointEditView {
+export default class TripPointEditView extends AbstractView {
+  #point = null;
+  #offers = null;
+  #destination = null;
+  #isNewPoint = null;
+
+  #onCloseClick = null;
+
   constructor (
-    {point, offers, destination}
+    {point, offers, destination, onCloseClick, isNewPoint = false}
   ) {
-    this.point = point;
-    this.offers = offers;
-    this.destination = destination;
+    super();
+    this.#point = point;
+    this.#offers = offers;
+    this.#destination = destination;
+
+    this.#isNewPoint = isNewPoint;
+
+    this.#onCloseClick = onCloseClick;
+
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#clickHandler);
 
   }
 
-  getTemplate() {
-    return createTripEditTemplate(this.point, this.offers[this.point.type], this.destination);
+  #clickHandler = (evt) => {
+    evt.preventDefault();
+    this.#onCloseClick(this.#point);
+  };
+
+  get template() {
+    return createTripEditTemplate(this.#point[1], this.#offers[this.#point[1].type], this.#destination[this.#point[1].destination], this.#isNewPoint);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
 }

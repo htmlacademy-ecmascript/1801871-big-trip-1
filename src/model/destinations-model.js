@@ -1,11 +1,11 @@
 import { mockDestination } from '../mock/mock-destination';
 
 export default class DestinationsModel {
-  destinations = mockDestination;
+  #destinations = mockDestination;
 
-  getDestinations () {
+  get destinations () {
     const convertedDestinations = {};
-    this.destinations.forEach((destination)=>{
+    this.#destinations.forEach((destination)=>{
       convertedDestinations[destination.id] = {
         'description': destination.description,
         'name': destination.name,

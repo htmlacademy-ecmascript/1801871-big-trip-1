@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+// import duration from 'dayjs';
 
 // eslint-disable-next-line no-undef
 const duration = require('dayjs/plugin/duration');
@@ -17,13 +18,17 @@ function getDateDiff(dateFrom, dateTo) {
 
 
   if (days > 0) {
-    return `${durations.format('DD')}D ${durations.format('HH')}H ${durations.format('mm')}M`;
+    return durations.format('DD[D] HH[H] mm[M]');
   }
   if (hours > 0) {
-    return `${durations.format('HH')}H ${durations.format('mm')}M`;
+    return durations.format('HH[H] mm[M]');
   }
 
-  return `${durations.format('mm')}M`;
+  return durations.format('mm[M]');
 }
 
-export { getDateDiff };
+function formatDate(date, format) {
+  return dayjs(new Date(date)).format(format);
+}
+
+export { getDateDiff, formatDate };

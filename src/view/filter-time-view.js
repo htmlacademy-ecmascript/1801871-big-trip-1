@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 const filterTimeTemplate = () =>
   `
@@ -32,20 +32,8 @@ const filterTimeTemplate = () =>
   </div>
   `;
 
-export default class FilterTimeView {
-  getTemplate() {
+export default class FilterTimeView extends AbstractView{
+  get template() {
     return filterTimeTemplate();
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }

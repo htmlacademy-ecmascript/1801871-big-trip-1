@@ -1,22 +1,21 @@
-import { createElement } from '../render.js';
-import { getDateDiff } from '../utils.js';
+import { getDateDiff, formatDate } from '../utils.js';
 
-import dayjs from 'dayjs';
+import AbstractView from '../framework/view/abstract-view.js';
 
 
 const createTripPointTemplate = (point, offers, destination,) =>
   `         <li class="trip-events__item">
               <div class="event">
-                <time class="event__date" datetime="${dayjs(new Date(point.date_from)).format('YYYY-MM-DD')}">${dayjs(new Date(point.date_from)).format('MMM DD')}</time>
+                <time class="event__date" datetime="${formatDate(point.date_from, 'YYYY-MM-DD')}">${formatDate(point.date_from, 'MMM DD')}</time>
                 <div class="event__type">
                   <img class="event__type-icon" width="42" height="42" src="img/icons/${point.type}.png" alt="Event type icon">
                 </div>
                 <h3 class="event__title">${point.type} ${destination.name}</h3>
                 <div class="event__schedule">
                   <p class="event__time">
-                    <time class="event__start-time" datetime="${point.date_from}">${dayjs(new Date(point.date_from)).format('HH:mm')}</time>
+                    <time class="event__start-time" datetime="${point.date_from}">${formatDate(point.date_from, 'HH:mm')}</time>
                     &mdash;
-                    <time class="event__end-time" datetime="${point.date_to}">${dayjs(new Date(point.date_to)).format('HH:mm')}</time>
+                    <time class="event__end-time" datetime="${point.date_to}">${formatDate(point.date_to, 'HH:mm')}</time>
                   </p>
                   <p class="event__duration">${getDateDiff(point.date_from, point.date_to)}</p>
                 </div>
@@ -44,28 +43,35 @@ const createTripPointTemplate = (point, offers, destination,) =>
             </li>
   `;
 
-export default class TripPointView {
+export default class TripPointView extends AbstractView{
+  #point = null;
+  #offers = null;
+  #destination = null;
+
+  #onEditClick = null;
+
   constructor (
-    {point, offers, destination}
+    {point, offers, destination, onEditClick}
   ) {
-    this.point = point;
-    this.offers = offers;
-    this.destinaion = destination;
+    super();
+    this.#point = point;
+    this.#offers = offers;
+    this.#destination = destination;
+
+    this.#onEditClick = onEditClick;
+
+
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#clickHandler);
   }
 
-  getTemplate() {
-    return createTripPointTemplate(this.point, this.offers[this.point.type], this.destinaion);
+  get template() {
+    return createTripPointTemplate(this.#point[1], this.#offers[this.#point[1].type], this.#destination[this.#point[1].destination]);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
+  #clickHandler = (evt) => {
+    evt.preventDefault();
+    this.#onEditClick(this.#point);
+  };
 
-    return this.element;
-  }
 
-  removeElement() {
-    this.element = null;
-  }
 }
