@@ -1,12 +1,12 @@
-import { render, replace } from '../framework/render';
+import { render, replace, remove } from '../framework/render';
 
 import TripPointEditView from '../view/trip-point-edit-view';
 import TripPointView from '../view/trip-point-view';
 
 
 export default class TripPointPresenter{
-  #currentPoint = null;
-  #currentPointType = null;
+  #currentComponent = null;
+  #currentComponentType = null;
 
 
   #tripEventsListContainer = null;
@@ -14,17 +14,21 @@ export default class TripPointPresenter{
   #offers = null;
   #destinations = null;
 
+  #handelPointChange = null;
+
   constructor(
     {
       offers,
       destinations,
-      tripEventsListContainer
+      tripEventsListContainer,
+      handelPointChange
     }
   ){
     this.#tripEventsListContainer = tripEventsListContainer;
 
     this.#offers = offers;
     this.#destinations = destinations;
+    this.#handelPointChange = handelPointChange;
   }
 
   #onEditClick = (point) => {
@@ -33,6 +37,12 @@ export default class TripPointPresenter{
 
   #onCloseClick = (point) => {
     this.#replacePoint(point);
+  };
+
+  #onFavorieClick = (point) => {
+    console.log('#onFavorieClick');
+    point[1].is_favorite = !point[1].is_favorite;
+    this.#handelPointChange(point);
   };
 
   #replacePoint(point) {
@@ -46,24 +56,28 @@ export default class TripPointPresenter{
       }
     };
 
-    if(this.#currentPointType === 'View') {
+    if(this.#currentComponentType === 'View') {
       newPointComnponent = new TripPointEditView({point:point,offers:this.#offers, destination:this.#destinations, onCloseClick:this.#onCloseClick});
       document.addEventListener('keydown', escKeyDownHandler);
     }
-    if(this.#currentPointType === 'Edit') {
-      newPointComnponent = new TripPointView({point:point,offers:this.#offers, destination:this.#destinations, onEditClick:this.#onEditClick});
+    if(this.#currentComponentType === 'Edit') {
+      newPointComnponent = new TripPointView({point:point,offers:this.#offers, destination:this.#destinations, onEditClick:this.#onEditClick, onFavoriteClick:this.#onFavorieClick});
       document.removeEventListener('keydown', escKeyDownHandler);
     }
-    replace(newPointComnponent, this.#currentPoint);
-    this.#currentPoint = newPointComnponent;
-    this.#currentPointType = this.#currentPointType === 'View' ? 'Edit' : 'View';
+    replace(newPointComnponent, this.#currentComponent);
+    this.#currentComponent = newPointComnponent;
+    this.#currentComponentType = this.#currentComponentType === 'View' ? 'Edit' : 'View';
   }
 
 
   renderPoint (point) {
-    const pointComponent = new TripPointView({point:point, offers:this.#offers, destination:this.#destinations, onEditClick:this.#onEditClick});
-    this.#currentPointType = 'View';
-    this.#currentPoint = pointComponent;
+    const pointComponent = new TripPointView({point:point, offers:this.#offers, destination:this.#destinations, onEditClick:this.#onEditClick, onFavoriteClick:this.#onFavorieClick});
+    this.#currentComponentType = 'View';
+    this.#currentComponent = pointComponent;
     render(pointComponent, this.#tripEventsListContainer);
+  }
+
+  remove() {
+    remove(this.#currentComponent);
   }
 }

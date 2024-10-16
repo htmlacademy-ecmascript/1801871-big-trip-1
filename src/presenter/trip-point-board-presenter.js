@@ -6,8 +6,9 @@ import TripPointZeroView from '../view/zero-point-view';
 
 
 export default class TripPointBoardPresenter{
-
   #tripEventsListContainer = null;
+
+  #componentList = new Map();
 
   #tripPointsModel = null;
   #offersModel = null;
@@ -38,19 +39,34 @@ export default class TripPointBoardPresenter{
   }
 
   init() {
+    console.log(this.#points);
 
     if (this.#points.size === 0) {
       render(new TripPointZeroView(), this.#tripEventsListContainer);
     } else{
       for (const point of this.#points.entries()) {
-        this.renderPresenter(point);
+        this.#renderPresenter(point);
+
       }
     }
   }
 
-
-  renderPresenter = (point) => {
-    const pointPresenter = new TripPointPresenter({offers:this.#offers, destinations:this.#destinations, tripEventsListContainer:this.#tripEventsListContainer});
-    pointPresenter.renderPoint(point);
+  #handelPointChange = (updatePoint) => {
+    this.#points.set(updatePoint[0],updatePoint[1]);
+    // console.log(this.#points);
+    // console.log(updatePoint);
+    console.log(this.#points.get(updatePoint[0]));
   };
+
+
+  #renderPresenter = (point) => {
+    const pointPresenter = new TripPointPresenter({offers:this.#offers, destinations:this.#destinations, tripEventsListContainer:this.#tripEventsListContainer, handelPointChange:this.#handelPointChange});
+    pointPresenter.renderPoint(point);
+    this.#componentList.set(point[0],pointPresenter);
+  };
+
+  removePoint (point) {
+    this.#componentList.get(point[0]).remove();
+
+  }
 }
