@@ -16,12 +16,15 @@ export default class TripPointPresenter{
 
   #handelPointChange = null;
 
+  #handelTypeChange = null;
+
   constructor(
     {
       offers,
       destinations,
       tripEventsListContainer,
-      handelPointChange
+      handelPointChange,
+      handelTypeChange
     }
   ){
     this.#tripEventsListContainer = tripEventsListContainer;
@@ -29,6 +32,7 @@ export default class TripPointPresenter{
     this.#offers = offers;
     this.#destinations = destinations;
     this.#handelPointChange = handelPointChange;
+    this.#handelTypeChange = handelTypeChange;
   }
 
   #onEditClick = (point) => {
@@ -40,7 +44,7 @@ export default class TripPointPresenter{
   };
 
   #onFavorieClick = (point) => {
-    console.log('#onFavorieClick');
+    // eslint-disable-next-line camelcase
     point[1].is_favorite = !point[1].is_favorite;
     this.#handelPointChange(point);
   };
@@ -59,6 +63,7 @@ export default class TripPointPresenter{
     if(this.#currentComponentType === 'View') {
       newPointComnponent = new TripPointEditView({point:point,offers:this.#offers, destination:this.#destinations, onCloseClick:this.#onCloseClick});
       document.addEventListener('keydown', escKeyDownHandler);
+      this.#handelTypeChange();
     }
     if(this.#currentComponentType === 'Edit') {
       newPointComnponent = new TripPointView({point:point,offers:this.#offers, destination:this.#destinations, onEditClick:this.#onEditClick, onFavoriteClick:this.#onFavorieClick});
@@ -77,7 +82,20 @@ export default class TripPointPresenter{
     render(pointComponent, this.#tripEventsListContainer);
   }
 
+  replace(point) {
+    const pointComponent = new TripPointView({point:point, offers:this.#offers, destination:this.#destinations, onEditClick:this.#onEditClick, onFavoriteClick:this.#onFavorieClick});
+    this.#currentComponentType = 'View';
+    replace(pointComponent, this.#currentComponent);
+    this.#currentComponent = pointComponent;
+  }
+
   remove() {
     remove(this.#currentComponent);
+  }
+
+  resetView(point) {
+    if (this.#currentComponentType !== 'View') {
+      this.#replacePoint(point);
+    }
   }
 }
