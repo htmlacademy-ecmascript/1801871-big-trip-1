@@ -31,4 +31,28 @@ function formatDate(date, format) {
   return dayjs(new Date(date)).format(format);
 }
 
-export { getDateDiff, formatDate };
+
+function sortListFuture (points) {
+  const now = Date.now();
+  return Array.from(points).filter((point) => Date.parse(point[1].date_from) > now);
+}
+
+function sortListPast (points) {
+  const now = Date.now();
+  return Array.from(points).filter((point) => Date.parse(point[1].date_from) < now);
+}
+
+function sortListPresent (points) {
+  const now = dayjs();
+
+  return Array.from(points).filter((point) =>{
+    const startDate = dayjs(point[1].date_from);
+    const differenceInMilliseconds = now.diff(startDate);
+    const durations = dayjs.duration(differenceInMilliseconds).days();
+
+    return durations === 0;
+  });
+}
+
+
+export { getDateDiff, formatDate, sortListFuture, sortListPast, sortListPresent };

@@ -31,7 +31,8 @@ const tripPointBoardPresenter = new TripPointBoardPresenter ({
 
 const filterPresenter = new FilterPresenter ({
   tripFilterCategoryContainer:tripFilterCategoryContainer,
-  tripHeaderContainer:tripHeaderContainer
+  tripHeaderContainer:tripHeaderContainer,
+  tripPointBoardPresenter: tripPointBoardPresenter
 });
 
 
