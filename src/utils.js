@@ -32,17 +32,17 @@ function formatDate(date, format) {
 }
 
 
-function sortListFuture (points) {
+function filterListFuture (points) {
   const now = Date.now();
   return Array.from(points).filter((point) => Date.parse(point[1].date_from) > now);
 }
 
-function sortListPast (points) {
+function filterListPast (points) {
   const now = Date.now();
   return Array.from(points).filter((point) => Date.parse(point[1].date_from) < now);
 }
 
-function sortListPresent (points) {
+function filterListPresent (points) {
   const now = dayjs();
 
   return Array.from(points).filter((point) =>{
@@ -55,4 +55,4 @@ function sortListPresent (points) {
 }
 
 
-export { getDateDiff, formatDate, sortListFuture, sortListPast, sortListPresent };
+export { getDateDiff, formatDate, filterListFuture, filterListPast, filterListPresent };

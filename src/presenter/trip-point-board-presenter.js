@@ -1,6 +1,6 @@
 import { render, remove } from '../framework/render';
-import {SortType } from '../const';
-import { sortListFuture, sortListPresent, sortListPast } from '../utils';
+import { FilterType } from '../const';
+import { filterListFuture, filterListPresent, filterListPast } from '../utils';
 
 import TripPointPresenter from '../presenter/trip-point-presenter';
 
@@ -87,19 +87,22 @@ export default class TripPointBoardPresenter{
   }
 
 
-  sortBoard (sortType) {
+  filterBoard (filterType) {
     this.#clearBoard();
 
-    if(sortType === SortType.FUTURE){
-      this.#points = new Map(sortListFuture(this.#points));
+    if(filterType === FilterType.FUTURE){
+      this.#points = this.#tripPointsModel.points;
+      this.#points = new Map(filterListFuture(this.#points));
     }
-    if(sortType === SortType.PRESENT){
-      this.#points = new Map(sortListPresent(this.#points));
+    if(filterType === FilterType.PRESENT){
+      this.#points = this.#tripPointsModel.points;
+      this.#points = new Map(filterListPresent(this.#points));
     }
-    if(sortType === SortType.PAST){
-      this.#points = new Map(sortListPast(this.#points));
+    if(filterType === FilterType.PAST){
+      this.#points = this.#tripPointsModel.points;
+      this.#points = new Map(filterListPast(this.#points));
     }
-    if(sortType === SortType.EVERYTHING){
+    if(filterType === FilterType.EVERYTHING){
       this.#points = this.#tripPointsModel.points;
     }
     this.#renderBoard();

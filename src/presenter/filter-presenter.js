@@ -5,7 +5,7 @@ import FilterTimeView from '../view/filter-time-view';
 import AddNewTripButtonView from '../view/add-new-trip-button-view';
 import InfoView from '../view/info-view';
 
-import {SortType} from '../const.js';
+import {FilterType} from '../const.js';
 
 
 export default class FilterPresenter{
@@ -13,7 +13,8 @@ export default class FilterPresenter{
   #tripHeaderContainer = null;
   #tripPointBoardPresenter = null;
 
-  #currentSortType = SortType.EVERYTHING;
+  #currentFilterType = FilterType.EVERYTHING;
+  #currentSortCategory = null;
 
   constructor(
     {
@@ -28,14 +29,22 @@ export default class FilterPresenter{
   }
 
   init() {
-    render(new FilterCategoryView(), this.#tripFilterCategoryContainer);
+    render(new FilterCategoryView({ handleSortCategoryChange: this.#handleSortCategoryChange}), this.#tripFilterCategoryContainer);
     render(new InfoView(), this.#tripHeaderContainer);
-    render(new FilterTimeView({ handleSortTypeChange:this.#handleSortTypeChange}), this.#tripHeaderContainer);
+    render(new FilterTimeView({ handleFilterTypeChange:this.#handleFilterTypeChange}), this.#tripHeaderContainer);
     render(new AddNewTripButtonView(), this.#tripHeaderContainer);
   }
 
 
-  #handleSortTypeChange = (sortType) => {
+  #handleFilterTypeChange = (filterType) => {
+    if(filterType === this.#currentFilterType) {
+      return;
+    }
+    this.#currentFilterType = filterType;
+    this.#tripPointBoardPresenter.filterBoard(filterType);
+  };
+
+  #handleSortCategoryChange = (sortType) => {
     this.#tripPointBoardPresenter.sortBoard(sortType);
   };
 }

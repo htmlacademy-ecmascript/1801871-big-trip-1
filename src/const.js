@@ -1,11 +1,10 @@
 
-const SortType = {
+const FilterType = {
   EVERYTHING: 'Everything',
   FUTURE: 'Future',
   PRESENT: 'Present',
-  PAST: 'Past',
-  TEST: 'Test'
+  PAST: 'Past'
 };
 
 
-export { SortType };
+export { FilterType };
