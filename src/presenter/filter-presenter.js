@@ -45,6 +45,10 @@ export default class FilterPresenter{
   };
 
   #handleSortCategoryChange = (sortType) => {
-    this.#tripPointBoardPresenter.sortBoard(sortType);
+    // this.#tripPointBoardPresenter.sortBoard(sortType);
+    console.log(sortType);
   };
+
+
 }
+
