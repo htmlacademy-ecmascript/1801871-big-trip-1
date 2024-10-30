@@ -3,8 +3,8 @@ const mockPoints =
   {
     'id': '0',
     'base_price': 970,
-    'date_from': '2029-02-23T13:05:46.876Z',
-    'date_to': '2029-02-24T08:05:46.876Z',
+    'date_from': '2029-10-24T13:05:46.876Z',
+    'date_to': '2029-10-30T08:05:46.876Z',
     'destination': 'ba5f43a3-d91d-45dc-b83f-a28fa3faebec',
     'is_favorite': false,
     'offers': [],
@@ -13,8 +13,8 @@ const mockPoints =
   {
     'id': '1',
     'base_price': 1647,
-    'date_from': '2029-02-24T08:05:46.876Z',
-    'date_to': '2029-02-25T14:05:46.876Z',
+    'date_from': '2027-02-24T08:05:46.876Z',
+    'date_to': '2027-02-25T14:05:46.876Z',
     'destination': 'a2b1a841-f72b-4e13-a3a7-dc9686835641',
     'is_favorite': false,
     'offers': [],
