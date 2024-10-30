@@ -1,6 +1,6 @@
 import { render, remove } from '../framework/render';
-import { FilterType } from '../const';
-import { filterListFuture, filterListPresent, filterListPast } from '../utils';
+import { FilterType, SortType } from '../const';
+import { filterListFuture, filterListPresent, filterListPast, sortListDay, sortListPrice, sortListTime } from '../utils';
 
 import TripPointPresenter from '../presenter/trip-point-presenter';
 
@@ -104,6 +104,33 @@ export default class TripPointBoardPresenter{
     }
     if(filterType === FilterType.EVERYTHING){
       this.#points = this.#tripPointsModel.points;
+    }
+    this.#renderBoard();
+
+
+  }
+
+  sortBoard (sortType) {
+    this.#clearBoard();
+
+    if(sortType === SortType.DAY){
+      this.#points = this.#tripPointsModel.points;
+      this.#points = new Map(sortListDay(this.#points));
+
+    }
+    if(sortType === SortType.EVENT){
+      this.#points = this.#tripPointsModel.points;
+    }
+    if(sortType === SortType.OFFERS){
+      this.#points = this.#tripPointsModel.points;
+    }
+    if(sortType === SortType.PRICE){
+      this.#points = this.#tripPointsModel.points;
+      this.#points = new Map(sortListPrice(this.#points));
+    }
+    if(sortType === SortType.TIME){
+      this.#points = this.#tripPointsModel.points;
+      this.#points = new Map(sortListTime(this.#points));
     }
     this.#renderBoard();
 

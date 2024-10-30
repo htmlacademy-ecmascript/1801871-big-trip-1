@@ -5,7 +5,7 @@ import FilterTimeView from '../view/filter-time-view';
 import AddNewTripButtonView from '../view/add-new-trip-button-view';
 import InfoView from '../view/info-view';
 
-import {FilterType} from '../const.js';
+import {FilterType , SortType} from '../const.js';
 
 
 export default class FilterPresenter{
@@ -14,7 +14,7 @@ export default class FilterPresenter{
   #tripPointBoardPresenter = null;
 
   #currentFilterType = FilterType.EVERYTHING;
-  #currentSortCategory = null;
+  #currentSortCategory = SortType.DAY;
 
   constructor(
     {
@@ -45,8 +45,11 @@ export default class FilterPresenter{
   };
 
   #handleSortCategoryChange = (sortType) => {
-    // this.#tripPointBoardPresenter.sortBoard(sortType);
-    console.log(sortType);
+    if(sortType === this.#currentSortCategory) {
+      return;
+    }
+    this.#currentSortCategory = sortType;
+    this.#tripPointBoardPresenter.sortBoard(sortType);
   };
 
 

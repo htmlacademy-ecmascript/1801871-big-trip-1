@@ -39,7 +39,7 @@ function filterListFuture (points) {
 
 function filterListPast (points) {
   const now = Date.now();
-  return Array.from(points).filter((point) => Date.parse(point[1].date_from) < now);
+  return Array.from(points).filter((point) => Date.parse(point[1].date_to) < now);
 }
 
 function filterListPresent (points) {
@@ -47,12 +47,58 @@ function filterListPresent (points) {
 
   return Array.from(points).filter((point) =>{
     const startDate = dayjs(point[1].date_from);
-    const differenceInMilliseconds = now.diff(startDate);
-    const durations = dayjs.duration(differenceInMilliseconds).days();
+    const dateEnd = dayjs(point[1].date_to);
 
-    return durations === 0;
+
+    return now >= startDate && now <= dateEnd;
+  });
+}
+
+function sortListDay (points) {
+  return Array.from(points).sort((a, b) => {
+    if (dayjs(a[1].date_from) > dayjs(b[1].date_from)) {
+      return 1;
+    }
+    if (dayjs(a[1].date_from) < dayjs(b[1].date_from)) {
+      return -1;
+    }
+    return 0;
+  });
+}
+
+function sortListPrice (points) {
+  return Array.from(points).sort((a, b) => {
+    if (dayjs(a[1].base_price) < dayjs(b[1].base_price)) {
+      return 1;
+    }
+    if (dayjs(a[1].base_price) > dayjs(b[1].base_price)) {
+      return -1;
+    }
+    return 0;
+  });
+}
+
+function sortListTime (points) {
+
+
+  return Array.from(points).sort((a, b) => {
+    const startDateA = dayjs(a[1].date_from);
+    const endDateA = dayjs(a[1].date_to);
+    const differenceInMillisecondsA = endDateA.diff(startDateA);
+
+    const startDateB = dayjs(b[1].date_from);
+    const endDateB = dayjs(b[1].date_to);
+    const differenceInMillisecondsB = endDateB.diff(startDateB);
+
+    if (differenceInMillisecondsA < differenceInMillisecondsB) {
+      return 1;
+    }
+    if (differenceInMillisecondsA > differenceInMillisecondsB) {
+      return -1;
+    }
+    return 0;
   });
 }
 
 
-export { getDateDiff, formatDate, filterListFuture, filterListPast, filterListPresent };
+export { getDateDiff, formatDate, filterListFuture, filterListPast, filterListPresent, sortListDay, sortListPrice, sortListTime };
