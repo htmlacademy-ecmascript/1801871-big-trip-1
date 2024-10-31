@@ -5,7 +5,7 @@ import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 
 const createOffesTemplate = (point, offers) =>
   `
-  ${offers.map((offer) =>
+  ${offers[point.type].map((offer) =>
     `<div class="event__offer-selector">
         <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.title}-1" type="checkbox" name="event-offer-${offer.title}" data-offer-id="${offer.id}"
            ${point.offers.includes(offer.id) ? 'checked' : ''}>
@@ -29,7 +29,7 @@ const createGaleryTemplate = (destinaion) =>
 `;
 
 
-const createTripEditTemplate = (point, offers, destination, isNewPoint) =>
+const createTripEditTemplate = ({point, offers, destinations, isNewPoint}) =>
   `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
       <header class="event__header">
@@ -96,11 +96,10 @@ const createTripEditTemplate = (point, offers, destination, isNewPoint) =>
           <label class="event__label  event__type-output" for="event-destination-1">
           ${point.type}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destinations[point.destination].name}" list="destination-list-1">
           <datalist id="destination-list-1">
-            <option value="Amsterdam"></option>
-            <option value="Geneva"></option>
-            <option value="Chamonix"></option>
+          ${Object.values(destinations).map((destinaion)=>`<option value="${destinaion.name}"></option>`
+  ).join('')}
           </datalist>
         </div>
 
@@ -138,8 +137,8 @@ const createTripEditTemplate = (point, offers, destination, isNewPoint) =>
 
         <section class="event__section  event__section--destination">
           <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-          <p class="event__destination-description">${destination.description}</p>
-          ${isNewPoint ? createGaleryTemplate(destination) : ''}
+          <p class="event__destination-description">${destinations[point.destination].description}</p>
+          ${isNewPoint ? createGaleryTemplate(destinations[point.destination]) : ''}
         </section>
       </section>
     </form>
@@ -147,7 +146,6 @@ const createTripEditTemplate = (point, offers, destination, isNewPoint) =>
   `;
 
 export default class TripPointEditView extends AbstractStatefulView {
-  #isNewPoint = null;
 
   #onCloseClick = null;
   #onSubmitPoint = null;
@@ -158,13 +156,12 @@ export default class TripPointEditView extends AbstractStatefulView {
     super();
     console.log(point);
 
-    this.#isNewPoint = isNewPoint;
 
     this.#onCloseClick = onCloseClick;
     this.#onSubmitPoint = onSubmitPoint;
 
-    this._setState(TripPointEditView.convertDataToState(point, offers, destinations));
-    console.log(this._state);
+    this._setState(TripPointEditView.convertDataToState(point, offers, destinations, isNewPoint));
+    console.log(Object.values(this._state.destinations));
 
 
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#clickHandler);
@@ -172,7 +169,7 @@ export default class TripPointEditView extends AbstractStatefulView {
 
   }
 
-  static convertDataToState = (point, offers, destinations) => ({
+  static convertDataToState = (point, offers, destinations, isNewPoint) => ({
     point: {
       id:point[0],
       ...point[1]
@@ -182,10 +179,16 @@ export default class TripPointEditView extends AbstractStatefulView {
     },
     destinations: {
       ...destinations
-    }
+    },
+    isNewPoint: isNewPoint
   });
 
-  static convertStateToDate = (state) => state;
+  static convertStateToDate = (state) => {
+    const point = state.point;
+    const id = point.id;
+    delete point.id;
+    return [id, point];
+  };
 
   #clickHandler = () => {
     this.#onCloseClick(TripPointEditView.convertStateToDate(this._state));
@@ -193,26 +196,25 @@ export default class TripPointEditView extends AbstractStatefulView {
 
   #submitHandler = (evt) => {
     evt.preventDefault();
-    this.#X();
+    this.#updateSelectedOffersInState();
     this.#onSubmitPoint(TripPointEditView.convertStateToDate(this._state));
   };
 
-  #X = () => {
+  #updateSelectedOffersInState = () => {
     const offers = [];
-    this.element.querySelectorAll('.event__offer-checkbox:checked').forEach((offer)=>offers.push(offer.id));
+    this.element.querySelectorAll('.event__offer-checkbox:checked').forEach((offer)=>offers.push(offer.dataset.offerId));
     this._setState({
-      1: {
-        ...this._state[1],
-        offers:offers
+      point: {
+        ...this._state.point,
+        offers: offers
+
       }
     });
-
-    console.log(this._state);
   };
 
   get template() {
-    // return createTripEditTemplate(this._state[1], this.#offers[this._state[1].type], this.#destination[this._state[1].destination], this.#isNewPoint);
-    return 'gwegwe';
+    return createTripEditTemplate(this._state);
+
   }
 
 }

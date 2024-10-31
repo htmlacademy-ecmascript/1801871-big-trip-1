@@ -50,8 +50,6 @@ export default class TripPointPresenter{
   };
 
   #onSubmitPoint = (point) => {
-    console.log('point');
-    console.log(point);
     this.#handelPointChange(point);
   };
 
