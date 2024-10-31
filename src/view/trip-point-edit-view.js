@@ -98,7 +98,7 @@ const createTripEditTemplate = ({point, offers, destinations, isNewPoint}) =>
           </label>
           <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destinations[point.destination].name}" list="destination-list-1">
           <datalist id="destination-list-1">
-          ${Object.values(destinations).map((destinaion)=>`<option value="${destinaion.name}"></option>`
+          ${Object.values(destinations).map((destinaion)=>`<option value="${destinaion.name}" '></option>`
   ).join('')}
           </datalist>
         </div>
@@ -149,24 +149,21 @@ export default class TripPointEditView extends AbstractStatefulView {
 
   #onCloseClick = null;
   #onSubmitPoint = null;
+  #point = null;
 
   constructor (
     {point, offers, destinations, onCloseClick, onSubmitPoint, isNewPoint = false}
   ) {
     super();
-    console.log(point);
+    this.#point = point;
 
 
     this.#onCloseClick = onCloseClick;
     this.#onSubmitPoint = onSubmitPoint;
 
     this._setState(TripPointEditView.convertDataToState(point, offers, destinations, isNewPoint));
-    console.log(Object.values(this._state.destinations));
 
-
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#clickHandler);
-    this.element.querySelector('.event--edit').addEventListener('submit', this.#submitHandler);
-
+    this._restoreHandlers();
   }
 
   static convertDataToState = (point, offers, destinations, isNewPoint) => ({
@@ -191,7 +188,7 @@ export default class TripPointEditView extends AbstractStatefulView {
   };
 
   #clickHandler = () => {
-    this.#onCloseClick(TripPointEditView.convertStateToDate(this._state));
+    this.#onCloseClick(this.#point);
   };
 
   #submitHandler = (evt) => {
@@ -211,6 +208,37 @@ export default class TripPointEditView extends AbstractStatefulView {
       }
     });
   };
+
+  #onDestinationChange = (evt) => {
+    const destinationId = Object.entries(this._state.destinations).find((destinaion)=>destinaion[1].name === evt.target.value)[0];
+    this._setState({
+      point: {
+        ...this._state.point,
+        destination:destinationId
+
+      }
+    });
+
+    this.updateElement(this._state);
+  };
+
+  #onTypeChange = (evt) => {
+    this._setState({
+      point: {
+        ...this._state.point,
+        offers:'',
+        type:evt.target.value
+      }
+    });
+    this.updateElement(this._state);
+  };
+
+  _restoreHandlers() {
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#clickHandler);
+    this.element.querySelector('.event--edit').addEventListener('submit', this.#submitHandler);
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#onDestinationChange);
+    this.element.querySelector('.event__type-group').addEventListener('change', this.#onTypeChange);
+  }
 
   get template() {
     return createTripEditTemplate(this._state);
