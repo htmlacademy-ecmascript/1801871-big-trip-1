@@ -49,6 +49,12 @@ export default class TripPointPresenter{
     this.#handelPointChange(point);
   };
 
+  #onSubmitPoint = (point) => {
+    console.log('point');
+    console.log(point);
+    this.#handelPointChange(point);
+  };
+
   #replacePoint(point) {
     let newPointComnponent;
 
@@ -60,13 +66,15 @@ export default class TripPointPresenter{
       }
     };
 
+
     if(this.#currentComponentType === 'View') {
-      newPointComnponent = new TripPointEditView({point:point,offers:this.#offers, destination:this.#destinations, onCloseClick:this.#onCloseClick});
+
+      newPointComnponent = new TripPointEditView({point:point,offers:this.#offers, destinations:this.#destinations, onCloseClick:this.#onCloseClick, onSubmitPoint:this.#onSubmitPoint});
       document.addEventListener('keydown', escKeyDownHandler);
       this.#handelTypeChange();
     }
     if(this.#currentComponentType === 'Edit') {
-      newPointComnponent = new TripPointView({point:point,offers:this.#offers, destination:this.#destinations, onEditClick:this.#onEditClick, onFavoriteClick:this.#onFavorieClick});
+      newPointComnponent = new TripPointView({point:point,offers:this.#offers, destinations:this.#destinations, onEditClick:this.#onEditClick, onFavoriteClick:this.#onFavorieClick});
       document.removeEventListener('keydown', escKeyDownHandler);
     }
     replace(newPointComnponent, this.#currentComponent);
@@ -76,14 +84,14 @@ export default class TripPointPresenter{
 
 
   renderPoint (point) {
-    const pointComponent = new TripPointView({point:point, offers:this.#offers, destination:this.#destinations, onEditClick:this.#onEditClick, onFavoriteClick:this.#onFavorieClick});
+    const pointComponent = new TripPointView({point:point, offers:this.#offers, destinations:this.#destinations, onEditClick:this.#onEditClick, onFavoriteClick:this.#onFavorieClick});
     this.#currentComponentType = 'View';
     this.#currentComponent = pointComponent;
     render(pointComponent, this.#tripEventsListContainer);
   }
 
   replace(point) {
-    const pointComponent = new TripPointView({point:point, offers:this.#offers, destination:this.#destinations, onEditClick:this.#onEditClick, onFavoriteClick:this.#onFavorieClick});
+    const pointComponent = new TripPointView({point:point, offers:this.#offers, destinations:this.#destinations, onEditClick:this.#onEditClick, onFavoriteClick:this.#onFavorieClick});
     this.#currentComponentType = 'View';
     replace(pointComponent, this.#currentComponent);
     this.#currentComponent = pointComponent;

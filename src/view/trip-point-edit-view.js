@@ -1,12 +1,13 @@
 import { formatDate } from '../utils.js';
-import AbstractView from '../framework/view/abstract-view.js';
+
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 
 
 const createOffesTemplate = (point, offers) =>
   `
   ${offers.map((offer) =>
     `<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.title}-1" type="checkbox" name="event-offer-${offer.title}"
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.title}-1" type="checkbox" name="event-offer-${offer.title}" data-offer-id="${offer.id}"
            ${point.offers.includes(offer.id) ? 'checked' : ''}>
         <label class="event__offer-label" for="event-offer-${offer.title}-1">
           <span class="event__offer-title">${offer.title}</span>
@@ -26,6 +27,7 @@ const createGaleryTemplate = (destinaion) =>
 
 
 `;
+
 
 const createTripEditTemplate = (point, offers, destination, isNewPoint) =>
   `<li class="trip-events__item">
@@ -144,38 +146,73 @@ const createTripEditTemplate = (point, offers, destination, isNewPoint) =>
   </li>
   `;
 
-export default class TripPointEditView extends AbstractView {
-  #point = null;
-  #offers = null;
-  #destination = null;
+export default class TripPointEditView extends AbstractStatefulView {
   #isNewPoint = null;
 
   #onCloseClick = null;
+  #onSubmitPoint = null;
 
   constructor (
-    {point, offers, destination, onCloseClick, isNewPoint = false}
+    {point, offers, destinations, onCloseClick, onSubmitPoint, isNewPoint = false}
   ) {
     super();
-    this.#point = point;
-    this.#offers = offers;
-    this.#destination = destination;
+    console.log(point);
 
     this.#isNewPoint = isNewPoint;
 
     this.#onCloseClick = onCloseClick;
+    this.#onSubmitPoint = onSubmitPoint;
+
+    this._setState(TripPointEditView.convertDataToState(point, offers, destinations));
+    console.log(this._state);
 
 
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#clickHandler);
-
+    this.element.querySelector('.event--edit').addEventListener('submit', this.#submitHandler);
 
   }
 
+  static convertDataToState = (point, offers, destinations) => ({
+    point: {
+      id:point[0],
+      ...point[1]
+    },
+    offers: {
+      ...offers
+    },
+    destinations: {
+      ...destinations
+    }
+  });
+
+  static convertStateToDate = (state) => state;
+
   #clickHandler = () => {
-    this.#onCloseClick(this.#point);
+    this.#onCloseClick(TripPointEditView.convertStateToDate(this._state));
+  };
+
+  #submitHandler = (evt) => {
+    evt.preventDefault();
+    this.#X();
+    this.#onSubmitPoint(TripPointEditView.convertStateToDate(this._state));
+  };
+
+  #X = () => {
+    const offers = [];
+    this.element.querySelectorAll('.event__offer-checkbox:checked').forEach((offer)=>offers.push(offer.id));
+    this._setState({
+      1: {
+        ...this._state[1],
+        offers:offers
+      }
+    });
+
+    console.log(this._state);
   };
 
   get template() {
-    return createTripEditTemplate(this.#point[1], this.#offers[this.#point[1].type], this.#destination[this.#point[1].destination], this.#isNewPoint);
+    // return createTripEditTemplate(this._state[1], this.#offers[this._state[1].type], this.#destination[this._state[1].destination], this.#isNewPoint);
+    return 'gwegwe';
   }
 
 }
