@@ -1,4 +1,5 @@
 import { formatDate } from '../utils.js';
+import flatpickr from 'flatpickr';
 
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 
@@ -149,7 +150,11 @@ export default class TripPointEditView extends AbstractStatefulView {
 
   #onCloseClick = null;
   #onSubmitPoint = null;
+
   #point = null;
+
+  #dateFromFaltpicker = null;
+  #dateToFaltpicker = null;
 
   constructor (
     {point, offers, destinations, onCloseClick, onSubmitPoint, isNewPoint = false}
@@ -162,6 +167,16 @@ export default class TripPointEditView extends AbstractStatefulView {
     this.#onSubmitPoint = onSubmitPoint;
 
     this._setState(TripPointEditView.convertDataToState(point, offers, destinations, isNewPoint));
+
+    // this.#dateFromFaltpicker = flatpickr(this.element.querySelector('#event-start-time-1'), {
+    //   enableTime: true,
+    //   dateFormat: 'Y-m-d H:i',
+    // });
+    // this.#dateToFaltpicker = flatpickr('#event-end-time-1', {
+    //   enableTime: true,
+    //   dateFormat: 'Y-m-d H:i',
+    // });
+    // console.log(this.#dateFromFaltpicker);
 
     this._restoreHandlers();
   }
