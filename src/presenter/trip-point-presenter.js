@@ -78,6 +78,7 @@ export default class TripPointPresenter{
       document.removeEventListener('keydown', this.#escKeyDownHandler);
     }
     replace(newPointComnponent, this.#currentComponent);
+    this.#currentComponent.removeElement();
     this.#currentComponent = newPointComnponent;
     this.#currentComponentType = this.#currentComponentType === 'View' ? 'Edit' : 'View';
   }

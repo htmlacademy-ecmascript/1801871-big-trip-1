@@ -170,8 +170,6 @@ export default class TripPointEditView extends AbstractStatefulView {
 
     this._setState(TripPointEditView.convertDataToState(point, offers, destinations, isNewPoint));
 
-    this.#setDatePickers();
-
     this._restoreHandlers();
   }
 
@@ -219,6 +217,20 @@ export default class TripPointEditView extends AbstractStatefulView {
     this.updateElement(this._state);
   };
 
+
+  removeElement() {
+    super.removeElement();
+
+    if (this.#dateToFaltpicker) {
+      this.#dateToFaltpicker.destroy();
+      this.#dateToFaltpicker = null;
+    }
+
+    if (this.#dateFromFaltpicker) {
+      this.#dateFromFaltpicker.destroy();
+      this.#dateFromFaltpicker = null;
+    }
+  }
 
   static convertDataToState = (point, offers, destinations, isNewPoint) => ({
     point: {
@@ -291,6 +303,7 @@ export default class TripPointEditView extends AbstractStatefulView {
     this.element.querySelector('.event--edit').addEventListener('submit', this.#submitHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#onDestinationChange);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#onTypeChange);
+    this.#setDatePickers();
   }
 
   get template() {
