@@ -92,6 +92,7 @@ export default class TripPointPresenter{
 
   renderNewPoint (point) {
     const pointComponent = new TripPointEditView({point:point,offers:this.#offers, destinations:this.#destinations, onCloseClick:this.#onCloseClick, onSubmitPoint:this.#onSubmitPoint, isNewPoint:true});
+    this.#handelTypeChange();
     this.#currentComponentType = 'Edit';
     this.#currentComponent = pointComponent;
     this.#point = point;
