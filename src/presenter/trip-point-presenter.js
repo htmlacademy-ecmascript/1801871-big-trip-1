@@ -17,6 +17,7 @@ export default class TripPointPresenter{
   #handelPointChange = null;
 
   #handelTypeChange = null;
+  #point = null;
 
   constructor(
     {
@@ -53,27 +54,28 @@ export default class TripPointPresenter{
     this.#handelPointChange(point);
   };
 
+  #escKeyDownHandler = (evt) => {
+    if (evt.key === 'Escape') {
+      evt.preventDefault();
+      this.#replacePoint(this.#point);
+      document.removeEventListener('keydown', this.#escKeyDownHandler);
+    }
+  };
+
   #replacePoint(point) {
     let newPointComnponent;
-
-    const escKeyDownHandler = (evt) => {
-      if (evt.key === 'Escape') {
-        evt.preventDefault();
-        this.#replacePoint(point);
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    };
+    this.#point = point;
 
 
     if(this.#currentComponentType === 'View') {
 
       newPointComnponent = new TripPointEditView({point:point,offers:this.#offers, destinations:this.#destinations, onCloseClick:this.#onCloseClick, onSubmitPoint:this.#onSubmitPoint});
-      document.addEventListener('keydown', escKeyDownHandler);
+      document.addEventListener('keydown', this.#escKeyDownHandler);
       this.#handelTypeChange();
     }
     if(this.#currentComponentType === 'Edit') {
       newPointComnponent = new TripPointView({point:point,offers:this.#offers, destinations:this.#destinations, onEditClick:this.#onEditClick, onFavoriteClick:this.#onFavorieClick});
-      document.removeEventListener('keydown', escKeyDownHandler);
+      document.removeEventListener('keydown', this.#escKeyDownHandler);
     }
     replace(newPointComnponent, this.#currentComponent);
     this.#currentComponent = newPointComnponent;
@@ -92,6 +94,8 @@ export default class TripPointPresenter{
     const pointComponent = new TripPointEditView({point:point,offers:this.#offers, destinations:this.#destinations, onCloseClick:this.#onCloseClick, onSubmitPoint:this.#onSubmitPoint, isNewPoint:true});
     this.#currentComponentType = 'Edit';
     this.#currentComponent = pointComponent;
+    this.#point = point;
+    document.addEventListener('keydown', this.#escKeyDownHandler);
     render(pointComponent, this.#tripEventsListContainer, 'afterbegin');
   }
 
