@@ -45,8 +45,7 @@ export default class TripPointBoardPresenter{
 
   init() {
     this.#renderBoard();
-    const pointPresenter = new TripPointPresenter({offers:this.#offers, destinations:this.#destinations, tripEventsListContainer:this.#tripEventsListContainer, handelPointChange:this.#handelPointChange, handelTypeChange:this.#handleTypeChange});
-    pointPresenter.renderPoint(this.#tripPointsModel.blankPoint, true);
+    this.#renderNewPoint();
   }
 
   #handelPointChange = (updatePoint) => {
@@ -86,6 +85,13 @@ export default class TripPointBoardPresenter{
         this.#createPresernter(point);
       }
     }
+  }
+
+  #renderNewPoint() {
+    const blankPoint = this.#tripPointsModel.blankPoint;
+    const pointPresenter = new TripPointPresenter({offers:this.#offers, destinations:this.#destinations, tripEventsListContainer:this.#tripEventsListContainer, handelPointChange:this.#handelPointChange, handelTypeChange:this.#handleTypeChange});
+    pointPresenter.renderNewPoint(this.#tripPointsModel.blankPoint);
+    this.#listPresernter.set(blankPoint[0],pointPresenter);
   }
 
 
