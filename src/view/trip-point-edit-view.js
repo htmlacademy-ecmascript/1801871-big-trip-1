@@ -1,5 +1,7 @@
 import { formatDate } from '../utils.js';
+
 import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
 
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 
@@ -168,18 +170,55 @@ export default class TripPointEditView extends AbstractStatefulView {
 
     this._setState(TripPointEditView.convertDataToState(point, offers, destinations, isNewPoint));
 
-    // this.#dateFromFaltpicker = flatpickr(this.element.querySelector('#event-start-time-1'), {
-    //   enableTime: true,
-    //   dateFormat: 'Y-m-d H:i',
-    // });
-    // this.#dateToFaltpicker = flatpickr('#event-end-time-1', {
-    //   enableTime: true,
-    //   dateFormat: 'Y-m-d H:i',
-    // });
-    // console.log(this.#dateFromFaltpicker);
+    this.#setDatePickers();
 
     this._restoreHandlers();
   }
+
+  #setDatePickers() {
+    this.#dateFromFaltpicker = flatpickr(this.element.querySelector('#event-start-time-1'), {
+      enableTime: true,
+      dateFormat: 'd/m/y H:i',
+      altFormat: 'Y-m-d',
+      defaultDate: this._state.point.date_from,
+      maxDate: this._state.point.date_to,
+      onClose: this.#updateSelecteDataFromInState
+    });
+    this.#dateToFaltpicker = flatpickr(this.element.querySelector('#event-end-time-1'), {
+      enableTime: true,
+      dateFormat: 'd/m/y H:i',
+      altFormat: 'Y-m-d',
+      defaultDate: this._state.point.date_to,
+      minDate: this._state.point.date_from,
+      onClose: this.#updateSelecteDataToInState
+    });
+
+  }
+
+  #updateSelecteDataToInState = ([date]) => {
+    const updateDate = new Date(date).toISOString();
+    this._setState({
+      point: {
+        ...this._state.point,
+        // eslint-disable-next-line camelcase
+        date_to:updateDate
+      }
+    });
+    this.updateElement(this._state);
+  };
+
+  #updateSelecteDataFromInState = ([date]) => {
+    const updateDate = new Date(date).toISOString();
+    this._setState({
+      point: {
+        ...this._state.point,
+        // eslint-disable-next-line camelcase
+        date_from:updateDate
+      }
+    });
+    this.updateElement(this._state);
+  };
+
 
   static convertDataToState = (point, offers, destinations, isNewPoint) => ({
     point: {
