@@ -218,7 +218,6 @@ export default class TripPointEditView extends AbstractStatefulView {
 
       }
     });
-
     this.updateElement(this._state);
   };
 

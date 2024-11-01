@@ -81,9 +81,16 @@ export default class TripPointPresenter{
   }
 
 
-  renderPoint (point) {
-    const pointComponent = new TripPointView({point:point, offers:this.#offers, destinations:this.#destinations, onEditClick:this.#onEditClick, onFavoriteClick:this.#onFavorieClick});
-    this.#currentComponentType = 'View';
+  renderPoint (point, isNew = false) {
+    let pointComponent;
+    if (isNew) {
+      pointComponent = new TripPointEditView({point:point,offers:this.#offers, destinations:this.#destinations, onCloseClick:this.#onCloseClick, onSubmitPoint:this.#onSubmitPoint, isNewPoint:true});
+      this.#currentComponentType = 'Edit';
+      this.#handelTypeChange();
+    } else{
+      pointComponent = new TripPointView({point:point, offers:this.#offers, destinations:this.#destinations, onEditClick:this.#onEditClick, onFavoriteClick:this.#onFavorieClick});
+      this.#currentComponentType = 'View';
+    }
     this.#currentComponent = pointComponent;
     render(pointComponent, this.#tripEventsListContainer);
   }

@@ -3,7 +3,12 @@ const mockDestination = [
     'id': '871888aa-5dbf-4601-b7dc-14eebf151f6c',
     'description': 'Monaco - with a beautiful old town',
     'name': 'Monaco',
-    'pictures': []
+    'pictures': [
+      {
+        'src': 'https://20.objects.htmlacademy.pro/static/destinations/8.jpg',
+        'description': 'Amsterdam famous for its crowded street markets with the best street food in Asia'
+      }
+    ]
   },
   {
     'id': '2ce7b3bb-ee15-4f13-95f0-550b57a9426f',
@@ -55,7 +60,12 @@ const mockDestination = [
     'id': 'ba5f43a3-d91d-45dc-b83f-a28fa3faebec',
     'description': 'Venice - with an embankment of a mighty river as a centre of attraction',
     'name': 'Venice',
-    'pictures': []
+    'pictures': [
+      {
+        'src': 'https://20.objects.htmlacademy.pro/static/destinations/5.jpg',
+        'description': 'Vien is a beautiful city'
+      }
+    ]
   },
   {
     'id': 'd7a45d4b-e2f1-46c7-b4ff-2d0aeb5dadf3',

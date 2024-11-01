@@ -24,7 +24,7 @@ export default class TripPointsModel {
 
 
   get blankPoint () {
-    return {
+    return [13,{
       'base_price': '1',
       'date_from': '2029-02-24T08:05:46.876Z',
       'date_to': '2029-02-24T08:05:46.876Z',
@@ -32,7 +32,7 @@ export default class TripPointsModel {
       'is_favorite': false,
       'offers': [],
       'type': 'taxi'
-    };
+    }];
   }
 
 }
