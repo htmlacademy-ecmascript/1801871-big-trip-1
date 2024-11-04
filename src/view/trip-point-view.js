@@ -46,19 +46,19 @@ const createTripPointTemplate = (point, offers, destination,) =>
 export default class TripPointView extends AbstractView{
   #point = null;
   #offers = null;
-  #destination = null;
+  #destinations = null;
 
   #onEditClick = null;
 
   #onFavoriteClick = null;
 
   constructor (
-    {point, offers, destination, onEditClick, onFavoriteClick,}
+    {point, offers, destinations, onEditClick, onFavoriteClick,}
   ) {
     super();
     this.#point = point;
     this.#offers = offers;
-    this.#destination = destination;
+    this.#destinations = destinations;
 
     this.#onEditClick = onEditClick;
 
@@ -70,7 +70,7 @@ export default class TripPointView extends AbstractView{
   }
 
   get template() {
-    return createTripPointTemplate(this.#point[1], this.#offers[this.#point[1].type], this.#destination[this.#point[1].destination]);
+    return createTripPointTemplate(this.#point[1], this.#offers[this.#point[1].type], this.#destinations[this.#point[1].destination]);
   }
 
   #editClickHandler = () => {

@@ -66,8 +66,11 @@ export default class TripPointBoardPresenter{
 
   #handleTypeChange = () => {
     this.#points.entries().forEach((point) => {
-      this.#listPresernter.get(point[0]).resetView(point);
+      if (this.#listPresernter.has(point[0])){
+        this.#listPresernter.get(point[0]).resetView(point);
+      }
     });
+
   };
 
   #clearBoard = () => {
@@ -84,6 +87,14 @@ export default class TripPointBoardPresenter{
         this.#createPresernter(point);
       }
     }
+  }
+
+  #renderNewPoint() {
+    const blankPoint = this.#tripPointsModel.blankPoint;
+    const pointPresenter = new TripPointPresenter({offers:this.#offers, destinations:this.#destinations, tripEventsListContainer:this.#tripEventsListContainer, handelPointChange:this.#handelPointChange, handelTypeChange:this.#handleTypeChange});
+    pointPresenter.renderNewPoint(this.#tripPointsModel.blankPoint);
+    this.#points.set(blankPoint[0],blankPoint[1]);
+    this.#listPresernter.set(blankPoint[0],pointPresenter);
   }
 
 

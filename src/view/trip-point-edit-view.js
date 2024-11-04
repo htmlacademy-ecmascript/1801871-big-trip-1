@@ -1,12 +1,16 @@
 import { formatDate } from '../utils.js';
-import AbstractView from '../framework/view/abstract-view.js';
+
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
+
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 
 
 const createOffesTemplate = (point, offers) =>
   `
-  ${offers.map((offer) =>
+  ${offers[point.type].map((offer) =>
     `<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.title}-1" type="checkbox" name="event-offer-${offer.title}"
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.title}-1" type="checkbox" name="event-offer-${offer.title}" data-offer-id="${offer.id}"
            ${point.offers.includes(offer.id) ? 'checked' : ''}>
         <label class="event__offer-label" for="event-offer-${offer.title}-1">
           <span class="event__offer-title">${offer.title}</span>
@@ -27,7 +31,8 @@ const createGaleryTemplate = (destinaion) =>
 
 `;
 
-const createTripEditTemplate = (point, offers, destination, isNewPoint) =>
+
+const createTripEditTemplate = ({point, offers, destinations, isNewPoint}) =>
   `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
       <header class="event__header">
@@ -94,11 +99,10 @@ const createTripEditTemplate = (point, offers, destination, isNewPoint) =>
           <label class="event__label  event__type-output" for="event-destination-1">
           ${point.type}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destinations[point.destination].name}" list="destination-list-1">
           <datalist id="destination-list-1">
-            <option value="Amsterdam"></option>
-            <option value="Geneva"></option>
-            <option value="Chamonix"></option>
+          ${Object.values(destinations).map((destinaion)=>`<option value="${destinaion.name}" '></option>`
+  ).join('')}
           </datalist>
         </div>
 
@@ -136,46 +140,175 @@ const createTripEditTemplate = (point, offers, destination, isNewPoint) =>
 
         <section class="event__section  event__section--destination">
           <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-          <p class="event__destination-description">${destination.description}</p>
-          ${isNewPoint ? createGaleryTemplate(destination) : ''}
+          <p class="event__destination-description">${destinations[point.destination].description}</p>
+          ${isNewPoint ? createGaleryTemplate(destinations[point.destination]) : ''}
         </section>
       </section>
     </form>
   </li>
   `;
 
-export default class TripPointEditView extends AbstractView {
-  #point = null;
-  #offers = null;
-  #destination = null;
-  #isNewPoint = null;
+export default class TripPointEditView extends AbstractStatefulView {
 
   #onCloseClick = null;
+  #onSubmitPoint = null;
+
+  #point = null;
+
+  #dateFromFaltpicker = null;
+  #dateToFaltpicker = null;
 
   constructor (
-    {point, offers, destination, onCloseClick, isNewPoint = false}
+    {point, offers, destinations, onCloseClick, onSubmitPoint, isNewPoint = false}
   ) {
     super();
     this.#point = point;
-    this.#offers = offers;
-    this.#destination = destination;
 
-    this.#isNewPoint = isNewPoint;
 
     this.#onCloseClick = onCloseClick;
+    this.#onSubmitPoint = onSubmitPoint;
 
+    this._setState(TripPointEditView.convertDataToState(point, offers, destinations, isNewPoint));
 
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#clickHandler);
+    this._restoreHandlers();
+  }
 
+  #setDatePickers() {
+    this.#dateFromFaltpicker = flatpickr(this.element.querySelector('#event-start-time-1'), {
+      enableTime: true,
+      dateFormat: 'd/m/y H:i',
+      altFormat: 'Y-m-d',
+      defaultDate: this._state.point.date_from,
+      maxDate: this._state.point.date_to,
+      onClose: this.#updateSelecteDataFromInState
+    });
+    this.#dateToFaltpicker = flatpickr(this.element.querySelector('#event-end-time-1'), {
+      enableTime: true,
+      dateFormat: 'd/m/y H:i',
+      altFormat: 'Y-m-d',
+      defaultDate: this._state.point.date_to,
+      minDate: this._state.point.date_from,
+      onClose: this.#updateSelecteDataToInState
+    });
 
   }
+
+  #updateSelecteDataToInState = ([date]) => {
+    const updateDate = new Date(date).toISOString();
+    this._setState({
+      point: {
+        ...this._state.point,
+        // eslint-disable-next-line camelcase
+        date_to:updateDate
+      }
+    });
+    this.updateElement(this._state);
+  };
+
+  #updateSelecteDataFromInState = ([date]) => {
+    const updateDate = new Date(date).toISOString();
+    this._setState({
+      point: {
+        ...this._state.point,
+        // eslint-disable-next-line camelcase
+        date_from:updateDate
+      }
+    });
+    this.updateElement(this._state);
+  };
+
+
+  removeElement() {
+    super.removeElement();
+
+    if (this.#dateToFaltpicker) {
+      this.#dateToFaltpicker.destroy();
+      this.#dateToFaltpicker = null;
+    }
+
+    if (this.#dateFromFaltpicker) {
+      this.#dateFromFaltpicker.destroy();
+      this.#dateFromFaltpicker = null;
+    }
+  }
+
+  static convertDataToState = (point, offers, destinations, isNewPoint) => ({
+    point: {
+      id:point[0],
+      ...point[1]
+    },
+    offers: {
+      ...offers
+    },
+    destinations: {
+      ...destinations
+    },
+    isNewPoint: isNewPoint
+  });
+
+  static convertStateToDate = (state) => {
+    const point = state.point;
+    const id = point.id;
+    delete point.id;
+    return [id, point];
+  };
 
   #clickHandler = () => {
     this.#onCloseClick(this.#point);
   };
 
+  #submitHandler = (evt) => {
+    evt.preventDefault();
+    this.#updateSelectedOffersInState();
+    this.#onSubmitPoint(TripPointEditView.convertStateToDate(this._state));
+  };
+
+  #updateSelectedOffersInState = () => {
+    const offers = [];
+    this.element.querySelectorAll('.event__offer-checkbox:checked').forEach((offer)=>offers.push(offer.dataset.offerId));
+    this._setState({
+      point: {
+        ...this._state.point,
+        offers: offers
+
+      }
+    });
+  };
+
+  #onDestinationChange = (evt) => {
+    const destinationId = Object.entries(this._state.destinations).find((destinaion)=>destinaion[1].name === evt.target.value)[0];
+    this._setState({
+      point: {
+        ...this._state.point,
+        destination:destinationId
+
+      }
+    });
+    this.updateElement(this._state);
+  };
+
+  #onTypeChange = (evt) => {
+    this._setState({
+      point: {
+        ...this._state.point,
+        offers:'',
+        type:evt.target.value
+      }
+    });
+    this.updateElement(this._state);
+  };
+
+  _restoreHandlers() {
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#clickHandler);
+    this.element.querySelector('.event--edit').addEventListener('submit', this.#submitHandler);
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#onDestinationChange);
+    this.element.querySelector('.event__type-group').addEventListener('change', this.#onTypeChange);
+    this.#setDatePickers();
+  }
+
   get template() {
-    return createTripEditTemplate(this.#point[1], this.#offers[this.#point[1].type], this.#destination[this.#point[1].destination], this.#isNewPoint);
+    return createTripEditTemplate(this._state);
+
   }
 
 }
