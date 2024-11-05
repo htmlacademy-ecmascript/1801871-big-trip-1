@@ -4,14 +4,19 @@ import { filterListFuture, filterListPresent, filterListPast, sortListDay, sortL
 
 import TripPointPresenter from '../presenter/trip-point-presenter';
 
+import AddNewTripButtonView from '../view/add-new-trip-button-view';
+
+
 import TripPointZeroView from '../view/zero-point-view';
 
 
 export default class TripPointBoardPresenter{
   #tripEventsListContainer = null;
+  #tripHeaderContainer = null;
 
   #listPresernter = new Map();
   #zeroPointsPresenter = null;
+  #addNewTripButtonView = null;
 
   #tripPointsModel = null;
   #offersModel = null;
@@ -27,25 +32,30 @@ export default class TripPointBoardPresenter{
       tripEventsListContainer,
       tripPointsModel,
       offersModel,
-      destinationsModel
+      destinationsModel,
+      tripHeaderContainer
     }
   ){
     this.#tripEventsListContainer = tripEventsListContainer;
+    this.#tripHeaderContainer = tripHeaderContainer;
 
     this.#tripPointsModel = tripPointsModel;
     this.#offersModel = offersModel;
     this.#destinationsModel = destinationsModel;
 
     this.#tripPointsModel.addObserver(this.#handleModelEvent);
+    this.#tripPointsModel.addObserver(this.#renderNewPoint);
 
 
     this.#offers = this.#offersModel.offers;
     this.#destinations = this.#destinationsModel.destinations;
 
     this.#zeroPointsPresenter = new TripPointZeroView();
+    this.#addNewTripButtonView = new AddNewTripButtonView();
   }
 
   init() {
+    render(this.#addNewTripButtonView, this.#tripHeaderContainer);
     this.#renderBoard(this.points);
   }
 
@@ -82,12 +92,6 @@ export default class TripPointBoardPresenter{
     }
 
   };
-
-  // #handelPointChange = (updatePoint) => {
-  //   this.#tripPointsModel.updatePoint(updatePoint, 'test');
-  //   this.#listPresernter.get(updatePoint[0]).replace(updatePoint);
-  // };
-
 
   #createPresernter = (point) => {
     const pointPresenter = new TripPointPresenter(
@@ -133,8 +137,13 @@ export default class TripPointBoardPresenter{
     }
   }
 
-  #renderNewPoint() {
-    const blankPoint = this.#tripPointsModel.blankPoint;
+  #renderNewPoint(event, point) {
+    console.log(event, point);
+    if(event !== 'New point') {
+      return;
+    }
+
+    const blankPoint = point;
     const pointPresenter = new TripPointPresenter(
       {offers:this.#offers,
         destinations:this.#destinations,
@@ -144,7 +153,6 @@ export default class TripPointBoardPresenter{
       });
 
     pointPresenter.renderNewPoint(this.#tripPointsModel.blankPoint);
-    this.#tripPointsModel.updatePoint(blankPoint, 'test');
     this.#listPresernter.set(blankPoint[0],pointPresenter);
   }
 

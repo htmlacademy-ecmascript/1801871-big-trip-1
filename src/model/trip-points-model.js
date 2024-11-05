@@ -31,10 +31,10 @@ export default class TripPointsModel extends Observable {
     this._notify(update, updateType);
   }
 
-  addPoint (update, updateType) {
+  addPoint () {
 
-    this.#points.set(update[0],update[1]);
-    this._notify(update, updateType);
+    this.#points.set(this.blankPoint[0],this.blankPoint[1]);
+    this._notify('newpoint');
   }
 
   deletePoint (update, updateType) {

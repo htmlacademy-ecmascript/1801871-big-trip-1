@@ -26,15 +26,17 @@ const tripPointBoardPresenter = new TripPointBoardPresenter ({
   tripEventsListContainer: tripEventsListContainer,
   tripPointsModel: tripPointsModel,
   offersModel: offersModel,
-  destinationsModel: destinationsModel
+  destinationsModel: destinationsModel,
+  tripHeaderContainer:tripHeaderContainer
 });
 
 const filterPresenter = new FilterPresenter ({
   tripFilterCategoryContainer:tripFilterCategoryContainer,
   tripHeaderContainer:tripHeaderContainer,
-  tripPointBoardPresenter: tripPointBoardPresenter
+  tripPointBoardPresenter: tripPointBoardPresenter,
+  tripPointsModel:tripPointsModel
 });
 
 
-tripPointBoardPresenter.init();
 filterPresenter.init();
+tripPointBoardPresenter.init();
