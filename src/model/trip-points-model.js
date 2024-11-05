@@ -1,13 +1,15 @@
 import { mockPoints } from '../mock/mock-points';
+import Observable from '../framework/observable';
 
-export default class TripPointsModel {
+export default class TripPointsModel extends Observable {
 
-  #points = mockPoints;
+  #points = new Map();
+
 
   get points () {
-    const newPoints = new Map();
-    this.#points.forEach((point)=>{
-      newPoints.set(
+
+    mockPoints.forEach((point)=>{
+      this.#points.set(
         point.id, {
           'base_price': point.base_price,
           'date_from':  point.date_from,
@@ -19,7 +21,22 @@ export default class TripPointsModel {
         });
 
     });
-    return newPoints;
+
+    return this.#points;
+  }
+
+  updatePoint (update, updateType) {
+    console.log(updateType);
+
+    this.#points.set(update[0],update[1]);
+    this._notify(updateType, update);
+  }
+
+  addPoint (update, updateType) {
+    console.log(updateType);
+
+    this.#points.set(update[0],update[1]);
+    this._notify(updateType, update);
   }
 
 

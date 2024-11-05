@@ -19,13 +19,14 @@ export default class TripPointPresenter{
   #handelTypeChange = null;
   #point = null;
 
+
   constructor(
     {
       offers,
       destinations,
       tripEventsListContainer,
       handelPointChange,
-      handelTypeChange
+      handelTypeChange,
     }
   ){
     this.#tripEventsListContainer = tripEventsListContainer;
@@ -34,6 +35,7 @@ export default class TripPointPresenter{
     this.#destinations = destinations;
     this.#handelPointChange = handelPointChange;
     this.#handelTypeChange = handelTypeChange;
+
   }
 
   #onEditClick = (point) => {
@@ -62,6 +64,7 @@ export default class TripPointPresenter{
     }
   };
 
+
   #replacePoint(point) {
     let newPointComnponent;
     this.#point = point;
@@ -69,12 +72,25 @@ export default class TripPointPresenter{
 
     if(this.#currentComponentType === 'View') {
 
-      newPointComnponent = new TripPointEditView({point:point,offers:this.#offers, destinations:this.#destinations, onCloseClick:this.#onCloseClick, onSubmitPoint:this.#onSubmitPoint});
+      newPointComnponent = new TripPointEditView(
+        {point:point,
+          offers:this.#offers,
+          destinations:this.#destinations,
+          onCloseClick:this.#onCloseClick,
+          onSubmitPoint:this.#onSubmitPoint
+        });
+
       document.addEventListener('keydown', this.#escKeyDownHandler);
       this.#handelTypeChange();
     }
     if(this.#currentComponentType === 'Edit') {
-      newPointComnponent = new TripPointView({point:point,offers:this.#offers, destinations:this.#destinations, onEditClick:this.#onEditClick, onFavoriteClick:this.#onFavorieClick});
+      newPointComnponent = new TripPointView(
+        {point:point,
+          offers:this.#offers,
+          destinations:this.#destinations,
+          onEditClick:this.#onEditClick,
+          onFavoriteClick:this.#onFavorieClick
+        });
       document.removeEventListener('keydown', this.#escKeyDownHandler);
     }
     replace(newPointComnponent, this.#currentComponent);
@@ -85,14 +101,27 @@ export default class TripPointPresenter{
 
 
   renderPoint (point) {
-    const pointComponent = new TripPointView({point:point, offers:this.#offers, destinations:this.#destinations, onEditClick:this.#onEditClick, onFavoriteClick:this.#onFavorieClick});
+    const pointComponent = new TripPointView(
+      {point:point, offers:this.#offers,
+        destinations:this.#destinations,
+        onEditClick:this.#onEditClick,
+        onFavoriteClick:this.#onFavorieClick
+      });
     this.#currentComponentType = 'View';
     this.#currentComponent = pointComponent;
     render(pointComponent, this.#tripEventsListContainer);
   }
 
   renderNewPoint (point) {
-    const pointComponent = new TripPointEditView({point:point,offers:this.#offers, destinations:this.#destinations, onCloseClick:this.#onCloseClick, onSubmitPoint:this.#onSubmitPoint, isNewPoint:true});
+    const pointComponent = new TripPointEditView(
+      {point:point,
+        offers:this.#offers,
+        destinations:this.#destinations,
+        onCloseClick:this.#onCloseClick,
+        onSubmitPoint:this.#onSubmitPoint,
+        isNewPoint:true
+      });
+
     this.#handelTypeChange();
     this.#currentComponentType = 'Edit';
     this.#currentComponent = pointComponent;
@@ -103,7 +132,14 @@ export default class TripPointPresenter{
 
 
   replace(point) {
-    const pointComponent = new TripPointView({point:point, offers:this.#offers, destinations:this.#destinations, onEditClick:this.#onEditClick, onFavoriteClick:this.#onFavorieClick});
+    const pointComponent = new TripPointView(
+      {point:point,
+        offers:this.#offers,
+        destinations:this.#destinations,
+        onEditClick:this.#onEditClick,
+        onFavoriteClick:this.#onFavorieClick
+      });
+
     this.#currentComponentType = 'View';
     replace(pointComponent, this.#currentComponent);
     this.#currentComponent = pointComponent;
