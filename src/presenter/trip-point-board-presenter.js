@@ -1,5 +1,5 @@
 import { render, remove } from '../framework/render';
-import { FilterType, SortType } from '../const';
+import { FilterType, SortType, UserAction, UpdateType } from '../const';
 import { filterListFuture, filterListPresent, filterListPast, sortListDay, sortListPrice, sortListTime } from '../utils';
 
 import TripPointPresenter from '../presenter/trip-point-presenter';
@@ -36,6 +36,8 @@ export default class TripPointBoardPresenter{
     this.#offersModel = offersModel;
     this.#destinationsModel = destinationsModel;
 
+    this.#tripPointsModel.addObserver(this.#handleModelEvent);
+
 
     this.#offers = this.#offersModel.offers;
     this.#destinations = this.#destinationsModel.destinations;
@@ -51,10 +53,40 @@ export default class TripPointBoardPresenter{
     return this.#tripPointsModel.points;
   }
 
-  #handelPointChange = (updatePoint) => {
-    this.#tripPointsModel.updatePoint(updatePoint, 'test');
-    this.#listPresernter.get(updatePoint[0]).replace(updatePoint);
+  #handleViewAction = (update, actionType, updateType) => {
+    switch (actionType) {
+      case UserAction.UPDATE_POINT:
+        this.#tripPointsModel.updatePoint(update, updateType);
+        break;
+      case UserAction.ADD_POINT:
+        this.#tripPointsModel.addPoint(update, updateType);
+        break;
+      case UserAction.DELETE_POINT:
+        this.#tripPointsModel.deletePoint(update, updateType);
+        break;
+    }
   };
+
+  #handleModelEvent = (data, updateType) => {
+    switch (updateType) {
+      case UpdateType.PATCH:
+
+        this.#listPresernter.get(data[0]).replace(data);
+        break;
+      case UpdateType.MINOR:
+        this.#renderBoard(this.points);
+        break;
+      case UpdateType.MAJOR:
+
+        break;
+    }
+
+  };
+
+  // #handelPointChange = (updatePoint) => {
+  //   this.#tripPointsModel.updatePoint(updatePoint, 'test');
+  //   this.#listPresernter.get(updatePoint[0]).replace(updatePoint);
+  // };
 
 
   #createPresernter = (point) => {
@@ -62,7 +94,7 @@ export default class TripPointBoardPresenter{
       {offers:this.#offers,
         destinations:this.#destinations,
         tripEventsListContainer:this.#tripEventsListContainer,
-        handelPointChange:this.#handelPointChange,
+        handelPointChange:this.#handleViewAction,
         handelTypeChange:this.#handleTypeChange,
       });
 
@@ -90,6 +122,7 @@ export default class TripPointBoardPresenter{
   };
 
   #renderBoard (points) {
+    this.#clearBoard();
     if (points.size === 0) {
       render(this.#zeroPointsPresenter, this.#tripEventsListContainer);
     } else{
@@ -106,7 +139,7 @@ export default class TripPointBoardPresenter{
       {offers:this.#offers,
         destinations:this.#destinations,
         tripEventsListContainer:this.#tripEventsListContainer,
-        handelPointChange:this.#handelPointChange,
+        handelPointChange:this.#handleViewAction,
         handelTypeChange:this.#handleTypeChange
       });
 

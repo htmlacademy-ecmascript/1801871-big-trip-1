@@ -1,5 +1,7 @@
 import { render, replace, remove } from '../framework/render';
 
+import { UserAction, UpdateType } from '../const';
+
 import TripPointEditView from '../view/trip-point-edit-view';
 import TripPointView from '../view/trip-point-view';
 
@@ -46,14 +48,18 @@ export default class TripPointPresenter{
     this.#replacePoint(point);
   };
 
+  #onDeleteClick = (point) => {
+    this.#handelPointChange(point, UserAction.DELETE_POINT, UpdateType.MINOR);
+  };
+
   #onFavorieClick = (point) => {
     // eslint-disable-next-line camelcase
     point[1].is_favorite = !point[1].is_favorite;
-    this.#handelPointChange(point);
+    this.#handelPointChange(point, UserAction.UPDATE_POINT, UpdateType.PATCH);
   };
 
   #onSubmitPoint = (point) => {
-    this.#handelPointChange(point);
+    this.#handelPointChange(point, UserAction.UPDATE_POINT, UpdateType.PATCH);
   };
 
   #escKeyDownHandler = (evt) => {
@@ -77,7 +83,8 @@ export default class TripPointPresenter{
           offers:this.#offers,
           destinations:this.#destinations,
           onCloseClick:this.#onCloseClick,
-          onSubmitPoint:this.#onSubmitPoint
+          onSubmitPoint:this.#onSubmitPoint,
+          onDeleteClick: this.#onDeleteClick
         });
 
       document.addEventListener('keydown', this.#escKeyDownHandler);

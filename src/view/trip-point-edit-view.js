@@ -152,6 +152,7 @@ export default class TripPointEditView extends AbstractStatefulView {
 
   #onCloseClick = null;
   #onSubmitPoint = null;
+  #onDeleteClick = null;
 
   #point = null;
 
@@ -163,7 +164,7 @@ export default class TripPointEditView extends AbstractStatefulView {
   #dateToFaltpicker = null;
 
   constructor (
-    {point, offers, destinations, onCloseClick, onSubmitPoint, isNewPoint = false}
+    {point, offers, destinations, onCloseClick, onSubmitPoint, onDeleteClick, isNewPoint = false}
   ) {
     super();
     this.#point = point;
@@ -175,6 +176,7 @@ export default class TripPointEditView extends AbstractStatefulView {
 
     this.#onCloseClick = onCloseClick;
     this.#onSubmitPoint = onSubmitPoint;
+    this.#onDeleteClick = onDeleteClick;
 
     this._setState(TripPointEditView.convertDataToState(point, offers, destinations, isNewPoint));
 
@@ -297,11 +299,16 @@ export default class TripPointEditView extends AbstractStatefulView {
     }});
   };
 
+  #onDeletePoint = () => {
+    this.#onDeleteClick(TripPointEditView.convertStateToDate(this._state));
+  };
+
   _restoreHandlers() {
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#clickHandler);
     this.element.querySelector('.event--edit').addEventListener('submit', this.#submitHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#onDestinationChange);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#onTypeChange);
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#onDeletePoint);
     this.#setDatePickers();
   }
 
