@@ -12,7 +12,7 @@ export default class FilterPresenter{
   #tripFilterCategoryContainer = null;
   #tripHeaderContainer = null;
   #tripPointBoardPresenter = null;
-  #tripPointsModel = null;
+
 
   #currentFilterType = FilterType.EVERYTHING;
   #currentSortCategory = SortType.DAY;
@@ -33,7 +33,6 @@ export default class FilterPresenter{
     render(new InfoView(), this.#tripHeaderContainer);
     render(new FilterCategoryView({ handleSortCategoryChange: this.#handleSortCategoryChange}), this.#tripFilterCategoryContainer);
     render(new FilterTimeView({ handleFilterTypeChange:this.#handleFilterTypeChange}), this.#tripHeaderContainer);
-
   }
 
 

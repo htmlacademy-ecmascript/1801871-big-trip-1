@@ -51,7 +51,7 @@ export default class TripPointBoardPresenter{
     this.#destinations = this.#destinationsModel.destinations;
 
     this.#zeroPointsPresenter = new TripPointZeroView();
-    this.#addNewTripButtonView = new AddNewTripButtonView();
+    this.#addNewTripButtonView = new AddNewTripButtonView({newPoinHandler:this.#handleViewAction});
   }
 
   init() {
@@ -69,7 +69,7 @@ export default class TripPointBoardPresenter{
         this.#tripPointsModel.updatePoint(update, updateType);
         break;
       case UserAction.ADD_POINT:
-        this.#tripPointsModel.addPoint(update, updateType);
+        this.#tripPointsModel.addPoint();
         break;
       case UserAction.DELETE_POINT:
         this.#tripPointsModel.deletePoint(update, updateType);
@@ -95,7 +95,8 @@ export default class TripPointBoardPresenter{
 
   #createPresernter = (point) => {
     const pointPresenter = new TripPointPresenter(
-      {offers:this.#offers,
+      {
+        offers:this.#offers,
         destinations:this.#destinations,
         tripEventsListContainer:this.#tripEventsListContainer,
         handelPointChange:this.#handleViewAction,
@@ -139,21 +140,21 @@ export default class TripPointBoardPresenter{
 
   #renderNewPoint(event, point) {
     console.log(event, point);
-    if(event !== 'New point') {
+    if(event !== 'newpoint') {
       return;
     }
 
-    const blankPoint = point;
-    const pointPresenter = new TripPointPresenter(
-      {offers:this.#offers,
+    const newPointPresenter = new TripPointPresenter(
+      {
+        offers:this.#offers,
         destinations:this.#destinations,
         tripEventsListContainer:this.#tripEventsListContainer,
         handelPointChange:this.#handleViewAction,
-        handelTypeChange:this.#handleTypeChange
+        handelTypeChange:this.#handleTypeChange,
       });
 
-    pointPresenter.renderNewPoint(this.#tripPointsModel.blankPoint);
-    this.#listPresernter.set(blankPoint[0],pointPresenter);
+    newPointPresenter.renderNewPoint(point);
+    this.#listPresernter.set(point[0],'pointPresenter');
   }
 
 

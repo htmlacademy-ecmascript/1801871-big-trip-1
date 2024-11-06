@@ -121,7 +121,8 @@ export default class TripPointPresenter{
 
   renderNewPoint (point) {
     const pointComponent = new TripPointEditView(
-      {point:point,
+      {
+        point:point,
         offers:this.#offers,
         destinations:this.#destinations,
         onCloseClick:this.#onCloseClick,

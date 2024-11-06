@@ -34,7 +34,7 @@ export default class TripPointsModel extends Observable {
   addPoint () {
 
     this.#points.set(this.blankPoint[0],this.blankPoint[1]);
-    this._notify('newpoint');
+    this._notify('newpoint', this.blankPoint);
   }
 
   deletePoint (update, updateType) {
