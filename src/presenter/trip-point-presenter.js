@@ -109,7 +109,9 @@ export default class TripPointPresenter{
 
   renderPoint (point) {
     const pointComponent = new TripPointView(
-      {point:point, offers:this.#offers,
+      {
+        point:point,
+        offers:this.#offers,
         destinations:this.#destinations,
         onEditClick:this.#onEditClick,
         onFavoriteClick:this.#onFavorieClick
@@ -127,6 +129,7 @@ export default class TripPointPresenter{
         destinations:this.#destinations,
         onCloseClick:this.#onCloseClick,
         onSubmitPoint:this.#onSubmitPoint,
+        onDeleteClick: this.#onDeleteClick,
         isNewPoint:true
       });
 
@@ -140,8 +143,10 @@ export default class TripPointPresenter{
 
 
   replace(point) {
+    console.log(point);
     const pointComponent = new TripPointView(
-      {point:point,
+      {
+        point:point,
         offers:this.#offers,
         destinations:this.#destinations,
         onEditClick:this.#onEditClick,

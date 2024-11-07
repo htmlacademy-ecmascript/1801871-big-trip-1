@@ -34,7 +34,7 @@ export default class TripPointsModel extends Observable {
   addPoint () {
 
     this.#points.set(this.blankPoint[0],this.blankPoint[1]);
-    this._notify('newpoint', this.blankPoint);
+    this._notify(this.blankPoint, 'newpoint');
   }
 
   deletePoint (update, updateType) {
@@ -45,7 +45,7 @@ export default class TripPointsModel extends Observable {
 
 
   get blankPoint () {
-    return [13,{
+    return ['13',{
       'base_price': '1',
       'date_from': '2029-02-24T08:05:46.876Z',
       'date_to': '2029-02-24T08:05:46.876Z',

@@ -44,7 +44,7 @@ export default class TripPointBoardPresenter{
     this.#destinationsModel = destinationsModel;
 
     this.#tripPointsModel.addObserver(this.#handleModelEvent);
-    this.#tripPointsModel.addObserver(this.#renderNewPoint);
+    // this.#tripPointsModel.addObserver(this.#renderNewPoint);
 
 
     this.#offers = this.#offersModel.offers;
@@ -78,20 +78,48 @@ export default class TripPointBoardPresenter{
   };
 
   #handleModelEvent = (data, updateType) => {
+
+    let newPointPresenter = null;
     switch (updateType) {
       case UpdateType.PATCH:
-
         this.#listPresernter.get(data[0]).replace(data);
         break;
       case UpdateType.MINOR:
         this.#renderBoard(this.points);
         break;
       case UpdateType.MAJOR:
-
+        break;
+      case 'newpoint':
+        this.#renderBoard(this.points);
+        newPointPresenter = new TripPointPresenter(
+          {
+            offers:this.#offers,
+            destinations:this.#destinations,
+            tripEventsListContainer:this.#tripEventsListContainer,
+            handelPointChange:this.#handleViewAction,
+            handelTypeChange:this.#handleTypeChange,
+          });
+        newPointPresenter.renderNewPoint(data);
+        this.#listPresernter.set(data[0],newPointPresenter);
         break;
     }
 
   };
+
+  // #renderNewPoint(data, updateType) {
+  //   if (updateType === 'newpoint') {
+  //     const newPointPresenter = new TripPointPresenter(
+  //       {
+  //         offers:this.#offers,
+  //         destinations:this.#destinations,
+  //         tripEventsListContainer:this.#tripEventsListContainer,
+  //         handelPointChange:this.#handleViewAction,
+  //         handelTypeChange:this.#handleTypeChange,
+  //       });
+  //     newPointPresenter.renderNewPoint(data);
+  //     this.#listPresernter.set(data[0],newPointPresenter);
+  //   }
+  // }
 
   #createPresernter = (point) => {
     const pointPresenter = new TripPointPresenter(
@@ -136,25 +164,6 @@ export default class TripPointBoardPresenter{
         this.#createPresernter(point);
       }
     }
-  }
-
-  #renderNewPoint(event, point) {
-    console.log(event, point);
-    if(event !== 'newpoint') {
-      return;
-    }
-
-    const newPointPresenter = new TripPointPresenter(
-      {
-        offers:this.#offers,
-        destinations:this.#destinations,
-        tripEventsListContainer:this.#tripEventsListContainer,
-        handelPointChange:this.#handleViewAction,
-        handelTypeChange:this.#handleTypeChange,
-      });
-
-    newPointPresenter.renderNewPoint(point);
-    this.#listPresernter.set(point[0],'pointPresenter');
   }
 
 

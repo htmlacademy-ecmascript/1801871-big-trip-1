@@ -5,43 +5,44 @@ import FilterTimeView from '../view/filter-time-view';
 import InfoView from '../view/info-view';
 
 
-import {FilterType , SortType} from '../const.js';
+import {FilterType, SortType} from '../const.js';
 
 
 export default class FilterPresenter{
   #tripFilterCategoryContainer = null;
   #tripHeaderContainer = null;
+
   #tripPointBoardPresenter = null;
+  #filterModel = null;
 
 
-  #currentFilterType = FilterType.EVERYTHING;
   #currentSortCategory = SortType.DAY;
 
   constructor(
     {
       tripFilterCategoryContainer,
       tripHeaderContainer,
-      tripPointBoardPresenter
+      tripPointBoardPresenter,
+      filterModel
     }
   ){
     this.#tripFilterCategoryContainer = tripFilterCategoryContainer;
     this.#tripHeaderContainer = tripHeaderContainer;
     this.#tripPointBoardPresenter = tripPointBoardPresenter;
+    this.#filterModel = filterModel;
   }
 
   init() {
     render(new InfoView(), this.#tripHeaderContainer);
-    render(new FilterCategoryView({ handleSortCategoryChange: this.#handleSortCategoryChange}), this.#tripFilterCategoryContainer);
-    render(new FilterTimeView({ handleFilterTypeChange:this.#handleFilterTypeChange}), this.#tripHeaderContainer);
+    render(new FilterCategoryView({handleSortCategoryChange: this.#handleSortCategoryChange}), this.#tripFilterCategoryContainer);
+    render(new FilterTimeView({
+      activeFilter: this.#filterModel.filter,
+      handleFilterTypeChange :this.#handleFilterTypeChange
+    }), this.#tripHeaderContainer);
   }
 
-
-  #handleFilterTypeChange = (filterType) => {
-    if(filterType === this.#currentFilterType) {
-      return;
-    }
-    this.#currentFilterType = filterType;
-    this.#tripPointBoardPresenter.filterBoard(filterType);
+  #handleFilterTypeChange = (af) => {
+    console.log(af);
   };
 
   #handleSortCategoryChange = (sortType) => {
