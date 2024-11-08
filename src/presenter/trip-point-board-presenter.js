@@ -63,7 +63,7 @@ export default class TripPointBoardPresenter{
   }
 
   get points() {
-    return this.#tripPointsModel.points;
+    return this.#filterPoints(this.#filterModel.filter);
   }
 
   #handleViewAction = (update, actionType, updateType) => {
@@ -89,7 +89,7 @@ export default class TripPointBoardPresenter{
         this.#renderBoard(this.points);
         break;
       case UpdateType.MAJOR:
-        this.#filterBoard(this.#filterModel.filter);
+        this.sortBoard(SortType.DAY);
         break;
     }
   };
@@ -158,20 +158,20 @@ export default class TripPointBoardPresenter{
   }
 
 
-  #filterBoard (filterType) {
-    this.#clearBoard();
+  #filterPoints(filterType) {
 
     if(filterType === FilterType.FUTURE){
-      this.#renderBoard(new Map(filterListFuture(this.points)));
+      return new Map(filterListFuture(this.#tripPointsModel.points));
+
     }
     if(filterType === FilterType.PRESENT){
-      this.#renderBoard(new Map(filterListPresent(this.points)));
+      return new Map(filterListPresent(this.#tripPointsModel.points));
     }
     if(filterType === FilterType.PAST){
-      this.#renderBoard(new Map(filterListPast(this.points)));
+      return new Map(filterListPast(this.#tripPointsModel.points));
     }
     if(filterType === FilterType.EVERYTHING){
-      this.#renderBoard(this.points);
+      return this.#tripPointsModel.points;
     }
   }
 

@@ -16,6 +16,7 @@ export default class FilterPresenter{
   #filterModel = null;
 
   #filterTimeViewComponent = null;
+  #filterCategoryViewComponent = null;
 
 
   #currentSortCategory = SortType.DAY;
@@ -33,27 +34,37 @@ export default class FilterPresenter{
     this.#tripPointBoardPresenter = tripPointBoardPresenter;
     this.#filterModel = filterModel;
 
-    this.#filterModel.addObserver(this.#checkFilterType);
+    this.#filterModel.addObserver(this.#refreshFilterType);
   }
 
   init() {
     render(new InfoView(), this.#tripHeaderContainer);
-    render(new FilterCategoryView({handleSortCategoryChange: this.#handleSortCategoryChange}), this.#tripFilterCategoryContainer);
+    this.#filterCategoryViewComponent = new FilterCategoryView({handleSortCategoryChange: this.#handleSortCategoryChange, activeCategoryType:this.#currentSortCategory});
+
     this.#filterTimeViewComponent = new FilterTimeView({
       activeFilter: this.#filterModel.filter,
       handleFilterTypeChange :this.#handleFilterTypeChange
     });
+
     render(this.#filterTimeViewComponent, this.#tripHeaderContainer);
+    render(this.#filterCategoryViewComponent, this.#tripFilterCategoryContainer);
   }
 
-  #checkFilterType = () => {
-    const newComponent = new FilterTimeView({
+  #refreshFilterType = () => {
+    const newFilterComponent = new FilterTimeView({
       activeFilter: this.#filterModel.filter,
       handleFilterTypeChange :this.#handleFilterTypeChange
     });
-    replace(newComponent, this.#filterTimeViewComponent);
+    replace(newFilterComponent, this.#filterTimeViewComponent);
     remove(this.#filterTimeViewComponent);
-    this.#filterTimeViewComponent = newComponent;
+    this.#filterTimeViewComponent = newFilterComponent;
+
+    this.#currentSortCategory = SortType.DAY;
+    const newCategoryComponent = new FilterCategoryView({handleSortCategoryChange: this.#handleSortCategoryChange, activeCategoryType:this.#currentSortCategory});
+
+    replace(newCategoryComponent, this.#filterCategoryViewComponent);
+    remove(this.#filterCategoryViewComponent);
+    this.#filterCategoryViewComponent = newCategoryComponent;
   };
 
   #handleFilterTypeChange = (filterType) => {
