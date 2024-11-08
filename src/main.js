@@ -29,6 +29,7 @@ const tripPointBoardPresenter = new TripPointBoardPresenter ({
   tripPointsModel: tripPointsModel,
   offersModel: offersModel,
   destinationsModel: destinationsModel,
+  filterModel: filterModel,
   tripHeaderContainer:tripHeaderContainer
 });
 

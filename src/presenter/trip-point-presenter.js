@@ -143,7 +143,6 @@ export default class TripPointPresenter{
 
 
   replace(point) {
-    console.log(point);
     const pointComponent = new TripPointView(
       {
         point:point,

@@ -1,4 +1,4 @@
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractView from '../framework/view/abstract-stateful-view.js';
 
 import { FilterType } from '../const.js';
 
@@ -10,7 +10,7 @@ const filterTimeTemplate = (activeFilter) =>
   <form class="trip-filters" action="#" method="get">
     ${Object.values(FilterType).map((element)=>
     `<div class="trip-filters__filter">
-      <input id="filter-${element}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${element}" data-filter-type="${element}" ${element === activeFilter ? 'checked' : ''}>
+      <input id="filter-${element}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${element}" ${element === activeFilter ? 'checked' : ''}>
       <label class="trip-filters__filter-label" for="filter-${element}">${element}</label>
     </div>`
   ).join('')}
@@ -20,7 +20,7 @@ const filterTimeTemplate = (activeFilter) =>
 </div>
   `;
 
-export default class FilterTimeView extends AbstractView{
+export default class FilterTimeView extends AbstractView {
 
   #activeFilter = null;
   #handleFilterTypeChange = null;
@@ -40,9 +40,10 @@ export default class FilterTimeView extends AbstractView{
     return filterTimeTemplate(this.#activeFilter);
   }
 
-  #filterTypeChangeHandler () {
-    this.#handleFilterTypeChange();
-  }
+  #filterTypeChangeHandler = (evt) =>{
+    this.#handleFilterTypeChange(evt.target.value);
+  };
+
 
 }
 

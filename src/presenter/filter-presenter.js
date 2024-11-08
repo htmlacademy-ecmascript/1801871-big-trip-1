@@ -1,11 +1,11 @@
-import { render } from '../framework/render';
+import { render, replace, remove } from '../framework/render';
 
 import FilterCategoryView from '../view/filter-category-view';
 import FilterTimeView from '../view/filter-time-view';
 import InfoView from '../view/info-view';
 
 
-import {FilterType, SortType} from '../const.js';
+import { SortType, UpdateType} from '../const.js';
 
 
 export default class FilterPresenter{
@@ -14,6 +14,8 @@ export default class FilterPresenter{
 
   #tripPointBoardPresenter = null;
   #filterModel = null;
+
+  #filterTimeViewComponent = null;
 
 
   #currentSortCategory = SortType.DAY;
@@ -30,19 +32,36 @@ export default class FilterPresenter{
     this.#tripHeaderContainer = tripHeaderContainer;
     this.#tripPointBoardPresenter = tripPointBoardPresenter;
     this.#filterModel = filterModel;
+
+    this.#filterModel.addObserver(this.#checkFilterType);
   }
 
   init() {
     render(new InfoView(), this.#tripHeaderContainer);
     render(new FilterCategoryView({handleSortCategoryChange: this.#handleSortCategoryChange}), this.#tripFilterCategoryContainer);
-    render(new FilterTimeView({
+    this.#filterTimeViewComponent = new FilterTimeView({
       activeFilter: this.#filterModel.filter,
       handleFilterTypeChange :this.#handleFilterTypeChange
-    }), this.#tripHeaderContainer);
+    });
+    render(this.#filterTimeViewComponent, this.#tripHeaderContainer);
   }
 
-  #handleFilterTypeChange = (af) => {
-    console.log(af);
+  #checkFilterType = () => {
+    const newComponent = new FilterTimeView({
+      activeFilter: this.#filterModel.filter,
+      handleFilterTypeChange :this.#handleFilterTypeChange
+    });
+    replace(newComponent, this.#filterTimeViewComponent);
+    remove(this.#filterTimeViewComponent);
+    this.#filterTimeViewComponent = newComponent;
+  };
+
+  #handleFilterTypeChange = (filterType) => {
+    if (this.#filterModel.filter === filterType) {
+      return;
+    }
+
+    this.#filterModel.setFilter(filterType, UpdateType.MAJOR);
   };
 
   #handleSortCategoryChange = (sortType) => {

@@ -21,6 +21,7 @@ export default class TripPointBoardPresenter{
   #tripPointsModel = null;
   #offersModel = null;
   #destinationsModel = null;
+  #filterModel = null;
 
 
   #offers = null;
@@ -33,7 +34,8 @@ export default class TripPointBoardPresenter{
       tripPointsModel,
       offersModel,
       destinationsModel,
-      tripHeaderContainer
+      tripHeaderContainer,
+      filterModel
     }
   ){
     this.#tripEventsListContainer = tripEventsListContainer;
@@ -42,16 +44,17 @@ export default class TripPointBoardPresenter{
     this.#tripPointsModel = tripPointsModel;
     this.#offersModel = offersModel;
     this.#destinationsModel = destinationsModel;
+    this.#filterModel = filterModel;
 
     this.#tripPointsModel.addObserver(this.#handleModelEvent);
-    // this.#tripPointsModel.addObserver(this.#renderNewPoint);
+    this.#filterModel.addObserver(this.#handleModelEvent);
 
 
     this.#offers = this.#offersModel.offers;
     this.#destinations = this.#destinationsModel.destinations;
 
     this.#zeroPointsPresenter = new TripPointZeroView();
-    this.#addNewTripButtonView = new AddNewTripButtonView({newPoinHandler:this.#handleViewAction});
+    this.#addNewTripButtonView = new AddNewTripButtonView({newPoinHandler:this.#newPoinHandler});
   }
 
   init() {
@@ -78,8 +81,6 @@ export default class TripPointBoardPresenter{
   };
 
   #handleModelEvent = (data, updateType) => {
-
-    let newPointPresenter = null;
     switch (updateType) {
       case UpdateType.PATCH:
         this.#listPresernter.get(data[0]).replace(data);
@@ -88,38 +89,28 @@ export default class TripPointBoardPresenter{
         this.#renderBoard(this.points);
         break;
       case UpdateType.MAJOR:
-        break;
-      case 'newpoint':
-        this.#renderBoard(this.points);
-        newPointPresenter = new TripPointPresenter(
-          {
-            offers:this.#offers,
-            destinations:this.#destinations,
-            tripEventsListContainer:this.#tripEventsListContainer,
-            handelPointChange:this.#handleViewAction,
-            handelTypeChange:this.#handleTypeChange,
-          });
-        newPointPresenter.renderNewPoint(data);
-        this.#listPresernter.set(data[0],newPointPresenter);
+        this.#filterBoard(this.#filterModel.filter);
         break;
     }
-
   };
 
-  // #renderNewPoint(data, updateType) {
-  //   if (updateType === 'newpoint') {
-  //     const newPointPresenter = new TripPointPresenter(
-  //       {
-  //         offers:this.#offers,
-  //         destinations:this.#destinations,
-  //         tripEventsListContainer:this.#tripEventsListContainer,
-  //         handelPointChange:this.#handleViewAction,
-  //         handelTypeChange:this.#handleTypeChange,
-  //       });
-  //     newPointPresenter.renderNewPoint(data);
-  //     this.#listPresernter.set(data[0],newPointPresenter);
-  //   }
-  // }
+  #newPoinHandler = () => {
+    this.#filterModel.setFilter(FilterType.EVERYTHING, UpdateType.MAJOR);
+    this.#renderNewPoint();
+  };
+
+  #renderNewPoint = () => {
+    const newPointPresenter = new TripPointPresenter(
+      {
+        offers:this.#offers,
+        destinations:this.#destinations,
+        tripEventsListContainer:this.#tripEventsListContainer,
+        handelPointChange:this.#handleViewAction,
+        handelTypeChange:this.#handleTypeChange,
+      });
+    newPointPresenter.renderNewPoint(this.#tripPointsModel.blankPoint);
+    this.#listPresernter.set(this.#tripPointsModel.blankPoint,newPointPresenter);
+  };
 
   #createPresernter = (point) => {
     const pointPresenter = new TripPointPresenter(
@@ -167,7 +158,7 @@ export default class TripPointBoardPresenter{
   }
 
 
-  filterBoard (filterType) {
+  #filterBoard (filterType) {
     this.#clearBoard();
 
     if(filterType === FilterType.FUTURE){
