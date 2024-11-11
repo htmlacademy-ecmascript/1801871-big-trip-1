@@ -24,4 +24,12 @@ export default class AddNewTripButtonView extends AbstractView {
   #addNewPointClickHandler = () => {
     this.#newPoinHandler('',UserAction.ADD_POINT,'');
   };
+
+  buttonOff = () => {
+    this.element.setAttribute('disabled', false);
+  };
+
+  buttonOn = () => {
+    this.element.removeAttribute('disabled', false);
+  };
 }

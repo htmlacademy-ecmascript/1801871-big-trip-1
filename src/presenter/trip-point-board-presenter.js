@@ -100,7 +100,7 @@ export default class TripPointBoardPresenter{
   };
 
   #newPoinHandler = () => {
-    this.#filterModel.setFilter(FilterType.EVERYTHING, UpdateType.MAJOR);
+    this.#filterModel.setFilter(FilterType.EVERYTHING, UpdateType.MINOR);
     this.#renderNewPoint();
   };
 
@@ -112,6 +112,7 @@ export default class TripPointBoardPresenter{
         tripEventsListContainer:this.#tripEventsListContainer,
         handelPointChange:this.#handleViewAction,
         handelTypeChange:this.#handleTypeChange,
+        addNewTripButtonView: this.#addNewTripButtonView
       });
     newPointPresenter.renderNewPoint(this.#tripPointsModel.blankPoint);
     this.#currentNewPoint = newPointPresenter;
@@ -127,6 +128,7 @@ export default class TripPointBoardPresenter{
         tripEventsListContainer:this.#tripEventsListContainer,
         handelPointChange:this.#handleViewAction,
         handelTypeChange:this.#handleTypeChange,
+        addNewTripButtonView: this.#addNewTripButtonView
       });
 
     pointPresenter.renderPoint(point);

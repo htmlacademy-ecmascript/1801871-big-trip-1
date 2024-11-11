@@ -23,6 +23,8 @@ export default class TripPointPresenter{
 
   #isNewPoint = null;
 
+  #addNewTripButtonView = null;
+
 
   constructor(
     {
@@ -31,6 +33,7 @@ export default class TripPointPresenter{
       tripEventsListContainer,
       handelPointChange,
       handelTypeChange,
+      addNewTripButtonView
     }
   ){
     this.#tripEventsListContainer = tripEventsListContainer;
@@ -40,6 +43,8 @@ export default class TripPointPresenter{
     this.#handelPointChange = handelPointChange;
     this.#handelTypeChange = handelTypeChange;
 
+    this.#addNewTripButtonView = addNewTripButtonView;
+
 
   }
 
@@ -48,6 +53,7 @@ export default class TripPointPresenter{
   };
 
   #onCloseClick = (point, isNewPoint) => {
+    this.#addNewTripButtonView.buttonOn();
     if (!isNewPoint) {
       this.#replacePoint(point);
     } else {
@@ -56,6 +62,7 @@ export default class TripPointPresenter{
   };
 
   #onDeleteClick = (point) => {
+    this.#addNewTripButtonView.buttonOn();
 
     this.#handelPointChange(point, UserAction.DELETE_POINT, UpdateType.MINOR);
   };
@@ -70,6 +77,7 @@ export default class TripPointPresenter{
     if(!isNewPoint) {
       this.#handelPointChange(point, UserAction.UPDATE_POINT, UpdateType.PATCH);
     } else{
+      this.#addNewTripButtonView.buttonOn();
       this.#handelPointChange(point, UserAction.ADD_POINT, UpdateType.MINOR);
     }
     this.#isNewPoint = false;
@@ -79,6 +87,7 @@ export default class TripPointPresenter{
     if (evt.key === 'Escape') {
       evt.preventDefault();
       if(this.#isNewPoint) {
+        this.#addNewTripButtonView.buttonOn();
         this.remove();
       } else{
         this.#replacePoint(this.#point);
@@ -151,6 +160,7 @@ export default class TripPointPresenter{
         isNewPoint:true
       });
     this.#isNewPoint = true;
+    this.#addNewTripButtonView.buttonOff();
 
     this.#handelTypeChange();
     this.#currentComponentType = 'Edit';
