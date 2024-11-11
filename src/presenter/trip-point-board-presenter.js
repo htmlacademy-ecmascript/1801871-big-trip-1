@@ -64,6 +64,7 @@ export default class TripPointBoardPresenter{
 
   get points() {
     return this.#filterPoints(this.#filterModel.filter);
+    console.log('drgdgd');
   }
 
   #handleViewAction = (update, actionType, updateType) => {
