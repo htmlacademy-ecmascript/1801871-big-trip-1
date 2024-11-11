@@ -2,12 +2,8 @@ import { mockPoints } from '../mock/mock-points';
 import Observable from '../framework/observable';
 
 export default class TripPointsModel extends Observable {
-
-  #points = new Map();
-
-
-  get points () {
-
+  constructor() {
+    super();
     mockPoints.forEach((point)=>{
       this.#points.set(
         point.id, {
@@ -21,7 +17,12 @@ export default class TripPointsModel extends Observable {
         });
 
     });
+  }
 
+  #points = new Map();
+
+
+  get points () {
     return this.#points;
   }
 
@@ -31,15 +32,17 @@ export default class TripPointsModel extends Observable {
     this._notify(update, updateType);
   }
 
-  addPoint () {
-
-    this.#points.set(this.blankPoint[0],this.blankPoint[1]);
-    this._notify(this.blankPoint, 'newpoint');
+  addPoint (update, updateType) {
+    console.log('add')
+    this.#points.set(update[0],update[1]);
+    console.log(this.#points);
+    this._notify(update, updateType);
   }
 
   deletePoint (update, updateType) {
-
     this.#points.delete(update[0]);
+    console.log(update);
+    console.log(this.#points);
     this._notify(update, updateType);
   }
 

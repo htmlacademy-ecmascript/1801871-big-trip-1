@@ -21,6 +21,8 @@ export default class TripPointPresenter{
   #handelTypeChange = null;
   #point = null;
 
+  #isNewPoint = null;
+
 
   constructor(
     {
@@ -38,17 +40,23 @@ export default class TripPointPresenter{
     this.#handelPointChange = handelPointChange;
     this.#handelTypeChange = handelTypeChange;
 
+
   }
 
   #onEditClick = (point) => {
     this.#replacePoint(point);
   };
 
-  #onCloseClick = (point) => {
-    this.#replacePoint(point);
+  #onCloseClick = (point, isNewPoint) => {
+    if (!isNewPoint) {
+      this.#replacePoint(point);
+    } else {
+      this.remove();
+    }
   };
 
   #onDeleteClick = (point) => {
+    console.log('delete');
     this.#handelPointChange(point, UserAction.DELETE_POINT, UpdateType.MINOR);
   };
 
@@ -58,15 +66,25 @@ export default class TripPointPresenter{
     this.#handelPointChange(point, UserAction.UPDATE_POINT, UpdateType.PATCH);
   };
 
-  #onSubmitPoint = (point) => {
-    this.#handelPointChange(point, UserAction.UPDATE_POINT, UpdateType.PATCH);
+  #onSubmitPoint = (point, isNewPoint) => {
+    if(!isNewPoint) {
+      this.#handelPointChange(point, UserAction.UPDATE_POINT, UpdateType.PATCH);
+      console.log(point);
+    } else{
+      this.#handelPointChange(point, UserAction.ADD_POINT, UpdateType.MINOR);
+    }
+    this.#isNewPoint = false;
   };
 
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
-      this.#replacePoint(this.#point);
-      document.removeEventListener('keydown', this.#escKeyDownHandler);
+      if(this.#isNewPoint) {
+        this.remove();
+      } else{
+        this.#replacePoint(this.#point);
+        document.removeEventListener('keydown', this.#escKeyDownHandler);
+      }
     }
   };
 
@@ -118,6 +136,7 @@ export default class TripPointPresenter{
       });
     this.#currentComponentType = 'View';
     this.#currentComponent = pointComponent;
+    this.#isNewPoint = false;
     render(pointComponent, this.#tripEventsListContainer);
   }
 
@@ -132,6 +151,7 @@ export default class TripPointPresenter{
         onDeleteClick: this.#onDeleteClick,
         isNewPoint:true
       });
+    this.#isNewPoint = true;
 
     this.#handelTypeChange();
     this.#currentComponentType = 'Edit';

@@ -257,13 +257,13 @@ export default class TripPointEditView extends AbstractStatefulView {
   };
 
   #clickHandler = () => {
-    this.#onCloseClick(this.#point);
+    this.#onCloseClick(this.#point, this.#isNewPoint);
   };
 
   #submitHandler = (evt) => {
     evt.preventDefault();
     this.#updateSelectedOffersInState();
-    this.#onSubmitPoint(TripPointEditView.convertStateToDate(this._state));
+    this.#onSubmitPoint(TripPointEditView.convertStateToDate(this._state), this.#isNewPoint);
   };
 
   #updateSelectedOffersInState = () => {

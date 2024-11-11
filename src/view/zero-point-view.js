@@ -1,11 +1,19 @@
 import AbstractView from '../framework/view/abstract-view.js';
+import { EmptyListPhrase } from '../const.js';
 
-const createZeroTemplate = () =>
-  `<p class="trip-events__msg">Click New Event to create your first point</p>
+const createZeroTemplate = (currentFilter) =>
+  `<p class="trip-events__msg">${EmptyListPhrase[currentFilter]}</p>
   `;
 
 export default class TripPointZeroView extends AbstractView{
+  #currentFilterType = null;
+
+  constructor({currentFilter}) {
+    super();
+    this.#currentFilterType = currentFilter;
+  }
+
   get template() {
-    return createZeroTemplate();
+    return createZeroTemplate(this.#currentFilterType);
   }
 }

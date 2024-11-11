@@ -53,8 +53,8 @@ export default class TripPointBoardPresenter{
     this.#offers = this.#offersModel.offers;
     this.#destinations = this.#destinationsModel.destinations;
 
-    this.#zeroPointsPresenter = new TripPointZeroView();
     this.#addNewTripButtonView = new AddNewTripButtonView({newPoinHandler:this.#newPoinHandler});
+    this.#zeroPointsPresenter = new TripPointZeroView({currentFilter: this.#filterModel.filter});
   }
 
   init() {
@@ -72,7 +72,7 @@ export default class TripPointBoardPresenter{
         this.#tripPointsModel.updatePoint(update, updateType);
         break;
       case UserAction.ADD_POINT:
-        this.#tripPointsModel.addPoint();
+        this.#tripPointsModel.addPoint(update, updateType);
         break;
       case UserAction.DELETE_POINT:
         this.#tripPointsModel.deletePoint(update, updateType);
@@ -86,7 +86,9 @@ export default class TripPointBoardPresenter{
         this.#listPresernter.get(data[0]).replace(data);
         break;
       case UpdateType.MINOR:
-        this.#renderBoard(this.points);
+        // this.#renderBoard(this.points);
+        console.log('minor');
+        this.sortBoard(SortType.DAY);
         break;
       case UpdateType.MAJOR:
         this.sortBoard(SortType.DAY);
@@ -109,7 +111,8 @@ export default class TripPointBoardPresenter{
         handelTypeChange:this.#handleTypeChange,
       });
     newPointPresenter.renderNewPoint(this.#tripPointsModel.blankPoint);
-    this.#listPresernter.set(this.#tripPointsModel.blankPoint,newPointPresenter);
+    this.#listPresernter.set(this.#tripPointsModel.blankPoint[0],newPointPresenter);
+    console.log(this.#listPresernter);
   };
 
   #createPresernter = (point) => {
@@ -136,18 +139,24 @@ export default class TripPointBoardPresenter{
       if (this.#listPresernter.has(point[0])){
         this.#listPresernter.get(point[0]).resetView(point);
       }
-    });
+    }
+    );
+    if(this.#listPresernter.has(this.#tripPointsModel.blankPoint[0])) {
+      this.#listPresernter.get(this.#tripPointsModel.blankPoint[0]).remove();
+    }
 
   };
 
   #clearBoard = () => {
     this.#listPresernter.forEach((element) => element.remove());
+    remove(this.#zeroPointsPresenter);
     this.#listPresernter.clear();
   };
 
   #renderBoard (points) {
     this.#clearBoard();
     if (points.size === 0) {
+      this.#zeroPointsPresenter = new TripPointZeroView({currentFilter: this.#filterModel.filter});
       render(this.#zeroPointsPresenter, this.#tripEventsListContainer);
     } else{
       remove(this.#zeroPointsPresenter);
@@ -177,6 +186,7 @@ export default class TripPointBoardPresenter{
 
   sortBoard (sortType) {
     this.#clearBoard();
+    console.log(this.points);
 
     if(sortType === SortType.DAY){
       this.#renderBoard(new Map(sortListDay(this.points)));
