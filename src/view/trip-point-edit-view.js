@@ -119,7 +119,7 @@ const createTripEditTemplate = ({point}, offers, destinations, isNewPoint) =>
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${point.base_price}">
+          <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${point.base_price}">
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -263,6 +263,7 @@ export default class TripPointEditView extends AbstractStatefulView {
   #submitHandler = (evt) => {
     evt.preventDefault();
     this.#updateSelectedOffersInState();
+    this.#updatePriceInState();
     this.#onSubmitPoint(TripPointEditView.convertStateToDate(this._state), this.#isNewPoint);
   };
 
@@ -274,6 +275,17 @@ export default class TripPointEditView extends AbstractStatefulView {
         ...this._state.point,
         offers: offers
 
+      }
+    });
+  };
+
+  #updatePriceInState = () => {
+    const price = this.element.querySelector('.event__input--price').value;
+    this._setState({
+      point: {
+        ...this._state.point,
+        // eslint-disable-next-line camelcase
+        base_price: price
       }
     });
   };
