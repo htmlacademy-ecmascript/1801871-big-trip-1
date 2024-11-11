@@ -291,15 +291,20 @@ export default class TripPointEditView extends AbstractStatefulView {
   };
 
   #onDestinationChange = (evt) => {
-    const destinationId = Object.entries(this.#destinations).find((destinaion)=>destinaion[1].name === evt.target.value)[0];
+    if(Object.entries(this.#destinations).find((destinaion)=>destinaion[1].name === evt.target.value) === undefined){
+      evt.target.value = this.#destinations[this._state.point.destination].name;
+    } else{
+      const destinationId = Object.entries(this.#destinations).find((destinaion)=>destinaion[1].name === evt.target.value)[0];
 
-    this.updateElement({
-      point: {
-        ...this._state.point,
-        destination:destinationId
+      this.updateElement({
+        point: {
+          ...this._state.point,
+          destination:destinationId
 
-      }
-    });
+        }
+      });
+
+    }
   };
 
   #onTypeChange = (evt) => {
