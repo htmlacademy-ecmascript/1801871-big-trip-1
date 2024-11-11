@@ -27,6 +27,8 @@ export default class TripPointBoardPresenter{
   #offers = null;
   #destinations = null;
 
+  #currentNewPoint = null;
+
 
   constructor(
     {
@@ -55,6 +57,8 @@ export default class TripPointBoardPresenter{
 
     this.#addNewTripButtonView = new AddNewTripButtonView({newPoinHandler:this.#newPoinHandler});
     this.#zeroPointsPresenter = new TripPointZeroView({currentFilter: this.#filterModel.filter});
+
+
   }
 
   init() {
@@ -64,7 +68,6 @@ export default class TripPointBoardPresenter{
 
   get points() {
     return this.#filterPoints(this.#filterModel.filter);
-    console.log('drgdgd');
   }
 
   #handleViewAction = (update, actionType, updateType) => {
@@ -74,6 +77,7 @@ export default class TripPointBoardPresenter{
         break;
       case UserAction.ADD_POINT:
         this.#tripPointsModel.addPoint(update, updateType);
+        this.#currentNewPoint = null;
         break;
       case UserAction.DELETE_POINT:
         this.#tripPointsModel.deletePoint(update, updateType);
@@ -87,8 +91,6 @@ export default class TripPointBoardPresenter{
         this.#listPresernter.get(data[0]).replace(data);
         break;
       case UpdateType.MINOR:
-        // this.#renderBoard(this.points);
-        console.log('minor');
         this.sortBoard(SortType.DAY);
         break;
       case UpdateType.MAJOR:
@@ -112,8 +114,9 @@ export default class TripPointBoardPresenter{
         handelTypeChange:this.#handleTypeChange,
       });
     newPointPresenter.renderNewPoint(this.#tripPointsModel.blankPoint);
+    this.#currentNewPoint = newPointPresenter;
     this.#listPresernter.set(this.#tripPointsModel.blankPoint[0],newPointPresenter);
-    console.log(this.#listPresernter);
+
   };
 
   #createPresernter = (point) => {
@@ -142,8 +145,8 @@ export default class TripPointBoardPresenter{
       }
     }
     );
-    if(this.#listPresernter.has(this.#tripPointsModel.blankPoint[0])) {
-      this.#listPresernter.get(this.#tripPointsModel.blankPoint[0]).remove();
+    if(this.#currentNewPoint) {
+      this.#currentNewPoint.remove();
     }
 
   };
@@ -187,7 +190,6 @@ export default class TripPointBoardPresenter{
 
   sortBoard (sortType) {
     this.#clearBoard();
-    console.log(this.points);
 
     if(sortType === SortType.DAY){
       this.#renderBoard(new Map(sortListDay(this.points)));

@@ -56,7 +56,7 @@ export default class TripPointPresenter{
   };
 
   #onDeleteClick = (point) => {
-    console.log('delete');
+
     this.#handelPointChange(point, UserAction.DELETE_POINT, UpdateType.MINOR);
   };
 
@@ -69,7 +69,6 @@ export default class TripPointPresenter{
   #onSubmitPoint = (point, isNewPoint) => {
     if(!isNewPoint) {
       this.#handelPointChange(point, UserAction.UPDATE_POINT, UpdateType.PATCH);
-      console.log(point);
     } else{
       this.#handelPointChange(point, UserAction.ADD_POINT, UpdateType.MINOR);
     }
