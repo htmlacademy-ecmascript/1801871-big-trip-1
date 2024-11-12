@@ -156,6 +156,7 @@ export default class TripPointBoardPresenter{
   #clearBoard = () => {
     this.#listPresernter.forEach((element) => element.remove());
     remove(this.#zeroPointsPresenter);
+    this.#addNewTripButtonView.buttonOn();
     this.#listPresernter.clear();
   };
 
