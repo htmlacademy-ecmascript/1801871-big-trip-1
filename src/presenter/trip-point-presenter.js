@@ -74,7 +74,7 @@ export default class TripPointPresenter{
       this.#handelPointChange(point, UserAction.UPDATE_POINT, UpdateType.PATCH);
     } else{
       this.#addNewTripButtonView.buttonOn();
-      this.#handelPointChange(point, UserAction.ADD_POINT, UpdateType.MINOR);
+      this.#handelPointChange(point, UserAction.ADD_POINT, UpdateType.MAJOR);
     }
     this.#isNewPoint = false;
   };

@@ -1,6 +1,6 @@
 import { render, remove } from '../framework/render';
 import { FilterType, SortType, UserAction, UpdateType } from '../const';
-import { filterListFuture, filterListPresent, filterListPast, sortListDay, sortListPrice, sortListTime } from '../utils';
+// import { filterListFuture, filterListPresent, filterListPast, sortListDay, sortListPrice, sortListTime } from '../utils';
 
 import TripPointPresenter from '../presenter/trip-point-presenter';
 
@@ -15,14 +15,18 @@ export default class TripPointBoardPresenter{
   #tripHeaderContainer = null;
 
   #listPresernter = new Map();
-  #zeroPointsPresenter = null;
+
+  #zeroPointsView = null;
   #addNewTripButtonView = null;
 
   #tripPointsModel = null;
   #offersModel = null;
   #destinationsModel = null;
-  #filterModel = null;
 
+  #filterModel = null;
+  #sortModel = null;
+
+  #filterPresenter = null;
 
   #offers = null;
   #destinations = null;
@@ -32,12 +36,17 @@ export default class TripPointBoardPresenter{
 
   constructor(
     {
+      tripHeaderContainer,
       tripEventsListContainer,
+
       tripPointsModel,
       offersModel,
       destinationsModel,
-      tripHeaderContainer,
-      filterModel
+
+      filterModel,
+      sortModel,
+
+      filterPresenter
     }
   ){
     this.#tripEventsListContainer = tripEventsListContainer;
@@ -46,17 +55,21 @@ export default class TripPointBoardPresenter{
     this.#tripPointsModel = tripPointsModel;
     this.#offersModel = offersModel;
     this.#destinationsModel = destinationsModel;
+
     this.#filterModel = filterModel;
+    this.#sortModel = sortModel;
 
-    this.#tripPointsModel.addObserver(this.#handleModelEvent);
-    this.#filterModel.addObserver(this.#handleModelEvent);
-
+    this.#filterPresenter = filterPresenter;
 
     this.#offers = this.#offersModel.offers;
     this.#destinations = this.#destinationsModel.destinations;
 
+    this.#tripPointsModel.addObserver(this.#handleModelEvent);
+    this.#sortModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
+
     this.#addNewTripButtonView = new AddNewTripButtonView({newPoinHandler:this.#newPoinHandler});
-    this.#zeroPointsPresenter = new TripPointZeroView({currentFilter: this.#filterModel.filter});
+    this.#zeroPointsView = new TripPointZeroView({currentFilter: this.#filterModel.filter});
 
 
   }
@@ -67,7 +80,7 @@ export default class TripPointBoardPresenter{
   }
 
   get points() {
-    return this.#filterPoints(this.#filterModel.filter);
+    return this.#filterPresenter.getPoints();
   }
 
   #handleViewAction = (update, actionType, updateType) => {
@@ -91,10 +104,13 @@ export default class TripPointBoardPresenter{
         this.#listPresernter.get(data[0]).replace(data);
         break;
       case UpdateType.MINOR:
-        this.sortBoard(SortType.DAY);
+        this.#renderBoard(this.points);
         break;
       case UpdateType.MAJOR:
-        this.sortBoard(SortType.DAY);
+        console.log('MAjor');
+        console.log(this.#filterModel.filter);
+        console.log(this.#sortModel.sort);
+        this.#renderBoard(this.points);
         break;
     }
   };
@@ -155,7 +171,7 @@ export default class TripPointBoardPresenter{
 
   #clearBoard = () => {
     this.#listPresernter.forEach((element) => element.remove());
-    remove(this.#zeroPointsPresenter);
+    remove(this.#zeroPointsView);
     this.#addNewTripButtonView.buttonOn();
     this.#listPresernter.clear();
   };
@@ -163,51 +179,13 @@ export default class TripPointBoardPresenter{
   #renderBoard (points) {
     this.#clearBoard();
     if (points.size === 0) {
-      this.#zeroPointsPresenter = new TripPointZeroView({currentFilter: this.#filterModel.filter});
-      render(this.#zeroPointsPresenter, this.#tripEventsListContainer);
+      this.#zeroPointsView = new TripPointZeroView({currentFilter: this.#filterModel.filter});
+      render(this.#zeroPointsView, this.#tripEventsListContainer);
     } else{
-      remove(this.#zeroPointsPresenter);
+      remove(this.#zeroPointsView);
       for (const point of points.entries()) {
         this.#createPresernter(point);
       }
-    }
-  }
-
-
-  #filterPoints(filterType) {
-
-    if(filterType === FilterType.FUTURE){
-      return new Map(filterListFuture(this.#tripPointsModel.points));
-
-    }
-    if(filterType === FilterType.PRESENT){
-      return new Map(filterListPresent(this.#tripPointsModel.points));
-    }
-    if(filterType === FilterType.PAST){
-      return new Map(filterListPast(this.#tripPointsModel.points));
-    }
-    if(filterType === FilterType.EVERYTHING){
-      return this.#tripPointsModel.points;
-    }
-  }
-
-  sortBoard (sortType) {
-    this.#clearBoard();
-
-    if(sortType === SortType.DAY){
-      this.#renderBoard(new Map(sortListDay(this.points)));
-    }
-    if(sortType === SortType.EVENT){
-      this.#renderBoard(this.points);
-    }
-    if(sortType === SortType.OFFERS){
-      this.#renderBoard(this.points);
-    }
-    if(sortType === SortType.PRICE){
-      this.#renderBoard(new Map(sortListPrice(this.points)));
-    }
-    if(sortType === SortType.TIME){
-      this.#renderBoard(new Map(sortListTime(this.points)));
     }
   }
 }
