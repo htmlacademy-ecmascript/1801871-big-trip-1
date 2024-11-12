@@ -52,13 +52,9 @@ export default class TripPointPresenter{
     this.#replacePoint(point);
   };
 
-  #onCloseClick = (point, isNewPoint) => {
+  #onCloseClick = (point) => {
     this.#addNewTripButtonView.buttonOn();
-    if (!isNewPoint) {
-      this.#replacePoint(point);
-    } else {
-      this.remove();
-    }
+    this.#replacePoint(point);
   };
 
   #onDeleteClick = (point) => {
@@ -100,6 +96,7 @@ export default class TripPointPresenter{
   #replacePoint(point) {
     let newPointComnponent;
     this.#point = point;
+    this.#addNewTripButtonView.buttonOn();
 
 
     if(this.#currentComponentType === 'View') {
@@ -180,6 +177,7 @@ export default class TripPointPresenter{
         onEditClick:this.#onEditClick,
         onFavoriteClick:this.#onFavorieClick
       });
+    this.#addNewTripButtonView.buttonOn();
 
     this.#currentComponentType = 'View';
     replace(pointComponent, this.#currentComponent);

@@ -123,8 +123,8 @@ const createTripEditTemplate = ({point}, offers, destinations, isNewPoint) =>
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        <button class="event__reset-btn" type="reset">Delete</button>
-        <button class="event__rollup-btn" type="button">
+        <button class="event__reset-btn" type="reset">${isNewPoint ? 'Cancel' : 'Delete'}</button>
+        <button class="event__rollup-btn" style='display:${isNewPoint ? 'none' : 'inline'}' type="button">
           <span class="visually-hidden">Open event</span>
         </button>
       </header>
@@ -141,7 +141,7 @@ const createTripEditTemplate = ({point}, offers, destinations, isNewPoint) =>
         <section class="event__section  event__section--destination">
           <h3 class="event__section-title  event__section-title--destination">Destination</h3>
           <p class="event__destination-description">${destinations[point.destination].description}</p>
-          ${isNewPoint ? createGaleryTemplate(destinations[point.destination]) : ''}
+          ${createGaleryTemplate(destinations[point.destination])}
         </section>
       </section>
     </form>
@@ -257,7 +257,7 @@ export default class TripPointEditView extends AbstractStatefulView {
   };
 
   #clickHandler = () => {
-    this.#onCloseClick(this.#point, this.#isNewPoint);
+    this.#onCloseClick(this.#point);
   };
 
   #submitHandler = (evt) => {
