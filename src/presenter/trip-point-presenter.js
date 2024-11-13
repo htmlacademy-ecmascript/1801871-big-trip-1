@@ -57,10 +57,13 @@ export default class TripPointPresenter{
     this.#replacePoint(point);
   };
 
-  #onDeleteClick = (point) => {
-    this.#addNewTripButtonView.buttonOn();
-
-    this.#handelPointChange(point, UserAction.DELETE_POINT, UpdateType.MINOR);
+  #onDeleteClick = (point, isNewPoint) => {
+    if(!isNewPoint) {
+      this.#handelPointChange(point, UserAction.DELETE_POINT, UpdateType.MINOR);
+    } else {
+      this.#addNewTripButtonView.buttonOn();
+      this.remove();
+    }
   };
 
   #onFavorieClick = (point) => {

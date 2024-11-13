@@ -33,7 +33,6 @@ export default class TripPointBoardPresenter{
 
   #currentNewPoint = null;
 
-
   constructor(
     {
       tripHeaderContainer,
@@ -90,6 +89,7 @@ export default class TripPointBoardPresenter{
         break;
       case UserAction.ADD_POINT:
         this.#tripPointsModel.addPoint(update, updateType);
+        this.#currentNewPoint.remove();
         this.#currentNewPoint = null;
         break;
       case UserAction.DELETE_POINT:
@@ -107,16 +107,14 @@ export default class TripPointBoardPresenter{
         this.#renderBoard(this.points);
         break;
       case UpdateType.MAJOR:
-        console.log('MAjor');
-        console.log(this.#filterModel.filter);
-        console.log(this.#sortModel.sort);
         this.#renderBoard(this.points);
         break;
     }
   };
 
   #newPoinHandler = () => {
-    this.#filterModel.setFilter(FilterType.EVERYTHING, UpdateType.MINOR);
+    this.#currentNewPoint = '';
+    this.#tripPointsModel.update('',UpdateType.MAJOR);
     this.#renderNewPoint();
   };
 
@@ -132,7 +130,7 @@ export default class TripPointBoardPresenter{
       });
     newPointPresenter.renderNewPoint(this.#tripPointsModel.blankPoint);
     this.#currentNewPoint = newPointPresenter;
-    this.#listPresernter.set(this.#tripPointsModel.blankPoint[0],newPointPresenter);
+    this.#listPresernter.set(this.#tripPointsModel.blankPoint[0],this.#currentNewPoint);
 
   };
 
@@ -170,15 +168,18 @@ export default class TripPointBoardPresenter{
   };
 
   #clearBoard = () => {
+
     this.#listPresernter.forEach((element) => element.remove());
     remove(this.#zeroPointsView);
     this.#addNewTripButtonView.buttonOn();
     this.#listPresernter.clear();
+
   };
 
-  #renderBoard (points) {
+  #renderBoard = (points) => {
     this.#clearBoard();
-    if (points.size === 0) {
+
+    if (points.size === 0 && this.#currentNewPoint === null) {
       this.#zeroPointsView = new TripPointZeroView({currentFilter: this.#filterModel.filter});
       render(this.#zeroPointsView, this.#tripEventsListContainer);
     } else{
@@ -187,5 +188,5 @@ export default class TripPointBoardPresenter{
         this.#createPresernter(point);
       }
     }
-  }
+  };
 }

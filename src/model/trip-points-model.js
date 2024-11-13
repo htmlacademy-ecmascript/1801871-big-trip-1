@@ -43,9 +43,13 @@ export default class TripPointsModel extends Observable {
     this._notify(update, updateType);
   }
 
+  update (update, updateType) {
+    this._notify(update, updateType);
+  }
+
 
   get blankPoint () {
-    return ['13',{
+    return [`${Math.floor(Math.random() * 100)}`,{
       'base_price': '1',
       'date_from': '2029-02-24T08:05:46.876Z',
       'date_to': '2029-02-24T08:05:46.876Z',

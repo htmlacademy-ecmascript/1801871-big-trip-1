@@ -12,6 +12,7 @@ import { filterListFuture, filterListPresent, filterListPast, sortListDay, sortL
 export default class FilterPresenter{
   #tripFilterCategoryContainer = null;
   #tripHeaderContainer = null;
+  #tripFilterContainer = null;
 
 
   #filterModel = null;
@@ -25,6 +26,7 @@ export default class FilterPresenter{
     {
       tripFilterCategoryContainer,
       tripHeaderContainer,
+      tripFilterContainer,
 
       filterModel,
       tripPointsModel,
@@ -34,19 +36,21 @@ export default class FilterPresenter{
 
     this.#tripFilterCategoryContainer = tripFilterCategoryContainer;
     this.#tripHeaderContainer = tripHeaderContainer;
+    this.#tripFilterContainer = tripFilterContainer;
 
     this.#filterModel = filterModel;
     this.#tripPointsModel = tripPointsModel;
     this.#sortModel = sortModel;
 
     this.#tripPointsModel.addObserver(this.#setSortFilterDefault);
+    this.#tripPointsModel.addObserver(this.#updateFilterSortView);
 
   }
 
   init() {
-    render(new InfoView(), this.#tripHeaderContainer);
-    this.#renderFilterSortView();
-
+    render(new InfoView(), this.#tripHeaderContainer, 'afterbegin');
+    this.#renderFilterView();
+    this.#renderSortView();
   }
 
 
@@ -121,27 +125,55 @@ export default class FilterPresenter{
     this.#sortModel.reset();
     this.#filterModel.reset();
 
-    this.#removeFilterSortView();
-    this.#renderFilterSortView();
+    this.#removeSortView();
+    this.#removeFilterView();
+
+    this.#renderFilterView();
+    this.#renderSortView();
   };
 
-  #removeFilterSortView () {
-    remove(this.#filterTimeViewComponent);
+  #updateFilterSortView = (update, updateType) => {
+    if (updateType !== UpdateType.MINOR){
+      return;
+    }
+    this.#removeSortView();
+    this.#removeFilterView();
+
+    this.#renderFilterView();
+    this.#renderSortView();
+  };
+
+  #updateSoortView =  (update, updateType) => {
+    if (updateType !== UpdateType.MINOR){
+      return;
+    }
+    this.#sortModel.reset();
+    this.#removeSortView();
+    this.#renderSortView();
+  }
+
+  #removeSortView () {
     remove(this.#filterCategoryViewComponent);
   }
 
-  #renderFilterSortView () {
-    this.#filterCategoryViewComponent = new FilterCategoryView({handleSortCategoryChange: this.#handleSortCategoryChange, activeCategoryType:this.#sortModel.sort});
+  #removeFilterView () {
+    remove(this.#filterTimeViewComponent);
+  }
 
+  #renderFilterView () {
     this.#filterTimeViewComponent = new FilterTimeView({
       activeFilter: this.#filterModel.filter,
       handleFilterTypeChange :this.#handleFilterTypeChange,
       pointsInFilter: this.#getHowMAnyPointsInFilter()
     });
 
-    render(this.#filterTimeViewComponent, this.#tripHeaderContainer);
-    render(this.#filterCategoryViewComponent, this.#tripFilterCategoryContainer);
+    render(this.#filterTimeViewComponent, this.#tripFilterContainer);
   }
+
+  #renderSortView () {
+    this.#filterCategoryViewComponent = new FilterCategoryView({handleSortCategoryChange: this.#handleSortCategoryChange, activeCategoryType:this.#sortModel.sort});
+    render(this.#filterCategoryViewComponent, this.#tripFilterCategoryContainer);
+  };
 
 
   getPoints = () =>{

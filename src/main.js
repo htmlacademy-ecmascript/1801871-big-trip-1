@@ -9,6 +9,8 @@ import SortModel from './model/sort-model';
 
 const tripFilterCategoryContainer = document.querySelector('.filter-category-container');
 
+const tripFilterContainer = document.querySelector('.trip-main__trip-controls');
+
 
 const tripHeaderContainer = document.querySelector('.trip-main');
 
@@ -30,6 +32,8 @@ const sortModel = new SortModel();
 const filterPresenter = new FilterPresenter ({
   tripFilterCategoryContainer:tripFilterCategoryContainer,
   tripHeaderContainer:tripHeaderContainer,
+  tripFilterContainer:tripFilterContainer,
+
   filterModel: filterModel,
   tripPointsModel: tripPointsModel,
   sortModel:sortModel

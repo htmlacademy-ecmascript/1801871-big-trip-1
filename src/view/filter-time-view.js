@@ -3,7 +3,7 @@ import AbstractView from '../framework/view/abstract-stateful-view.js';
 
 const filterTimeTemplate = (activeFilter, pointsInFilter) =>
   `
- <div class="trip-main__trip-controls  trip-controls">
+
 <div class="trip-controls__filters">
   <h2 class="visually-hidden">Filter events</h2>
   <form class="trip-filters" action="#" method="get">
@@ -36,7 +36,6 @@ export default class FilterTimeView extends AbstractView {
     this.#handleFilterTypeChange = handleFilterTypeChange;
     this.#pointsInFilter = pointsInFilter;
 
-    console.log(pointsInFilter);
     this.element.querySelector('.trip-filters').addEventListener('change', this.#filterTypeChangeHandler);
   }
 

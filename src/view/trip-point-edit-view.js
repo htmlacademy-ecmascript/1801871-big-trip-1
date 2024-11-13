@@ -317,7 +317,7 @@ export default class TripPointEditView extends AbstractStatefulView {
   };
 
   #onDeletePoint = () => {
-    this.#onDeleteClick(TripPointEditView.convertStateToDate(this._state));
+    this.#onDeleteClick(TripPointEditView.convertStateToDate(this._state), this.#isNewPoint);
   };
 
   _restoreHandlers() {
