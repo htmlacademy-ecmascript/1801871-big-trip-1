@@ -1,6 +1,6 @@
 import { render, remove } from '../framework/render';
-import { FilterType, SortType, UserAction, UpdateType } from '../const';
-// import { filterListFuture, filterListPresent, filterListPast, sortListDay, sortListPrice, sortListTime } from '../utils';
+import { UserAction, UpdateType } from '../const';
+
 
 import TripPointPresenter from '../presenter/trip-point-presenter';
 

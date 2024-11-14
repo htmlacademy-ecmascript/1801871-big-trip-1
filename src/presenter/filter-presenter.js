@@ -1,4 +1,4 @@
-import { render, replace, remove } from '../framework/render';
+import { render, remove } from '../framework/render';
 
 import FilterCategoryView from '../view/filter-category-view';
 import FilterTimeView from '../view/filter-time-view';
@@ -44,6 +44,8 @@ export default class FilterPresenter{
 
     this.#tripPointsModel.addObserver(this.#setSortFilterDefault);
     this.#tripPointsModel.addObserver(this.#updateFilterSortView);
+
+    this.#filterModel.addObserver(this.#updateSoortView);
 
   }
 
@@ -143,14 +145,14 @@ export default class FilterPresenter{
     this.#renderSortView();
   };
 
-  #updateSoortView =  (update, updateType) => {
-    if (updateType !== UpdateType.MINOR){
+  #updateSoortView = (update, updateType) => {
+    if (updateType !== UpdateType.MAJOR){
       return;
     }
     this.#sortModel.reset();
     this.#removeSortView();
     this.#renderSortView();
-  }
+  };
 
   #removeSortView () {
     remove(this.#filterCategoryViewComponent);
@@ -173,7 +175,7 @@ export default class FilterPresenter{
   #renderSortView () {
     this.#filterCategoryViewComponent = new FilterCategoryView({handleSortCategoryChange: this.#handleSortCategoryChange, activeCategoryType:this.#sortModel.sort});
     render(this.#filterCategoryViewComponent, this.#tripFilterCategoryContainer);
-  };
+  }
 
 
   getPoints = () =>{
