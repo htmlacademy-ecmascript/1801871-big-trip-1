@@ -89,8 +89,7 @@ export default class TripPointBoardPresenter{
         break;
       case UserAction.ADD_POINT:
         this.#tripPointsModel.addPoint(update, updateType);
-        this.#currentNewPoint.remove();
-        this.#currentNewPoint = null;
+        this.#resetTripPointNew();
         break;
       case UserAction.DELETE_POINT:
         this.#tripPointsModel.deletePoint(update, updateType);
@@ -126,7 +125,8 @@ export default class TripPointBoardPresenter{
         tripEventsListContainer:this.#tripEventsListContainer,
         handelPointChange:this.#handleViewAction,
         handelTypeChange:this.#handleTypeChange,
-        addNewTripButtonView: this.#addNewTripButtonView
+        addNewTripButtonView: this.#addNewTripButtonView,
+        resetNewPoint: this.#resetTripPointNew
       });
     newPointPresenter.renderNewPoint(this.#tripPointsModel.blankPoint);
     this.#currentNewPoint = newPointPresenter;
@@ -142,7 +142,8 @@ export default class TripPointBoardPresenter{
         tripEventsListContainer:this.#tripEventsListContainer,
         handelPointChange:this.#handleViewAction,
         handelTypeChange:this.#handleTypeChange,
-        addNewTripButtonView: this.#addNewTripButtonView
+        addNewTripButtonView: this.#addNewTripButtonView,
+        resetNewPoint: this.#resetTripPointNew
       });
 
     pointPresenter.renderPoint(point);
@@ -162,9 +163,17 @@ export default class TripPointBoardPresenter{
     }
     );
     if(this.#currentNewPoint) {
-      this.#currentNewPoint.remove();
+      this.#resetTripPointNew();
+
     }
 
+  };
+
+  #resetTripPointNew = () => {
+    if(this.#currentNewPoint) {
+      this.#currentNewPoint.remove();
+      this.#currentNewPoint = null;
+    }
   };
 
   #clearBoard = () => {

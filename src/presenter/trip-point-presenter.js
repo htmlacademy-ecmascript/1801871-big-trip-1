@@ -25,6 +25,7 @@ export default class TripPointPresenter{
 
   #addNewTripButtonView = null;
 
+  #resetTripPointNew = null;
 
   constructor(
     {
@@ -33,7 +34,8 @@ export default class TripPointPresenter{
       tripEventsListContainer,
       handelPointChange,
       handelTypeChange,
-      addNewTripButtonView
+      addNewTripButtonView,
+      resetNewPoint
     }
   ){
     this.#tripEventsListContainer = tripEventsListContainer;
@@ -44,6 +46,8 @@ export default class TripPointPresenter{
     this.#handelTypeChange = handelTypeChange;
 
     this.#addNewTripButtonView = addNewTripButtonView;
+
+    this.#resetTripPointNew = resetNewPoint;
 
 
   }
@@ -61,7 +65,9 @@ export default class TripPointPresenter{
     if(!isNewPoint) {
       this.#handelPointChange(point, UserAction.DELETE_POINT, UpdateType.MINOR);
     } else {
+      this.#resetTripPointNew();
       this.#addNewTripButtonView.buttonOn();
+      this.#handelPointChange('', UserAction.DELETE_POINT, UpdateType.MINOR);
       this.remove();
     }
   };
@@ -86,6 +92,8 @@ export default class TripPointPresenter{
     if (evt.key === 'Escape') {
       evt.preventDefault();
       if(this.#isNewPoint) {
+        this.#resetTripPointNew();
+        this.#handelPointChange('', UserAction.DELETE_POINT, UpdateType.MINOR);
         this.#addNewTripButtonView.buttonOn();
         this.remove();
       } else{
