@@ -3,6 +3,7 @@ import { UserAction, UpdateType } from '../const';
 
 
 import TripPointPresenter from '../presenter/trip-point-presenter';
+import TripNewPointPresenter from './trip-new-point-presenter';
 
 import AddNewTripButtonView from '../view/add-new-trip-button-view';
 
@@ -68,7 +69,7 @@ export default class TripPointBoardPresenter{
     this.#filterModel.addObserver(this.#handleModelEvent);
 
     this.#addNewTripButtonView = new AddNewTripButtonView({newPoinHandler:this.#newPoinHandler});
-    this.#zeroPointsView = new TripPointZeroView({currentFilter: this.#filterModel.filter});
+    this.#zeroPointsView = new TripPointZeroView({currentFilter: this.#filterModel.getFilter()});
 
 
   }
@@ -103,8 +104,6 @@ export default class TripPointBoardPresenter{
         this.#listPresernter.get(data[0]).replace(data);
         break;
       case UpdateType.MINOR:
-        this.#renderBoard(this.points);
-        break;
       case UpdateType.MAJOR:
         this.#renderBoard(this.points);
         break;
@@ -118,17 +117,26 @@ export default class TripPointBoardPresenter{
   };
 
   #renderNewPoint = () => {
-    const newPointPresenter = new TripPointPresenter(
+    // const newPointPresenter = new TripPointPresenter(
+    //   {
+    //     offers:this.#offers,
+    //     destinations:this.#destinations,
+    //     tripEventsListContainer:this.#tripEventsListContainer,
+    //     handelPointChange:this.#handleViewAction,
+    //     handelTypeChange:this.#handleTypeChange,
+    //     addNewTripButtonView: this.#addNewTripButtonView,
+    //     resetNewPoint: this.#resetTripPointNew
+    //   });
+    console.log(this.#offers);
+    console.log(this.#destinations);
+    const newPointPresenter = new TripNewPointPresenter (
       {
         offers:this.#offers,
         destinations:this.#destinations,
-        tripEventsListContainer:this.#tripEventsListContainer,
-        handelPointChange:this.#handleViewAction,
-        handelTypeChange:this.#handleTypeChange,
-        addNewTripButtonView: this.#addNewTripButtonView,
-        resetNewPoint: this.#resetTripPointNew
-      });
-    newPointPresenter.renderNewPoint(this.#tripPointsModel.blankPoint);
+        tripEventsListContainer:this.#tripEventsListContainer
+      }
+    );
+    newPointPresenter.renderPoint(this.#tripPointsModel.blankPoint);
     this.#currentNewPoint = newPointPresenter;
     this.#listPresernter.set(this.#tripPointsModel.blankPoint[0],this.#currentNewPoint);
 
@@ -189,7 +197,7 @@ export default class TripPointBoardPresenter{
     this.#clearBoard();
 
     if (points.size === 0 && this.#currentNewPoint === null) {
-      this.#zeroPointsView = new TripPointZeroView({currentFilter: this.#filterModel.filter});
+      this.#zeroPointsView = new TripPointZeroView({currentFilter: this.#filterModel.getFilter()});
       render(this.#zeroPointsView, this.#tripEventsListContainer);
     } else{
       remove(this.#zeroPointsView);

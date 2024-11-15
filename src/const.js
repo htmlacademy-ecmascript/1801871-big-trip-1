@@ -27,10 +27,10 @@ const UpdateType = {
 };
 
 const EmptyListPhrase = {
-  'everything':'Click New Event to create your first point',
-  'past':'There are no past events now',
-  'present':'There are no present events now',
-  'future':'There are no future events now'
+  [FilterType.EVERYTHING]: 'Click New Event to create your first point',
+  [FilterType.PAST]: 'There are no past events now',
+  [FilterType.PRESENT]: 'There are no present events now',
+  [FilterType.FUTURE]: 'There are no future events now'
 };
 
 

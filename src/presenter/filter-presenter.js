@@ -1,4 +1,4 @@
-import { render, remove } from '../framework/render';
+import { render, remove, RenderPosition } from '../framework/render';
 
 import FilterCategoryView from '../view/filter-category-view';
 import FilterTimeView from '../view/filter-time-view';
@@ -45,27 +45,27 @@ export default class FilterPresenter{
     this.#tripPointsModel.addObserver(this.#setSortFilterDefault);
     this.#tripPointsModel.addObserver(this.#updateFilterSortView);
 
-    this.#filterModel.addObserver(this.#updateSoortView);
+    this.#filterModel.addObserver(this.#updateSortView);
 
   }
 
   init() {
-    render(new InfoView(), this.#tripHeaderContainer, 'afterbegin');
+    render(new InfoView(), this.#tripHeaderContainer, RenderPosition.AFTERBEGIN);
     this.#renderFilterView();
     this.#renderSortView();
   }
 
 
   #getHowMAnyPointsInFilter = () => {
-    const pointsInFilter = Object.values(FilterType).map((element)=>({
-      length: this.#filterPoints(this.#tripPointsModel.points, element).size,
-      filter: element
+    const pointsInFilter = Object.values(FilterType).map((filter)=>({
+      length: this.#filterPoints(this.#tripPointsModel.getPoints(), filter).size,
+      filter: filter
     }));
     return pointsInFilter;
   };
 
   #handleFilterTypeChange = (filterType) => {
-    if (this.#filterModel.filter === filterType) {
+    if (this.#filterModel.getFilter() === filterType) {
       return;
     }
 
@@ -73,7 +73,7 @@ export default class FilterPresenter{
   };
 
   #handleSortCategoryChange = (sortType) => {
-    if(this.#sortModel.sort === sortType) {
+    if(this.#sortModel.getSort() === sortType) {
       return;
     }
     this.#sortModel.setSort(sortType, UpdateType.MAJOR);
@@ -100,22 +100,23 @@ export default class FilterPresenter{
   }
 
   #sortPoints(points, sortType) {
-    let sortedPoints = null;
+    let sortedPoints;
 
-    if(sortType === SortType.DAY){
-      sortedPoints = new Map(sortListDay(points));
-    }
-    if(sortType === SortType.EVENT){
-      sortedPoints = points;
-    }
-    if(sortType === SortType.OFFERS){
-      sortedPoints = points;
-    }
-    if(sortType === SortType.PRICE){
-      sortedPoints = new Map(sortListPrice(points));
-    }
-    if(sortType === SortType.TIME){
-      sortedPoints = new Map(sortListTime(points));
+    switch (sortType) {
+      case SortType.DAY:
+        sortedPoints = new Map(sortListDay(points));
+        break;
+      case SortType.EVENT:
+        sortedPoints = points;
+        break;
+      case SortType.OFFERS:
+        sortedPoints = points;
+        break;
+      case SortType.PRICE:
+        sortedPoints = new Map(sortListPrice(points));
+        break;
+      case SortType.TIME:
+        sortedPoints = new Map(sortListTime(points));
     }
     return sortedPoints;
   }
@@ -145,7 +146,7 @@ export default class FilterPresenter{
     this.#renderSortView();
   };
 
-  #updateSoortView = (update, updateType) => {
+  #updateSortView = (update, updateType) => {
     if (updateType !== UpdateType.MAJOR){
       return;
     }
@@ -164,7 +165,7 @@ export default class FilterPresenter{
 
   #renderFilterView () {
     this.#filterTimeViewComponent = new FilterTimeView({
-      activeFilter: this.#filterModel.filter,
+      activeFilter: this.#filterModel.getFilter(),
       handleFilterTypeChange :this.#handleFilterTypeChange,
       pointsInFilter: this.#getHowMAnyPointsInFilter()
     });
@@ -173,16 +174,16 @@ export default class FilterPresenter{
   }
 
   #renderSortView () {
-    this.#filterCategoryViewComponent = new FilterCategoryView({handleSortCategoryChange: this.#handleSortCategoryChange, activeCategoryType:this.#sortModel.sort});
+    this.#filterCategoryViewComponent = new FilterCategoryView({handleSortCategoryChange: this.#handleSortCategoryChange, activeCategoryType:this.#sortModel.getSort()});
     render(this.#filterCategoryViewComponent, this.#tripFilterCategoryContainer);
   }
 
 
   getPoints = () =>{
-    let points = this.#tripPointsModel.points;
+    let points = this.#tripPointsModel.getPoints();
 
-    points = this.#filterPoints(points, this.#filterModel.filter);
-    points = this.#sortPoints(points, this.#sortModel.sort);
+    points = this.#filterPoints(points, this.#filterModel.getFilter());
+    points = this.#sortPoints(points, this.#sortModel.getSort());
 
     return points;
   };

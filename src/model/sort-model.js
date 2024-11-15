@@ -4,7 +4,7 @@ import { SortType } from '../const';
 export default class SortModel extends Observable {
   #sort = SortType.DAY;
 
-  get sort () {
+  getSort () {
     return this.#sort;
   }
 

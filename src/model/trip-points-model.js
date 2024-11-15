@@ -22,7 +22,7 @@ export default class TripPointsModel extends Observable {
   #points = new Map();
 
 
-  get points () {
+  getPoints () {
     return this.#points;
   }
 
