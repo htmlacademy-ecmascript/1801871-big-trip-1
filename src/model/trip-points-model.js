@@ -1,13 +1,11 @@
 import { mockPoints } from '../mock/mock-points';
+import Observable from '../framework/observable';
 
-export default class TripPointsModel {
-
-  #points = mockPoints;
-
-  get points () {
-    const newPoints = new Map();
-    this.#points.forEach((point)=>{
-      newPoints.set(
+export default class TripPointsModel extends Observable {
+  constructor() {
+    super();
+    mockPoints.forEach((point)=>{
+      this.#points.set(
         point.id, {
           'base_price': point.base_price,
           'date_from':  point.date_from,
@@ -19,12 +17,39 @@ export default class TripPointsModel {
         });
 
     });
-    return newPoints;
+  }
+
+  #points = new Map();
+
+
+  getPoints () {
+    return this.#points;
+  }
+
+  updatePoint (update, updateType) {
+
+    this.#points.set(update[0],update[1]);
+    this._notify(update, updateType);
+  }
+
+  addPoint (update, updateType) {
+
+    this.#points.set(update[0],update[1]);
+    this._notify(update, updateType);
+  }
+
+  deletePoint (update, updateType) {
+    this.#points.delete(update[0]);
+    this._notify(update, updateType);
+  }
+
+  update (update, updateType) {
+    this._notify(update, updateType);
   }
 
 
   get blankPoint () {
-    return [13,{
+    return ['',{
       'base_price': '1',
       'date_from': '2029-02-24T08:05:46.876Z',
       'date_to': '2029-02-24T08:05:46.876Z',

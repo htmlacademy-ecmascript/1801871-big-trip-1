@@ -1,0 +1,83 @@
+import TripPointEditView from '../view/trip-point-edit-view';
+import { render, remove, RenderPosition } from '../framework/render';
+
+import { UserAction, UpdateType } from '../const';
+
+export default class TripNewPointPresenter{
+  #offers = null;
+  #destinations = null;
+  #tripEventsListContainer = null;
+
+  #pointViewComponent = null;
+
+  #handelPointChange = null;
+  #handleTypeChange = null;
+
+  #addNewTripButtonView = null;
+
+
+  constructor({
+    offers,
+    destinations,
+    tripEventsListContainer,
+    handelPointChange,
+    addNewTripButtonView,
+    handelTypeChange
+  }){
+    this.#offers = offers;
+    this.#destinations = destinations;
+    this.#tripEventsListContainer = tripEventsListContainer;
+
+    this.#handelPointChange = handelPointChange;
+    this.#handleTypeChange = handelTypeChange;
+    this.#addNewTripButtonView = addNewTripButtonView;
+  }
+
+
+  renderPoint(point) {
+    this.#pointViewComponent = new TripPointEditView({
+      point:point,
+      offers:this.#offers,
+      destinations:this.#destinations,
+      onSubmitPoint:this.#onSubmitPoint,
+      onDeleteClick: this.#onDeleteClick,
+      isNewPoint:true
+    });
+    render(this.#pointViewComponent, this.#tripEventsListContainer, RenderPosition.AFTERBEGIN);
+
+    this.#handleTypeChange();
+    this.#addNewTripButtonView.buttonOff();
+
+    document.addEventListener('keydown', this.#escKeyDownHandler);
+  }
+
+  #onSubmitPoint = (point) =>{
+    this.#addNewTripButtonView.buttonOn();
+    this.#handelPointChange(point, UserAction.ADD_POINT, UpdateType.MAJOR);
+  };
+
+
+  #onDeleteClick = () =>{
+    this.#addNewTripButtonView.buttonOn();
+    this.#handelPointChange('', UserAction.DELETE_POINT, UpdateType.MINOR);
+    this.remove();
+  };
+
+  remove = () => {
+    remove(this.#pointViewComponent);
+  };
+
+  #escKeyDownHandler = (evt) => {
+    if (evt.key === 'Escape') {
+      evt.preventDefault();
+      this.#handelPointChange('', UserAction.DELETE_POINT, UpdateType.MINOR);
+      this.#addNewTripButtonView.buttonOn();
+      this.remove();
+      document.removeEventListener('keydown', this.#escKeyDownHandler);
+    }
+  };
+
+
+}
+
+

@@ -32,7 +32,7 @@ const createGaleryTemplate = (destinaion) =>
 `;
 
 
-const createTripEditTemplate = ({point, offers, destinations, isNewPoint}) =>
+const createTripEditTemplate = ({point}, offers, destinations, isNewPoint) =>
   `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
       <header class="event__header">
@@ -119,12 +119,12 @@ const createTripEditTemplate = ({point, offers, destinations, isNewPoint}) =>
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${point.base_price}">
+          <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${point.base_price}">
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        <button class="event__reset-btn" type="reset">Delete</button>
-        <button class="event__rollup-btn" type="button">
+        <button class="event__reset-btn" type="reset">${isNewPoint ? 'Cancel' : 'Delete'}</button>
+        <button class="event__rollup-btn" style='display:${isNewPoint ? 'none' : 'inline'}' type="button">
           <span class="visually-hidden">Open event</span>
         </button>
       </header>
@@ -141,7 +141,7 @@ const createTripEditTemplate = ({point, offers, destinations, isNewPoint}) =>
         <section class="event__section  event__section--destination">
           <h3 class="event__section-title  event__section-title--destination">Destination</h3>
           <p class="event__destination-description">${destinations[point.destination].description}</p>
-          ${isNewPoint ? createGaleryTemplate(destinations[point.destination]) : ''}
+          ${createGaleryTemplate(destinations[point.destination])}
         </section>
       </section>
     </form>
@@ -152,21 +152,31 @@ export default class TripPointEditView extends AbstractStatefulView {
 
   #onCloseClick = null;
   #onSubmitPoint = null;
+  #onDeleteClick = null;
 
   #point = null;
+
+  #offers = null;
+  #destinations = null;
+  #isNewPoint = null;
 
   #dateFromFaltpicker = null;
   #dateToFaltpicker = null;
 
   constructor (
-    {point, offers, destinations, onCloseClick, onSubmitPoint, isNewPoint = false}
+    {point, offers, destinations, onCloseClick, onSubmitPoint, onDeleteClick, isNewPoint = false}
   ) {
     super();
     this.#point = point;
 
+    this.#offers = offers;
+    this.#destinations = destinations;
+    this.#isNewPoint = isNewPoint;
+
 
     this.#onCloseClick = onCloseClick;
     this.#onSubmitPoint = onSubmitPoint;
+    this.#onDeleteClick = onDeleteClick;
 
     this._setState(TripPointEditView.convertDataToState(point, offers, destinations, isNewPoint));
 
@@ -180,7 +190,7 @@ export default class TripPointEditView extends AbstractStatefulView {
       altFormat: 'Y-m-d',
       defaultDate: this._state.point.date_from,
       maxDate: this._state.point.date_to,
-      onClose: this.#updateSelecteDataFromInState
+      onClose: this.#updateSelecteDateFromInState
     });
     this.#dateToFaltpicker = flatpickr(this.element.querySelector('#event-end-time-1'), {
       enableTime: true,
@@ -188,12 +198,12 @@ export default class TripPointEditView extends AbstractStatefulView {
       altFormat: 'Y-m-d',
       defaultDate: this._state.point.date_to,
       minDate: this._state.point.date_from,
-      onClose: this.#updateSelecteDataToInState
+      onClose: this.#updateSelecteDateToInState
     });
 
   }
 
-  #updateSelecteDataToInState = ([date]) => {
+  #updateSelecteDateToInState = ([date]) => {
     const updateDate = new Date(date).toISOString();
     this._setState({
       point: {
@@ -205,7 +215,7 @@ export default class TripPointEditView extends AbstractStatefulView {
     this.updateElement(this._state);
   };
 
-  #updateSelecteDataFromInState = ([date]) => {
+  #updateSelecteDateFromInState = ([date]) => {
     const updateDate = new Date(date).toISOString();
     this._setState({
       point: {
@@ -232,18 +242,11 @@ export default class TripPointEditView extends AbstractStatefulView {
     }
   }
 
-  static convertDataToState = (point, offers, destinations, isNewPoint) => ({
+  static convertDataToState = (point) => ({
     point: {
       id:point[0],
       ...point[1]
-    },
-    offers: {
-      ...offers
-    },
-    destinations: {
-      ...destinations
-    },
-    isNewPoint: isNewPoint
+    }
   });
 
   static convertStateToDate = (state) => {
@@ -260,7 +263,8 @@ export default class TripPointEditView extends AbstractStatefulView {
   #submitHandler = (evt) => {
     evt.preventDefault();
     this.#updateSelectedOffersInState();
-    this.#onSubmitPoint(TripPointEditView.convertStateToDate(this._state));
+    this.#updatePriceInState();
+    this.#onSubmitPoint(TripPointEditView.convertStateToDate(this._state), this.#isNewPoint);
   };
 
   #updateSelectedOffersInState = () => {
@@ -275,27 +279,45 @@ export default class TripPointEditView extends AbstractStatefulView {
     });
   };
 
-  #onDestinationChange = (evt) => {
-    const destinationId = Object.entries(this._state.destinations).find((destinaion)=>destinaion[1].name === evt.target.value)[0];
+  #updatePriceInState = () => {
+    const price = this.element.querySelector('.event__input--price').value;
     this._setState({
       point: {
         ...this._state.point,
-        destination:destinationId
-
+        // eslint-disable-next-line camelcase
+        base_price: price
       }
     });
-    this.updateElement(this._state);
+  };
+
+  #onDestinationChange = (evt) => {
+    if(Object.entries(this.#destinations).find((destinaion)=>destinaion[1].name === evt.target.value) === undefined){
+      evt.target.value = this.#destinations[this._state.point.destination].name;
+    } else{
+      const destinationId = Object.entries(this.#destinations).find((destinaion)=>destinaion[1].name === evt.target.value)[0];
+
+      this.updateElement({
+        point: {
+          ...this._state.point,
+          destination:destinationId
+
+        }
+      });
+
+    }
   };
 
   #onTypeChange = (evt) => {
-    this._setState({
-      point: {
-        ...this._state.point,
-        offers:'',
-        type:evt.target.value
-      }
-    });
-    this.updateElement(this._state);
+
+    this.updateElement({point: {
+      ...this._state.point,
+      offers:'',
+      type:evt.target.value
+    }});
+  };
+
+  #onDeletePoint = () => {
+    this.#onDeleteClick(TripPointEditView.convertStateToDate(this._state), this.#isNewPoint);
   };
 
   _restoreHandlers() {
@@ -303,11 +325,12 @@ export default class TripPointEditView extends AbstractStatefulView {
     this.element.querySelector('.event--edit').addEventListener('submit', this.#submitHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#onDestinationChange);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#onTypeChange);
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#onDeletePoint);
     this.#setDatePickers();
   }
 
   get template() {
-    return createTripEditTemplate(this._state);
+    return createTripEditTemplate(this._state, this.#offers, this.#destinations, this.#isNewPoint);
 
   }
 
