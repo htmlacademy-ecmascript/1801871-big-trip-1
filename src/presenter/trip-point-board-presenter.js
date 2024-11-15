@@ -117,23 +117,14 @@ export default class TripPointBoardPresenter{
   };
 
   #renderNewPoint = () => {
-    // const newPointPresenter = new TripPointPresenter(
-    //   {
-    //     offers:this.#offers,
-    //     destinations:this.#destinations,
-    //     tripEventsListContainer:this.#tripEventsListContainer,
-    //     handelPointChange:this.#handleViewAction,
-    //     handelTypeChange:this.#handleTypeChange,
-    //     addNewTripButtonView: this.#addNewTripButtonView,
-    //     resetNewPoint: this.#resetTripPointNew
-    //   });
-    console.log(this.#offers);
-    console.log(this.#destinations);
     const newPointPresenter = new TripNewPointPresenter (
       {
         offers:this.#offers,
         destinations:this.#destinations,
-        tripEventsListContainer:this.#tripEventsListContainer
+        tripEventsListContainer:this.#tripEventsListContainer,
+        handelPointChange:this.#handleViewAction,
+        handelTypeChange:this.#handleTypeChange,
+        addNewTripButtonView: this.#addNewTripButtonView,
       }
     );
     newPointPresenter.renderPoint(this.#tripPointsModel.blankPoint);
@@ -150,8 +141,6 @@ export default class TripPointBoardPresenter{
         tripEventsListContainer:this.#tripEventsListContainer,
         handelPointChange:this.#handleViewAction,
         handelTypeChange:this.#handleTypeChange,
-        addNewTripButtonView: this.#addNewTripButtonView,
-        resetNewPoint: this.#resetTripPointNew
       });
 
     pointPresenter.renderPoint(point);
@@ -172,7 +161,6 @@ export default class TripPointBoardPresenter{
     );
     if(this.#currentNewPoint) {
       this.#resetTripPointNew();
-
     }
 
   };

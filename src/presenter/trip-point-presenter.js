@@ -21,11 +21,6 @@ export default class TripPointPresenter{
   #handelTypeChange = null;
   #point = null;
 
-  #isNewPoint = null;
-
-  #addNewTripButtonView = null;
-
-  #resetTripPointNew = null;
 
   constructor(
     {
@@ -34,8 +29,7 @@ export default class TripPointPresenter{
       tripEventsListContainer,
       handelPointChange,
       handelTypeChange,
-      addNewTripButtonView,
-      resetNewPoint
+
     }
   ){
     this.#tripEventsListContainer = tripEventsListContainer;
@@ -44,12 +38,6 @@ export default class TripPointPresenter{
     this.#destinations = destinations;
     this.#handelPointChange = handelPointChange;
     this.#handelTypeChange = handelTypeChange;
-
-    this.#addNewTripButtonView = addNewTripButtonView;
-
-    this.#resetTripPointNew = resetNewPoint;
-
-
   }
 
   #onEditClick = (point) => {
@@ -57,19 +45,12 @@ export default class TripPointPresenter{
   };
 
   #onCloseClick = (point) => {
-    this.#addNewTripButtonView.buttonOn();
+
     this.#replacePoint(point);
   };
 
-  #onDeleteClick = (point, isNewPoint) => {
-    if(!isNewPoint) {
-      this.#handelPointChange(point, UserAction.DELETE_POINT, UpdateType.MINOR);
-    } else {
-      this.#resetTripPointNew();
-      this.#addNewTripButtonView.buttonOn();
-      this.#handelPointChange('', UserAction.DELETE_POINT, UpdateType.MINOR);
-      this.remove();
-    }
+  #onDeleteClick = (point) => {
+    this.#handelPointChange(point, UserAction.DELETE_POINT, UpdateType.MINOR);
   };
 
   #onFavorieClick = (point) => {
@@ -78,28 +59,15 @@ export default class TripPointPresenter{
     this.#handelPointChange(point, UserAction.UPDATE_POINT, UpdateType.PATCH);
   };
 
-  #onSubmitPoint = (point, isNewPoint) => {
-    if(!isNewPoint) {
-      this.#handelPointChange(point, UserAction.UPDATE_POINT, UpdateType.PATCH);
-    } else{
-      this.#addNewTripButtonView.buttonOn();
-      this.#handelPointChange(point, UserAction.ADD_POINT, UpdateType.MAJOR);
-    }
-    this.#isNewPoint = false;
+  #onSubmitPoint = (point) => {
+    this.#handelPointChange(point, UserAction.UPDATE_POINT, UpdateType.PATCH);
   };
 
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
-      if(this.#isNewPoint) {
-        this.#resetTripPointNew();
-        this.#handelPointChange('', UserAction.DELETE_POINT, UpdateType.MINOR);
-        this.#addNewTripButtonView.buttonOn();
-        this.remove();
-      } else{
-        this.#replacePoint(this.#point);
-        document.removeEventListener('keydown', this.#escKeyDownHandler);
-      }
+      this.#replacePoint(this.#point);
+      document.removeEventListener('keydown', this.#escKeyDownHandler);
     }
   };
 
@@ -107,9 +75,6 @@ export default class TripPointPresenter{
   #replacePoint(point) {
     let newPointComnponent;
     this.#point = point;
-    this.#addNewTripButtonView.buttonOn();
-
-
     if(this.#currentComponentType === 'View') {
 
       newPointComnponent = new TripPointEditView(
@@ -152,32 +117,8 @@ export default class TripPointPresenter{
       });
     this.#currentComponentType = 'View';
     this.#currentComponent = pointComponent;
-    this.#isNewPoint = false;
     render(pointComponent, this.#tripEventsListContainer);
   }
-
-  renderNewPoint (point) {
-    const pointComponent = new TripPointEditView(
-      {
-        point:point,
-        offers:this.#offers,
-        destinations:this.#destinations,
-        onCloseClick:this.#onCloseClick,
-        onSubmitPoint:this.#onSubmitPoint,
-        onDeleteClick: this.#onDeleteClick,
-        isNewPoint:true
-      });
-    this.#isNewPoint = true;
-    this.#addNewTripButtonView.buttonOff();
-
-    this.#handelTypeChange();
-    this.#currentComponentType = 'Edit';
-    this.#currentComponent = pointComponent;
-    this.#point = point;
-    document.addEventListener('keydown', this.#escKeyDownHandler);
-    render(pointComponent, this.#tripEventsListContainer, 'afterbegin');
-  }
-
 
   replace(point) {
     const pointComponent = new TripPointView(
@@ -188,7 +129,6 @@ export default class TripPointPresenter{
         onEditClick:this.#onEditClick,
         onFavoriteClick:this.#onFavorieClick
       });
-    this.#addNewTripButtonView.buttonOn();
 
     this.#currentComponentType = 'View';
     replace(pointComponent, this.#currentComponent);
