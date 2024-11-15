@@ -68,7 +68,7 @@ export default class TripPointBoardPresenter{
     this.#sortModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
 
-    this.#addNewTripButtonView = new AddNewTripButtonView({newPoinHandler:this.#newPoinHandler});
+    this.#addNewTripButtonView = new AddNewTripButtonView({handleAddNewPoin: this.#newPoinHandler});
     this.#zeroPointsView = new TripPointZeroView({currentFilter: this.#filterModel.getFilter()});
 
 
@@ -129,8 +129,6 @@ export default class TripPointBoardPresenter{
     );
     newPointPresenter.renderPoint(this.#tripPointsModel.blankPoint);
     this.#currentNewPoint = newPointPresenter;
-    this.#listPresernter.set(this.#tripPointsModel.blankPoint[0],this.#currentNewPoint);
-
   };
 
   #createPresernter = (point) => {
