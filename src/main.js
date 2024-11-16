@@ -7,6 +7,8 @@ import DestinationsModel from './model/destinations-model';
 import FilterModel from './model/filter-model';
 import SortModel from './model/sort-model';
 
+import Api from './api';
+
 const tripFilterCategoryContainer = document.querySelector('.filter-category-container');
 
 const tripFilterContainer = document.querySelector('.trip-main__trip-controls');
@@ -54,6 +56,9 @@ const tripPointBoardPresenter = new TripPointBoardPresenter ({
   tripHeaderContainer:tripHeaderContainer
 });
 
+const api = new Api('https://20.objects.htmlacademy.pro/big-trip','Basic YWxhZGRpbjpvcGVuc2VzYW1l');
+
+api.parse('points');
 
 filterPresenter.init();
 tripPointBoardPresenter.init();
