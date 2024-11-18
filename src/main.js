@@ -7,7 +7,11 @@ import DestinationsModel from './model/destinations-model';
 import FilterModel from './model/filter-model';
 import SortModel from './model/sort-model';
 
-import Api from './api';
+import PointsApiService from './api/points-api-service';
+
+const END_POINT = 'https://20.objects.htmlacademy.pro/big-trip';
+
+const AUTHORIZATION_TOKEN = 'Basic YWxhZGRpbjpvcGVuc2VzYW1l';
 
 const tripFilterCategoryContainer = document.querySelector('.filter-category-container');
 
@@ -18,8 +22,13 @@ const tripHeaderContainer = document.querySelector('.trip-main');
 
 
 const tripEventsListContainer = document.querySelector('.trip-events__list');
+const pointsApiService = new PointsApiService(END_POINT, AUTHORIZATION_TOKEN);
 
-const tripPointsModel = new TripPointsModel();
+const tripPointsModel = new TripPointsModel(
+  {
+    pointsApiService: pointsApiService,
+  }
+);
 
 
 const offersModel = new OffersModel();
@@ -56,9 +65,6 @@ const tripPointBoardPresenter = new TripPointBoardPresenter ({
   tripHeaderContainer:tripHeaderContainer
 });
 
-const api = new Api('https://20.objects.htmlacademy.pro/big-trip','Basic YWxhZGRpbjpvcGVuc2VzYW1l');
-
-api.parse('points');
 
 filterPresenter.init();
 tripPointBoardPresenter.init();

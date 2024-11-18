@@ -108,10 +108,10 @@ const createTripEditTemplate = ({point}, offers, destinations, isNewPoint) =>
 
         <div class="event__field-group  event__field-group--time">
           <label class="visually-hidden" for="event-start-time-1">From</label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${formatDate(point.date_from,'DD/MM/YY HH:mm')}">
+          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${formatDate(point.dateFrom,'DD/MM/YY HH:mm')}">
           &mdash;
           <label class="visually-hidden" for="event-end-time-1">To</label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${formatDate(point.date_to,'DD/MM/YY HH:mm')}">
+          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${formatDate(point.dateTo,'DD/MM/YY HH:mm')}">
         </div>
 
         <div class="event__field-group  event__field-group--price">
@@ -119,7 +119,7 @@ const createTripEditTemplate = ({point}, offers, destinations, isNewPoint) =>
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${point.base_price}">
+          <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${point.basePrice}">
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -188,16 +188,16 @@ export default class TripPointEditView extends AbstractStatefulView {
       enableTime: true,
       dateFormat: 'd/m/y H:i',
       altFormat: 'Y-m-d',
-      defaultDate: this._state.point.date_from,
-      maxDate: this._state.point.date_to,
+      defaultDate: this._state.point.dateFrom,
+      maxDate: this._state.point.dateTo,
       onClose: this.#updateSelecteDateFromInState
     });
     this.#dateToFaltpicker = flatpickr(this.element.querySelector('#event-end-time-1'), {
       enableTime: true,
       dateFormat: 'd/m/y H:i',
       altFormat: 'Y-m-d',
-      defaultDate: this._state.point.date_to,
-      minDate: this._state.point.date_from,
+      defaultDate: this._state.point.dateTo,
+      minDate: this._state.point.dateFrom,
       onClose: this.#updateSelecteDateToInState
     });
 
@@ -209,7 +209,7 @@ export default class TripPointEditView extends AbstractStatefulView {
       point: {
         ...this._state.point,
         // eslint-disable-next-line camelcase
-        date_to:updateDate
+        dateTo:updateDate
       }
     });
     this.updateElement(this._state);
@@ -221,7 +221,7 @@ export default class TripPointEditView extends AbstractStatefulView {
       point: {
         ...this._state.point,
         // eslint-disable-next-line camelcase
-        date_from:updateDate
+        dateFrom:updateDate
       }
     });
     this.updateElement(this._state);
@@ -285,7 +285,7 @@ export default class TripPointEditView extends AbstractStatefulView {
       point: {
         ...this._state.point,
         // eslint-disable-next-line camelcase
-        base_price: price
+        basePrice: price
       }
     });
   };

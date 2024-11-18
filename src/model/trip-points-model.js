@@ -2,24 +2,41 @@ import { mockPoints } from '../mock/mock-points';
 import Observable from '../framework/observable';
 
 export default class TripPointsModel extends Observable {
-  constructor() {
+  #pointsApiService = null;
+  #points = new Map();
+  constructor({
+    pointsApiService
+  }) {
     super();
     mockPoints.forEach((point)=>{
-      this.#points.set(
-        point.id, {
-          'base_price': point.base_price,
-          'date_from':  point.date_from,
-          'date_to': point.date_to,
-          'destination': point.destination,
-          'is_favorite': point.is_favorite,
-          'offers': point.offers,
-          'type': point.type
-        });
+      this.#points.set(this.#adaptPointToClient(point)[0],this.#adaptPointToClient(point)[1]);
+    });
 
+    this.#pointsApiService = pointsApiService;
+    this.#pointsApiService.points.then((point)=>{
+      console.log(point);
     });
   }
 
-  #points = new Map();
+
+  #adaptPointToServer (point) {
+    return {
+      id:point[0],
+      ...point[1]
+    };
+  }
+
+  #adaptPointToClient (point) {
+    return [point.id, {
+      'basePrice': point.base_price,
+      'dateFrom':  point.date_from,
+      'dateTo': point.date_to,
+      'destination': point.destination,
+      'isFavorite': point.is_favorite,
+      'offers': point.offers,
+      'type': point.type
+    }];
+  }
 
 
   getPoints () {
@@ -27,7 +44,8 @@ export default class TripPointsModel extends Observable {
   }
 
   updatePoint (update, updateType) {
-
+    console.log(update);
+    console.log(this.#adaptPointToServer(update));
     this.#points.set(update[0],update[1]);
     this._notify(update, updateType);
   }
@@ -50,7 +68,7 @@ export default class TripPointsModel extends Observable {
 
   get blankPoint () {
     return ['',{
-      'base_price': '1',
+      'basePrice': '1',
       'date_from': '2029-02-24T08:05:46.876Z',
       'date_to': '2029-02-24T08:05:46.876Z',
       'destination': '2ce7b3bb-ee15-4f13-95f0-550b57a9426f',
