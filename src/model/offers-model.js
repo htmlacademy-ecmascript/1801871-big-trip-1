@@ -1,15 +1,27 @@
-import { mockOffers } from '../mock/mock-offers';
+
 
 export default class OffersModel {
-  #offers = mockOffers;
+  #offers = {};
+  #offersApiService = null;
+  constructor({offersApiService}) {
+    this.#offersApiService = offersApiService;
+  }
 
   get offers () {
-    const convertedOffers = {};
-    this.#offers.forEach((offer)=>{
-      convertedOffers[offer.type] = offer.offers;
+    return this.#offers;
+  }
 
-    });
-    return convertedOffers;
+  async init () {
+    try {
+      const offers = await this.#offersApiService.offers;
+      offers.forEach((offer)=>{
+        this.#offers[offer.type] = offer.offers;
+      });
+    } catch(err){
+      console.log(err);
+    }
+    console.log(this.#offers);
+
   }
 }
 

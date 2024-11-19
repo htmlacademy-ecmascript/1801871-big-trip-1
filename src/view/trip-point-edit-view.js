@@ -208,7 +208,7 @@ export default class TripPointEditView extends AbstractStatefulView {
     this._setState({
       point: {
         ...this._state.point,
-        // eslint-disable-next-line camelcase
+
         dateTo:updateDate
       }
     });
@@ -220,7 +220,7 @@ export default class TripPointEditView extends AbstractStatefulView {
     this._setState({
       point: {
         ...this._state.point,
-        // eslint-disable-next-line camelcase
+
         dateFrom:updateDate
       }
     });
@@ -284,7 +284,6 @@ export default class TripPointEditView extends AbstractStatefulView {
     this._setState({
       point: {
         ...this._state.point,
-        // eslint-disable-next-line camelcase
         basePrice: price
       }
     });

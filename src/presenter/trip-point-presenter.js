@@ -54,7 +54,7 @@ export default class TripPointPresenter{
   };
 
   #onFavorieClick = (point) => {
-    // eslint-disable-next-line camelcase
+
     point[1].isFavorite = !point[1].isFavorite;
     this.#handelPointChange(point, UserAction.UPDATE_POINT, UpdateType.PATCH);
   };

@@ -1,17 +1,36 @@
-import { mockDestination } from '../mock/mock-destination';
+
 
 export default class DestinationsModel {
-  #destinations = mockDestination;
+  #destinationsApiService = null;
+  #convertedDestinations = {};
+  #isReady = false;
+
+  constructor({destinationsApiService}) {
+    this.#destinationsApiService = destinationsApiService;
+  }
 
   get destinations () {
-    const convertedDestinations = {};
-    this.#destinations.forEach((destination)=>{
-      convertedDestinations[destination.id] = {
-        'description': destination.description,
-        'name': destination.name,
-        'pictures': destination.pictures
-      };
-    });
-    return convertedDestinations;
+    return this.#convertedDestinations;
+  }
+
+  async init () {
+    try {
+      const destinations = await this.#destinationsApiService.destinations;
+      destinations.forEach((destination)=>{
+        this.#convertedDestinations[destination.id] = {
+          'description': destination.description,
+          'name': destination.name,
+          'pictures': destination.pictures
+        };
+      });
+      this.#isReady = true;
+    } catch(err){
+      console.log(err);
+    }
+
+  }
+
+  isDestinationsReady() {
+    return this.#isReady;
   }
 }

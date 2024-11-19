@@ -1,5 +1,6 @@
-import { mockPoints } from '../mock/mock-points';
+
 import Observable from '../framework/observable';
+import { UpdateType } from '../const';
 
 export default class TripPointsModel extends Observable {
   #pointsApiService = null;
@@ -8,21 +9,36 @@ export default class TripPointsModel extends Observable {
     pointsApiService
   }) {
     super();
-    mockPoints.forEach((point)=>{
-      this.#points.set(this.#adaptPointToClient(point)[0],this.#adaptPointToClient(point)[1]);
-    });
+
 
     this.#pointsApiService = pointsApiService;
-    this.#pointsApiService.points.then((point)=>{
-      console.log(point);
-    });
+
+
+  }
+
+  async init () {
+    try {
+      const points = await this.#pointsApiService.points;
+      points.forEach((point)=>this.#points.set(this.#adaptPointToClient(point)[0],this.#adaptPointToClient(point)[1]));
+    } catch(err){
+      console.log('err');
+    }
+    console.log(this.#points);
+    this._notify('', UpdateType.INIT);
   }
 
 
   #adaptPointToServer (point) {
     return {
-      id:point[0],
-      ...point[1]
+      'id':point[0],
+      'base_price':point[1].basePrice,
+      'date_from':point[1].dateFrom,
+      'date_to':point[1].dateTo,
+      'is_favorite':point[1].isFavorite,
+      'offers': point[1].offers,
+      'type': point[1].type,
+      'destination': point[1].destination,
+
     };
   }
 
@@ -44,8 +60,6 @@ export default class TripPointsModel extends Observable {
   }
 
   updatePoint (update, updateType) {
-    console.log(update);
-    console.log(this.#adaptPointToServer(update));
     this.#points.set(update[0],update[1]);
     this._notify(update, updateType);
   }

@@ -105,6 +105,7 @@ export default class TripPointBoardPresenter{
         break;
       case UpdateType.MINOR:
       case UpdateType.MAJOR:
+      case UpdateType.INIT:
         this.#renderBoard(this.points);
         break;
     }
