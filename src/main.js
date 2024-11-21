@@ -77,9 +77,9 @@ const tripPointBoardPresenter = new TripPointBoardPresenter ({
 
   tripHeaderContainer:tripHeaderContainer
 });
-// destinationsModel.init();
-// offersModel.init();
-// tripPointsModel.init();
+destinationsModel.init();
+offersModel.init();
+tripPointsModel.init();
 
 filterPresenter.init();
 tripPointBoardPresenter.init();

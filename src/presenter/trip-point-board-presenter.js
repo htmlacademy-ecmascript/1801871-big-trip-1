@@ -65,6 +65,8 @@ export default class TripPointBoardPresenter{
     this.#destinations = this.#destinationsModel.destinations;
 
     this.#tripPointsModel.addObserver(this.#handleModelEvent);
+    this.#destinationsModel.addObserver(this.#handleModelEvent);
+    this.#offersModel.addObserver(this.#handleModelEvent);
     this.#sortModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
 
@@ -105,8 +107,13 @@ export default class TripPointBoardPresenter{
         break;
       case UpdateType.MINOR:
       case UpdateType.MAJOR:
-      case UpdateType.INIT:
         this.#renderBoard(this.points);
+        break;
+      case UpdateType.INIT:
+        if(this.#tripPointsModel.isPointsReady() && this.#offersModel.isOffersReady() && this.#destinationsModel.isDestinationsReady()){
+          this.#renderBoard(this.points);
+
+        }
         break;
     }
   };

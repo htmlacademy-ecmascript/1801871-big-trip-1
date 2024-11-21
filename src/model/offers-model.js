@@ -1,9 +1,13 @@
+import Observable from '../framework/observable';
+import { UpdateType } from '../const';
 
-
-export default class OffersModel {
+export default class OffersModel extends Observable{
   #offers = {};
   #offersApiService = null;
+  #isReady = false;
+
   constructor({offersApiService}) {
+    super();
     this.#offersApiService = offersApiService;
   }
 
@@ -17,11 +21,15 @@ export default class OffersModel {
       offers.forEach((offer)=>{
         this.#offers[offer.type] = offer.offers;
       });
+      this.#isReady = true;
+      this._notify('', UpdateType.INIT);
     } catch(err){
       console.log(err);
     }
-    console.log(this.#offers);
+  }
 
+  isOffersReady() {
+    return this.#isReady;
   }
 }
 

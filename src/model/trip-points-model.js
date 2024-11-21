@@ -5,6 +5,9 @@ import { UpdateType } from '../const';
 export default class TripPointsModel extends Observable {
   #pointsApiService = null;
   #points = new Map();
+
+  #isReady = false;
+
   constructor({
     pointsApiService
   }) {
@@ -20,11 +23,15 @@ export default class TripPointsModel extends Observable {
     try {
       const points = await this.#pointsApiService.points;
       points.forEach((point)=>this.#points.set(this.#adaptPointToClient(point)[0],this.#adaptPointToClient(point)[1]));
+      this.#isReady = true;
     } catch(err){
       console.log('err');
     }
-    console.log(this.#points);
     this._notify('', UpdateType.INIT);
+  }
+
+  isPointsReady() {
+    return this.#isReady;
   }
 
 
