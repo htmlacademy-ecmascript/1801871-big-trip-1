@@ -28,7 +28,7 @@ export default class DestinationsModel extends Observable {
       this.#isReady = true;
       this._notify('', UpdateType.INIT);
     } catch(err){
-      console.log(err);
+      throw new Error('Can\'t download destinations');
     }
 
   }
