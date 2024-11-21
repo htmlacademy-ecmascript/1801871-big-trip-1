@@ -6,7 +6,7 @@ const filterCategoryTemplate = (activeCategoryType) =>
 <div>
 <form class="trip-events__trip-sort  trip-sort" action="#" method="get">
     <div class="trip-sort__item  trip-sort__item--day">
-      <input id="sort-day" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-day" data-sort-type='${SortType.DAY}' ${activeCategoryType === SortType.DAY ? 'checked' : ''}>
+      <input id="sort-day" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-day" data-sort-type='${SortType.DAY}' ${activeCategoryType === SortType.DAY ? 'checked' : ''} disabled>
       <label class="trip-sort__btn" for="sort-day">Day</label>
     </div>
 
@@ -16,12 +16,12 @@ const filterCategoryTemplate = (activeCategoryType) =>
     </div>
 
     <div class="trip-sort__item  trip-sort__item--time">
-      <input id="sort-time" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-time" data-sort-type='${SortType.TIME}' ${activeCategoryType === SortType.TIME ? 'checked' : ''}>
+      <input id="sort-time" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-time" data-sort-type='${SortType.TIME}' ${activeCategoryType === SortType.TIME ? 'checked' : ''} disabled>
       <label class="trip-sort__btn" for="sort-time">Time</label>
     </div>
 
     <div class="trip-sort__item  trip-sort__item--price">
-      <input id="sort-price" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-price" data-sort-type='${SortType.PRICE}' ${activeCategoryType === SortType.PRICE ? 'checked' : ''}>
+      <input id="sort-price" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-price" data-sort-type='${SortType.PRICE}' ${activeCategoryType === SortType.PRICE ? 'checked' : ''} disabled>
       <label class="trip-sort__btn" for="sort-price" data-filter-type="price">Price</label>
     </div>
 
@@ -55,6 +55,14 @@ export default class FilterCategoryView extends AbstractView{
 
   #sortTypeChangeHandler = (evt) => {
     this.#handleSortCategoryChange(evt.target.dataset.sortType);
+  };
+
+  categoryOn = () => {
+    this.element.querySelectorAll('input').forEach((input)=>{
+      if(input.dataset.sortType === SortType.DAY || input.dataset.sortType === SortType.TIME || input.dataset.sortType === SortType.PRICE) {
+        input.removeAttribute('disabled', false);
+      }
+    });
   };
 
 }

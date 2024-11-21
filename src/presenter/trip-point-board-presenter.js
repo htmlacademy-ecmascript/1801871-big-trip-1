@@ -119,6 +119,8 @@ export default class TripPointBoardPresenter{
         if(this.#tripPointsModel.isPointsReady() && this.#offersModel.isOffersReady() && this.#destinationsModel.isDestinationsReady()){
           this.#isLoading = false;
           remove(this.#loadingView);
+          this.#filterPresenter.enableCatagory();
+          this.#addNewTripButtonView.buttonOn();
           this.#renderBoard(this.points);
         }
         break;
@@ -198,6 +200,7 @@ export default class TripPointBoardPresenter{
     this.#clearBoard();
     if(this.#isLoading) {
       render(this.#loadingView, this.#tripEventsListContainer);
+      this.#addNewTripButtonView.buttonOff();
       return;
     }
 
