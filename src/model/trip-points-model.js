@@ -25,7 +25,7 @@ export default class TripPointsModel extends Observable {
       points.forEach((point)=>this.#points.set(this.#adaptPointToClient(point)[0],this.#adaptPointToClient(point)[1]));
       this.#isReady = true;
     } catch(err){
-      console.log('err');
+      throw new Error('Can\'t get points');
     }
     this._notify('', UpdateType.INIT);
   }
@@ -38,7 +38,7 @@ export default class TripPointsModel extends Observable {
   #adaptPointToServer (point) {
     return {
       'id':point[0],
-      'base_price':point[1].basePrice,
+      'base_price':Number(point[1].basePrice),
       'date_from':point[1].dateFrom,
       'date_to':point[1].dateTo,
       'is_favorite':point[1].isFavorite,
@@ -66,8 +66,14 @@ export default class TripPointsModel extends Observable {
     return this.#points;
   }
 
-  updatePoint (update, updateType) {
-    this.#points.set(update[0],update[1]);
+  async updatePoint (update, updateType) {
+    try{
+      const response = await this.#pointsApiService.updatePoint(this.#adaptPointToServer(update));
+      const updatedPoint = this.#adaptPointToClient(response);
+      this.#points.set(updatedPoint[0],updatedPoint[1]);
+    }catch{
+      throw new Error('Can\'t add points');
+    }
     this._notify(update, updateType);
   }
 
