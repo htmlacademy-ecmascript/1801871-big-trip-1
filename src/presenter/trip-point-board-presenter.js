@@ -10,6 +10,8 @@ import AddNewTripButtonView from '../view/add-new-trip-button-view';
 
 import TripPointZeroView from '../view/zero-point-view';
 
+import LoadingView from '../view/loading-view';
+
 
 export default class TripPointBoardPresenter{
   #tripEventsListContainer = null;
@@ -19,6 +21,7 @@ export default class TripPointBoardPresenter{
 
   #zeroPointsView = null;
   #addNewTripButtonView = null;
+  #loadingView = null;
 
   #tripPointsModel = null;
   #offersModel = null;
@@ -33,6 +36,8 @@ export default class TripPointBoardPresenter{
   #destinations = null;
 
   #currentNewPoint = null;
+
+  #isLoading = true;
 
   constructor(
     {
@@ -72,6 +77,7 @@ export default class TripPointBoardPresenter{
 
     this.#addNewTripButtonView = new AddNewTripButtonView({handleAddNewPoin: this.#newPoinHandler});
     this.#zeroPointsView = new TripPointZeroView({currentFilter: this.#filterModel.getFilter()});
+    this.#loadingView = new LoadingView();
 
 
   }
@@ -111,8 +117,9 @@ export default class TripPointBoardPresenter{
         break;
       case UpdateType.INIT:
         if(this.#tripPointsModel.isPointsReady() && this.#offersModel.isOffersReady() && this.#destinationsModel.isDestinationsReady()){
+          this.#isLoading = false;
+          remove(this.#loadingView);
           this.#renderBoard(this.points);
-
         }
         break;
     }
@@ -189,6 +196,10 @@ export default class TripPointBoardPresenter{
 
   #renderBoard = (points) => {
     this.#clearBoard();
+    if(this.#isLoading) {
+      render(this.#loadingView, this.#tripEventsListContainer);
+      return;
+    }
 
     if (points.size === 0 && this.#currentNewPoint === null) {
       this.#zeroPointsView = new TripPointZeroView({currentFilter: this.#filterModel.getFilter()});
