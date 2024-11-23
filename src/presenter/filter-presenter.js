@@ -122,7 +122,7 @@ export default class FilterPresenter{
   }
 
   #setSortFilterDefault = (update, updateType) => {
-    if (updateType !== UpdateType.MAJOR){
+    if (updateType !== UpdateType.MAJOR && updateType !== UpdateType.INIT){
       return;
     }
     this.#sortModel.reset();
@@ -186,5 +186,9 @@ export default class FilterPresenter{
     points = this.#sortPoints(points, this.#sortModel.getSort());
 
     return points;
+  };
+
+  enableCatagory = ()=> {
+    this.#filterCategoryViewComponent.categoryOn();
   };
 }

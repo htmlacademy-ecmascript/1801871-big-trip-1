@@ -34,20 +34,20 @@ function formatDate(date, format) {
 
 function filterListFuture (points) {
   const now = Date.now();
-  return Array.from(points).filter((point) => Date.parse(point[1].date_from) > now);
+  return Array.from(points).filter((point) => Date.parse(point[1].dateFrom) > now);
 }
 
 function filterListPast (points) {
   const now = Date.now();
-  return Array.from(points).filter((point) => Date.parse(point[1].date_to) < now);
+  return Array.from(points).filter((point) => Date.parse(point[1].dateTo) < now);
 }
 
 function filterListPresent (points) {
   const now = dayjs();
 
   return Array.from(points).filter((point) =>{
-    const startDate = dayjs(point[1].date_from);
-    const dateEnd = dayjs(point[1].date_to);
+    const startDate = dayjs(point[1].dateFrom);
+    const dateEnd = dayjs(point[1].dateTo);
 
 
     return now >= startDate && now <= dateEnd;
@@ -56,10 +56,10 @@ function filterListPresent (points) {
 
 function sortListDay (points) {
   return Array.from(points).sort((a, b) => {
-    if (dayjs(a[1].date_from) > dayjs(b[1].date_from)) {
+    if (dayjs(a[1].dateFrom) > dayjs(b[1].dateFrom)) {
       return 1;
     }
-    if (dayjs(a[1].date_from) < dayjs(b[1].date_from)) {
+    if (dayjs(a[1].dateFrom) < dayjs(b[1].dateFrom)) {
       return -1;
     }
     return 0;
@@ -68,10 +68,10 @@ function sortListDay (points) {
 
 function sortListPrice (points) {
   return Array.from(points).sort((a, b) => {
-    if (dayjs(a[1].base_price) < dayjs(b[1].base_price)) {
+    if (dayjs(a[1].basePrice) < dayjs(b[1].basePrice)) {
       return 1;
     }
-    if (dayjs(a[1].base_price) > dayjs(b[1].base_price)) {
+    if (dayjs(a[1].basePrice) > dayjs(b[1].basePrice)) {
       return -1;
     }
     return 0;
@@ -82,12 +82,12 @@ function sortListTime (points) {
 
 
   return Array.from(points).sort((a, b) => {
-    const startDateA = dayjs(a[1].date_from);
-    const endDateA = dayjs(a[1].date_to);
+    const startDateA = dayjs(a[1].dateFrom);
+    const endDateA = dayjs(a[1].dateTo);
     const differenceInMillisecondsA = endDateA.diff(startDateA);
 
-    const startDateB = dayjs(b[1].date_from);
-    const endDateB = dayjs(b[1].date_to);
+    const startDateB = dayjs(b[1].dateFrom);
+    const endDateB = dayjs(b[1].dateTo);
     const differenceInMillisecondsB = endDateB.diff(startDateB);
 
     if (differenceInMillisecondsA < differenceInMillisecondsB) {
