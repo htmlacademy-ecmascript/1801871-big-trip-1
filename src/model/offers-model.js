@@ -28,7 +28,7 @@ export default class OffersModel extends Observable{
     }
   }
 
-  isOffersReady() {
+  isReady() {
     return this.#isReady;
   }
 }

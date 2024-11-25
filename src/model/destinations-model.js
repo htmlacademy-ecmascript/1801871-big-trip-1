@@ -33,7 +33,7 @@ export default class DestinationsModel extends Observable {
 
   }
 
-  isDestinationsReady() {
+  isReady() {
     return this.#isReady;
   }
 }

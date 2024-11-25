@@ -116,7 +116,7 @@ export default class TripPointBoardPresenter{
         this.#renderBoard(this.points);
         break;
       case UpdateType.INIT:
-        if(this.#tripPointsModel.isPointsReady() && this.#offersModel.isOffersReady() && this.#destinationsModel.isDestinationsReady()){
+        if(this.#tripPointsModel.isReady() && this.#offersModel.isReady() && this.#destinationsModel.isReady()){
           this.#isLoading = false;
           remove(this.#loadingView);
           this.#filterPresenter.enableCatagory();
