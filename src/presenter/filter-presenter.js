@@ -133,6 +133,7 @@ export default class FilterPresenter{
 
     this.#renderFilterView();
     this.#renderSortView();
+    this.enableCatagory();
   };
 
   #updateFilterSortView = (update, updateType) => {
@@ -144,6 +145,7 @@ export default class FilterPresenter{
 
     this.#renderFilterView();
     this.#renderSortView();
+    this.enableCatagory();
   };
 
   #updateSortView = (update, updateType) => {
@@ -153,6 +155,7 @@ export default class FilterPresenter{
     this.#sortModel.reset();
     this.#removeSortView();
     this.#renderSortView();
+    this.enableCatagory();
   };
 
   #removeSortView () {
@@ -188,7 +191,7 @@ export default class FilterPresenter{
     return points;
   };
 
-  enableCatagory = ()=> {
+  enableCatagory = () => {
     this.#filterCategoryViewComponent.categoryOn();
   };
 }

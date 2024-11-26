@@ -184,6 +184,7 @@ export default class TripPointBoardPresenter{
     if(this.#currentNewPoint) {
       this.#currentNewPoint.remove();
       this.#currentNewPoint = null;
+      this.#addNewTripButtonView.buttonOn();
     }
   };
 
