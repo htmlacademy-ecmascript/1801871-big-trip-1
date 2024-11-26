@@ -91,17 +91,29 @@ export default class TripPointBoardPresenter{
     return this.#filterPresenter.getPoints();
   }
 
-  #handleViewAction = (update, actionType, updateType) => {
+  #handleViewAction = async (update, actionType, updateType) => {
     switch (actionType) {
       case UserAction.UPDATE_POINT:
-        this.#tripPointsModel.updatePoint(update, updateType);
+        this.#listPresernter.get(update[0]).setSaving();
+        try {
+          await this.#tripPointsModel.updatePoint(update, updateType);
+        } catch(err) {
+          this.#listPresernter.get(update[0]).setAborting();
+        }
         break;
       case UserAction.ADD_POINT:
-        this.#tripPointsModel.addPoint(update, updateType);
-        this.#resetTripPointNew();
+        this.#currentNewPoint.setSaving();
+        try {
+          await this.#tripPointsModel.addPoint(update, updateType);
+          this.#resetTripPointNew();
+        } catch(err) {
+          this.#currentNewPoint.setAborting();
+        }
+
         break;
       case UserAction.DELETE_POINT:
-        this.#tripPointsModel.deletePoint(update, updateType);
+        this.#listPresernter.get(update[0]).setDeleting();
+        // this.#tripPointsModel.deletePoint(update, updateType);
         break;
     }
   };
@@ -113,6 +125,7 @@ export default class TripPointBoardPresenter{
         break;
       case UpdateType.MINOR:
       case UpdateType.MAJOR:
+        this.#addNewTripButtonView.buttonOn();
         this.#renderBoard(this.points);
         break;
       case UpdateType.INIT:

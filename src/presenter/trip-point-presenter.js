@@ -60,6 +60,7 @@ export default class TripPointPresenter{
   };
 
   #onSubmitPoint = (point) => {
+    console.log(point);
     this.#handelPointChange(point, UserAction.UPDATE_POINT, UpdateType.PATCH);
   };
 
@@ -143,5 +144,37 @@ export default class TripPointPresenter{
     if (this.#currentComponentType !== 'View') {
       this.#replacePoint(point);
     }
+  }
+
+  setSaving = () =>{
+    console.log('isSaving');
+    this.#currentComponent.updateElement(
+      {
+        isSaving:true,
+        isDisabled:true
+      }
+    );
+  };
+
+  setDeleting = () => {
+    this.#currentComponent.updateElement(
+      {
+        isDeleting:true,
+        isDisabled:true
+      }
+    );
+  };
+
+  setAborting() {
+    const resetFormState = () => {
+      this.#currentComponent.updateElement(
+        {
+          isDeleting:false,
+          isDisabled:false,
+          isSaving:false
+        }
+      );
+    };
+    this.#currentComponent.shake(resetFormState);
   }
 }

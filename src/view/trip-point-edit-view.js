@@ -6,12 +6,12 @@ import 'flatpickr/dist/flatpickr.min.css';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 
 
-const createOffesTemplate = (point, offers) =>
+const createOffesTemplate = (point, offers, isDisabled) =>
   `
   ${offers[point.type].map((offer) =>
     `<div class="event__offer-selector">
         <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.title}-1" type="checkbox" name="event-offer-${offer.title}" data-offer-id="${offer.id}"
-           ${point.offers.includes(offer.id) ? 'checked' : ''}>
+           ${point.offers.includes(offer.id) ? 'checked' : ''} ${isDisabled ? 'disabled' : ''}>
         <label class="event__offer-label" for="event-offer-${offer.title}-1">
           <span class="event__offer-title">${offer.title}</span>
           &plus;&euro;&nbsp;
@@ -27,12 +27,19 @@ const createGaleryTemplate = (destinaion) =>
       `).join('')}
     </div>
   </div>
-
-
 `;
 
+const createDeleteButtonTextTemplate = (isNewPoint, isDeleting) => {
+  if(isNewPoint){
+    return 'Cancel';
+  }
+  if(isDeleting) {
+    return 'Deliting...';
+  }
+  return 'Delete';
+};
 
-const createTripEditTemplate = ({point}, offers, destinations, isNewPoint) =>
+const createTripEditTemplate = ({point, isSaving, isDeleting, isDisabled}, offers, destinations, isNewPoint) =>
   `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
       <header class="event__header">
@@ -41,7 +48,7 @@ const createTripEditTemplate = ({point}, offers, destinations, isNewPoint) =>
             <span class="visually-hidden">Choose event type</span>
             <img class="event__type-icon" width="17" height="17" src="img/icons/${point.type}.png" alt="Event type icon">
           </label>
-          <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
+          <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox" ${isDisabled ? 'disabled' : ''}>
 
           <div class="event__type-list">
             <fieldset class="event__type-group">
@@ -99,7 +106,7 @@ const createTripEditTemplate = ({point}, offers, destinations, isNewPoint) =>
           <label class="event__label  event__type-output" for="event-destination-1">
           ${point.type}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destinations[point.destination].name}" list="destination-list-1">
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destinations[point.destination].name}" list="destination-list-1" ${isDisabled ? 'disabled' : ''}>
           <datalist id="destination-list-1">
           ${Object.values(destinations).map((destinaion)=>`<option value="${destinaion.name}" '></option>`
   ).join('')}
@@ -108,10 +115,10 @@ const createTripEditTemplate = ({point}, offers, destinations, isNewPoint) =>
 
         <div class="event__field-group  event__field-group--time">
           <label class="visually-hidden" for="event-start-time-1">From</label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${formatDate(point.dateFrom,'DD/MM/YY HH:mm')}">
+          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${formatDate(point.dateFrom,'DD/MM/YY HH:mm')}" ${isDisabled ? 'disabled' : ''}>
           &mdash;
           <label class="visually-hidden" for="event-end-time-1">To</label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${formatDate(point.dateTo,'DD/MM/YY HH:mm')}">
+          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${formatDate(point.dateTo,'DD/MM/YY HH:mm')}" ${isDisabled ? 'disabled' : ''}>
         </div>
 
         <div class="event__field-group  event__field-group--price">
@@ -119,11 +126,11 @@ const createTripEditTemplate = ({point}, offers, destinations, isNewPoint) =>
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${point.basePrice}">
+          <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${point.basePrice}" ${isDisabled ? 'disabled' : ''}>
         </div>
 
-        <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        <button class="event__reset-btn" type="reset">${isNewPoint ? 'Cancel' : 'Delete'}</button>
+        <button class="event__save-btn  btn  btn--blue" type="submit">${isSaving ? 'Saving...' : 'Save'}</button>
+        <button class="event__reset-btn" type="reset">${createDeleteButtonTextTemplate(isNewPoint, isDeleting)}</button>
         <button class="event__rollup-btn" style='display:${isNewPoint ? 'none' : 'inline'}' type="button">
           <span class="visually-hidden">Open event</span>
         </button>
@@ -133,7 +140,7 @@ const createTripEditTemplate = ({point}, offers, destinations, isNewPoint) =>
           <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
         <div class="event__available-offers">
-          ${createOffesTemplate(point, offers)}
+          ${createOffesTemplate(point, offers, isDisabled)}
         </div>
 
         </section>
@@ -178,9 +185,10 @@ export default class TripPointEditView extends AbstractStatefulView {
     this.#onSubmitPoint = onSubmitPoint;
     this.#onDeleteClick = onDeleteClick;
 
-    this._setState(TripPointEditView.convertDataToState(point, offers, destinations, isNewPoint));
+    this._setState(TripPointEditView.convertDataToState(point));
 
     this._restoreHandlers();
+    console.log(this._state);
   }
 
   #setDatePickers() {
@@ -243,9 +251,12 @@ export default class TripPointEditView extends AbstractStatefulView {
   }
 
   static convertDataToState = (point) => ({
+    isDisabled: false,
+    isSaving: false,
+    isDeleting: false,
     point: {
       id:point[0],
-      ...point[1]
+      ...point[1],
     }
   });
 
