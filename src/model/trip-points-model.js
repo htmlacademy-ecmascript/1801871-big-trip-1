@@ -10,7 +10,7 @@ export default class TripPointsModel extends Observable {
   #blankPoint = ['',{
     'basePrice': '1',
     'dateFrom': new Date(Date.now()).toISOString(),
-    'dateTo': new Date(Date.now()).toISOString(),
+    'dateTo': new Date(Date.now() + 100000).toISOString(),
     'isFavorite': false,
     'offers': [],
     'type': 'taxi'
@@ -108,8 +108,13 @@ export default class TripPointsModel extends Observable {
     this._notify(update, updateType);
   }
 
-  deletePoint (update, updateType) {
-    this.#points.delete(update[0]);
+  async deletePoint (update, updateType) {
+    try{
+      await this.#pointsApiService.deletePoint(update[0]);
+      this.#points.delete(update[0]);
+    }catch{
+      throw new Error('Can\'t delete points');
+    }
     this._notify(update, updateType);
   }
 

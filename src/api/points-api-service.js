@@ -3,7 +3,8 @@ import ApiService from '../framework/api-service';
 const Method = {
   'GET':'GET',
   'PUT':'PUT',
-  'POST':'Post'
+  'POST':'Post',
+  'DELETE':'Delete'
 };
 
 export default class PointsApiService extends ApiService {
@@ -40,4 +41,10 @@ export default class PointsApiService extends ApiService {
     return parsedResponse;
   }
 
+  async deletePoint (pointId) {
+    await this._load({
+      url:`points/${pointId}`,
+      method:Method.DELETE
+    });
+  }
 }
