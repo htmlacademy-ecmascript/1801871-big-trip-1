@@ -86,7 +86,7 @@ export default class TripPointsModel extends Observable {
       const updatedPoint = this.#adaptPointToClient(response);
       this.#points.set(updatedPoint[0],updatedPoint[1]);
     }catch{
-      throw new Error('Can\'t add points');
+      throw new Error('Can\'t update points');
     }
     this._notify(update, updateType);
   }

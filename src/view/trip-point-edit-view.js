@@ -188,7 +188,6 @@ export default class TripPointEditView extends AbstractStatefulView {
     this._setState(TripPointEditView.convertDataToState(point));
 
     this._restoreHandlers();
-    console.log(this._state);
   }
 
   #setDatePickers() {
@@ -261,10 +260,12 @@ export default class TripPointEditView extends AbstractStatefulView {
   });
 
   static convertStateToDate = (state) => {
+    const poinData = {};
+    Object.assign(poinData, state.point);
     const point = state.point;
     const id = point.id;
-    delete point.id;
-    return [id, point];
+    delete poinData.id;
+    return [id, poinData];
   };
 
   #clickHandler = () => {

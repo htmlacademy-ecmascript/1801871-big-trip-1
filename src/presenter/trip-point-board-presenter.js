@@ -96,6 +96,7 @@ export default class TripPointBoardPresenter{
       case UserAction.UPDATE_POINT:
         this.#listPresernter.get(update[0]).setSaving();
         try {
+
           await this.#tripPointsModel.updatePoint(update, updateType);
         } catch(err) {
           this.#listPresernter.get(update[0]).setAborting();

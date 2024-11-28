@@ -60,7 +60,6 @@ export default class TripPointPresenter{
   };
 
   #onSubmitPoint = (point) => {
-    console.log(point);
     this.#handelPointChange(point, UserAction.UPDATE_POINT, UpdateType.PATCH);
   };
 
@@ -147,7 +146,6 @@ export default class TripPointPresenter{
   }
 
   setSaving = () =>{
-    console.log('isSaving');
     this.#currentComponent.updateElement(
       {
         isSaving:true,
@@ -175,6 +173,8 @@ export default class TripPointPresenter{
         }
       );
     };
+
     this.#currentComponent.shake(resetFormState);
+
   }
 }
