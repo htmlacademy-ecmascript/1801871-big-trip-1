@@ -78,8 +78,8 @@ export default class TripPointBoardPresenter{
 
     this.#filterPresenter = filterPresenter;
 
-    this.#offers = this.#offersModel.offers;
-    this.#destinations = this.#destinationsModel.destinations;
+    this.#offers = this.#offersModel.getOffers();
+    this.#destinations = this.#destinationsModel.getDestinations();
 
 
     this.#tripPointsModel.addObserver(this.#handleModelEvent);
