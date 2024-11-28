@@ -144,4 +144,37 @@ export default class TripPointPresenter{
       this.#replacePoint(point);
     }
   }
+
+  setSaving = () =>{
+    this.#currentComponent.updateElement(
+      {
+        isSaving:true,
+        isDisabled:true
+      }
+    );
+  };
+
+  setDeleting = () => {
+    this.#currentComponent.updateElement(
+      {
+        isDeleting:true,
+        isDisabled:true
+      }
+    );
+  };
+
+  setAborting() {
+    const resetFormState = () => {
+      this.#currentComponent.updateElement(
+        {
+          isDeleting:false,
+          isDisabled:false,
+          isSaving:false
+        }
+      );
+    };
+
+    this.#currentComponent.shake(resetFormState);
+
+  }
 }

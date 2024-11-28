@@ -11,7 +11,7 @@ export default class DestinationsModel extends Observable {
     this.#destinationsApiService = destinationsApiService;
   }
 
-  get destinations () {
+  getDestinations () {
     return this.#convertedDestinations;
   }
 
@@ -33,7 +33,7 @@ export default class DestinationsModel extends Observable {
 
   }
 
-  isDestinationsReady() {
+  isReady() {
     return this.#isReady;
   }
 }

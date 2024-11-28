@@ -11,7 +11,7 @@ export default class OffersModel extends Observable{
     this.#offersApiService = offersApiService;
   }
 
-  get offers () {
+  getOffers () {
     return this.#offers;
   }
 
@@ -28,7 +28,7 @@ export default class OffersModel extends Observable{
     }
   }
 
-  isOffersReady() {
+  isReady() {
     return this.#isReady;
   }
 }

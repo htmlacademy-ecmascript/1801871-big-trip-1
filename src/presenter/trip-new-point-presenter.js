@@ -52,14 +52,12 @@ export default class TripNewPointPresenter{
   }
 
   #onSubmitPoint = (point) =>{
-    this.#addNewTripButtonView.buttonOn();
     this.#handelPointChange(point, UserAction.ADD_POINT, UpdateType.MAJOR);
   };
 
 
   #onDeleteClick = () =>{
     this.#addNewTripButtonView.buttonOn();
-    this.#handelPointChange('', UserAction.DELETE_POINT, UpdateType.MINOR);
     this.remove();
   };
 
@@ -70,13 +68,31 @@ export default class TripNewPointPresenter{
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
-      this.#handelPointChange('', UserAction.DELETE_POINT, UpdateType.MINOR);
       this.#addNewTripButtonView.buttonOn();
       this.remove();
       document.removeEventListener('keydown', this.#escKeyDownHandler);
     }
   };
 
+  setSaving = () =>{
+    this.#pointViewComponent.updateElement(
+      {
+        isSaving:true,
+        isDisabled:true
+      }
+    );
+  };
+
+  setAborting() {
+    const resetFormState = () => {
+      this.#pointViewComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+    this.#pointViewComponent.shake(resetFormState);
+  }
 
 }
 

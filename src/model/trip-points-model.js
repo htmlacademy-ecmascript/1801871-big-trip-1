@@ -7,6 +7,14 @@ export default class TripPointsModel extends Observable {
   #points = new Map();
 
   #isReady = false;
+  #blankPoint = ['',{
+    'basePrice': '1',
+    'dateFrom': new Date(Date.now()).toISOString(),
+    'dateTo': new Date(Date.now() + 100000).toISOString(),
+    'isFavorite': false,
+    'offers': [],
+    'type': 'taxi'
+  }];
 
   constructor({
     pointsApiService
@@ -22,29 +30,35 @@ export default class TripPointsModel extends Observable {
   async init () {
     try {
       const points = await this.#pointsApiService.points;
-      points.forEach((point)=>this.#points.set(this.#adaptPointToClient(point)[0],this.#adaptPointToClient(point)[1]));
+      points.forEach((point)=>{
+        const convertedPoint = this.#adaptPointToClient(point);
+        this.#points.set(convertedPoint[0],convertedPoint[1]);
+      });
+
+
       this.#isReady = true;
+      this.#blankPoint[1].destination = points[0].destination;
     } catch(err){
       throw new Error('Can\'t get points');
     }
     this._notify('', UpdateType.INIT);
   }
 
-  isPointsReady() {
+  isReady() {
     return this.#isReady;
   }
 
 
-  #adaptPointToServer (point) {
+  #adaptPointToServer ([id, point]) {
     return {
-      'id':point[0],
-      'base_price':Number(point[1].basePrice),
-      'date_from':point[1].dateFrom,
-      'date_to':point[1].dateTo,
-      'is_favorite':point[1].isFavorite,
-      'offers': point[1].offers,
-      'type': point[1].type,
-      'destination': point[1].destination,
+      'id':id,
+      'base_price':Number(point.basePrice),
+      'date_from': point.dateFrom,
+      'date_to':point.dateTo,
+      'is_favorite':point.isFavorite,
+      'offers': point.offers,
+      'type': point.type,
+      'destination': point.destination,
 
     };
   }
@@ -72,19 +86,8 @@ export default class TripPointsModel extends Observable {
       const updatedPoint = this.#adaptPointToClient(response);
       this.#points.set(updatedPoint[0],updatedPoint[1]);
     }catch{
-      throw new Error('Can\'t add points');
+      throw new Error('Can\'t update points');
     }
-    this._notify(update, updateType);
-  }
-
-  addPoint (update, updateType) {
-
-    this.#points.set(update[0],update[1]);
-    this._notify(update, updateType);
-  }
-
-  deletePoint (update, updateType) {
-    this.#points.delete(update[0]);
     this._notify(update, updateType);
   }
 
@@ -92,17 +95,32 @@ export default class TripPointsModel extends Observable {
     this._notify(update, updateType);
   }
 
+  async addPoint (update, updateType) {
+    try{
+      const convertedNewPoint = this.#adaptPointToServer(update);
+      delete convertedNewPoint.id;
+      const response = await this.#pointsApiService.addPoint(convertedNewPoint);
+      const newPoint = this.#adaptPointToClient(response);
+      this.#points.set(newPoint[0],newPoint[1]);
+    }catch{
+      throw new Error('Can\'t add points');
+    }
+    this._notify(update, updateType);
+  }
+
+  async deletePoint (update, updateType) {
+    try{
+      await this.#pointsApiService.deletePoint(update[0]);
+      this.#points.delete(update[0]);
+    }catch{
+      throw new Error('Can\'t delete points');
+    }
+    this._notify(update, updateType);
+  }
+
 
   get blankPoint () {
-    return ['',{
-      'basePrice': '1',
-      'date_from': '2029-02-24T08:05:46.876Z',
-      'date_to': '2029-02-24T08:05:46.876Z',
-      'destination': '2ce7b3bb-ee15-4f13-95f0-550b57a9426f',
-      'is_favorite': false,
-      'offers': [],
-      'type': 'taxi'
-    }];
+    return this.#blankPoint;
   }
 
 }

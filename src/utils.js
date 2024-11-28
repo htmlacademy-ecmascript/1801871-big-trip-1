@@ -100,5 +100,4 @@ function sortListTime (points) {
   });
 }
 
-
 export { getDateDiff, formatDate, filterListFuture, filterListPast, filterListPresent, sortListDay, sortListPrice, sortListTime };

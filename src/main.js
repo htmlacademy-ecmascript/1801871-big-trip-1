@@ -11,6 +11,7 @@ import PointsApiService from './api/points-api-service';
 import DestinationsApiService from './api/destinations-api-service';
 import OffersApiService from './api/offers-api-service';
 
+
 const END_POINT = 'https://20.objects.htmlacademy.pro/big-trip';
 
 const AUTHORIZATION_TOKEN = 'Basic YWxhZGRpbjpvcGVuc2VzYW1l';

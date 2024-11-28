@@ -60,7 +60,7 @@ export default class FilterCategoryView extends AbstractView{
   categoryOn = () => {
     this.element.querySelectorAll('input').forEach((input)=>{
       if(input.dataset.sortType === SortType.DAY || input.dataset.sortType === SortType.TIME || input.dataset.sortType === SortType.PRICE) {
-        input.removeAttribute('disabled', false);
+        input.disabled = false;
       }
     });
   };
