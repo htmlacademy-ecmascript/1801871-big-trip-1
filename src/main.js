@@ -47,6 +47,7 @@ const offersModel = new OffersModel(
 const destinationsModel = new DestinationsModel(
   {
     destinationsApiService:destinationsApiService,
+    tripPointsModel:tripPointsModel
   }
 );
 
