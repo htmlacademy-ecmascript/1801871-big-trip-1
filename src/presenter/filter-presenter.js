@@ -18,9 +18,12 @@ export default class FilterPresenter{
   #filterModel = null;
   #tripPointsModel = null;
   #sortModel = null;
+  #offersModel = null;
+  #destinationsModel = null;
 
   #filterTimeViewComponent = null;
   #filterCategoryViewComponent = null;
+  #infoComponent = null;
 
   constructor(
     {
@@ -30,7 +33,9 @@ export default class FilterPresenter{
 
       filterModel,
       tripPointsModel,
-      sortModel
+      sortModel,
+      offersModel,
+      destinationsModel
     }
   ){
 
@@ -41,20 +46,101 @@ export default class FilterPresenter{
     this.#filterModel = filterModel;
     this.#tripPointsModel = tripPointsModel;
     this.#sortModel = sortModel;
+    this.#offersModel = offersModel;
+    this.#destinationsModel = destinationsModel;
 
     this.#tripPointsModel.addObserver(this.#setSortFilterDefault);
     this.#tripPointsModel.addObserver(this.#updateFilterSortView);
+    this.#tripPointsModel.addObserver(this.renderInfo);
 
     this.#filterModel.addObserver(this.#updateSortView);
 
   }
 
   init() {
-    render(new InfoView(), this.#tripHeaderContainer, RenderPosition.AFTERBEGIN);
+    this.renderInfo();
     this.#renderFilterView();
     this.#renderSortView();
   }
 
+  #getTotalTripInfo = () => {
+    const points = this.#tripPointsModel.getPoints();
+    const offers = this.#offersModel.getOffers();
+    const destinaions = this.#destinationsModel.getDestinations();
+    const result = {
+      startPlace: {
+        name: 'loading..',
+        date: '0'
+      },
+      middelPlace: {
+        name: 'loading..'
+      },
+      finalPlace: {
+        name: 'loading..',
+        date: '0'
+      },
+      totalPrice:'loading'
+    };
+    let minDate;
+    let maxDate;
+    let totalPrice = 0;
+    let minDateIndex;
+    let maxDateIndex;
+
+
+    if(points.size !== 0 && Object.keys(offers).length !== 0 && Object.keys(destinaions).length !== 0){
+
+      minDate = Date.parse(points.values().next().value.dateFrom);
+      maxDate = Date.parse(points.values().next().value.dateTo);
+
+      points.entries().forEach((point) => {
+        if(Date.parse(point[1].dateFrom) <= minDate) {
+          minDate = Date.parse(point[1].dateFrom);
+          minDateIndex = point[0];
+        }
+
+        if(Date.parse(point[1].dateTo) >= maxDate){
+          maxDate = Date.parse(point[1].dateTo);
+          maxDateIndex = point[0];
+        }
+        const activeOffers = point[1].offers;
+        const allCurrentOffersByType = offers[point[1].type];
+
+        activeOffers.forEach((offerId) => {
+          const offer = allCurrentOffersByType.find((offerByAllOffer)=>offerId === offerByAllOffer.id);
+          totalPrice = totalPrice + offer.price;
+        });
+        totalPrice = totalPrice + point[1].basePrice;
+      });
+
+
+      result.startPlace.name = destinaions[points.get(minDateIndex).destination].name;
+      result.startPlace.date = points.get(minDateIndex).dateFrom;
+      result.finalPlace.name = destinaions[points.get(maxDateIndex).destination].name;
+      result.finalPlace.date = points.get(maxDateIndex).dateFrom;
+      result.middelPlace.name = '...';
+      result.totalPrice = totalPrice;
+
+      if(points.size === 3) {
+        for(const point of points) {
+          if(point[0] !== minDateIndex && point[0] !== maxDateIndex){
+            result.middelPlace.name = destinaions[point[1].destination].name;
+            break;
+          }
+        }
+      }
+    }
+
+    return result;
+  };
+
+  renderInfo = () => {
+    remove(this.#infoComponent);
+    this.#infoComponent = new InfoView({
+      destinations:this.#getTotalTripInfo()
+    });
+    render(this.#infoComponent, this.#tripHeaderContainer, RenderPosition.AFTERBEGIN);
+  };
 
   #getHowMAnyPointsInFilter = () => {
     const pointsInFilter = Object.values(FilterType).map((filter)=>({
@@ -184,7 +270,6 @@ export default class FilterPresenter{
 
   getPoints = () =>{
     let points = this.#tripPointsModel.getPoints();
-
     points = this.#filterPoints(points, this.#filterModel.getFilter());
     points = this.#sortPoints(points, this.#sortModel.getSort());
 
