@@ -13,7 +13,7 @@ export default class DestinationsModel extends Observable {
   }) {
     super();
     this.#destinationsApiService = destinationsApiService;
-    this.#tripPointsModel = tripPointsModel
+    this.#tripPointsModel = tripPointsModel;
   }
 
   getDestinations () {
