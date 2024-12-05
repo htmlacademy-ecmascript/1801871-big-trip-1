@@ -47,6 +47,7 @@ const offersModel = new OffersModel(
 const destinationsModel = new DestinationsModel(
   {
     destinationsApiService:destinationsApiService,
+    tripPointsModel:tripPointsModel
   }
 );
 
@@ -61,7 +62,9 @@ const filterPresenter = new FilterPresenter ({
 
   filterModel: filterModel,
   tripPointsModel: tripPointsModel,
-  sortModel:sortModel
+  sortModel:sortModel,
+  offersModel: offersModel,
+  destinationsModel: destinationsModel
 });
 
 

@@ -54,7 +54,6 @@ export default class TripPointPresenter{
   };
 
   #onFavorieClick = (point) => {
-
     point[1].isFavorite = !point[1].isFavorite;
     this.#handelPointChange(point, UserAction.UPDATE_POINT, UpdateType.PATCH);
   };
@@ -146,12 +145,14 @@ export default class TripPointPresenter{
   }
 
   setSaving = () =>{
-    this.#currentComponent.updateElement(
-      {
-        isSaving:true,
-        isDisabled:true
-      }
-    );
+    if(this.#currentComponentType !== 'View') {
+      this.#currentComponent.updateElement(
+        {
+          isSaving:true,
+          isDisabled:true
+        }
+      );
+    }
   };
 
   setDeleting = () => {

@@ -35,9 +35,7 @@ export default class TripPointsModel extends Observable {
         this.#points.set(convertedPoint[0],convertedPoint[1]);
       });
 
-
       this.#isReady = true;
-      this.#blankPoint[1].destination = points[0].destination;
     } catch(err){
       throw new Error('Can\'t get points');
     }
@@ -122,5 +120,9 @@ export default class TripPointsModel extends Observable {
   get blankPoint () {
     return this.#blankPoint;
   }
+
+  updateBlankPointDestination = (destination) => {
+    this.#blankPoint[1].destination = destination;
+  };
 
 }
