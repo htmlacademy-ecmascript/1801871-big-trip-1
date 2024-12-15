@@ -68,76 +68,79 @@ export default class FilterPresenter{
     const offers = this.#offersModel.getOffers();
     const destinaions = this.#destinationsModel.getDestinations();
     const result = {
-      startPlace: {
-        name: 'loading..',
-        date: '0'
-      },
-      middelPlace: {
-        name: 'loading..'
-      },
-      finalPlace: {
-        name: 'loading..',
-        date: '0'
+      destinaions: {
+        startPlace: {
+          name: 'loading..',
+          date: '0'
+        },
+        middelPlace: {
+          name: 'loading..'
+        },
+        finalPlace: {
+          name: 'loading..',
+          date: '0'
+        },
       },
       totalPrice:'loading'
     };
-    let minDate;
-    let maxDate;
+
     let totalPrice = 0;
-    let minDateIndex;
-    let maxDateIndex;
+    let minDatePoint;
+    let maxDatePoint;
 
 
-    if(points.size !== 0 && Object.keys(offers).length !== 0 && Object.keys(destinaions).length !== 0){
+    if(this.#tripPointsModel.isReady() && this.#offersModel.isReady() && this.#destinationsModel.isReady()){
 
-      minDate = Date.parse(points.values().next().value.dateFrom);
-      maxDate = Date.parse(points.values().next().value.dateTo);
 
-      points.entries().forEach((point) => {
-        if(Date.parse(point[1].dateFrom) <= minDate) {
-          minDate = Date.parse(point[1].dateFrom);
-          minDateIndex = point[0];
-        }
+      const pointsArray = Array.from(points.entries());
 
-        if(Date.parse(point[1].dateTo) >= maxDate){
-          maxDate = Date.parse(point[1].dateTo);
-          maxDateIndex = point[0];
-        }
+
+      minDatePoint = pointsArray[0];
+      maxDatePoint = pointsArray[pointsArray.length - 1];
+
+      const getTotalPrice = (accumulator, point) => {
+        let pointPrice = 0;
         const activeOffers = point[1].offers;
         const allCurrentOffersByType = offers[point[1].type];
 
         activeOffers.forEach((offerId) => {
           const offer = allCurrentOffersByType.find((offerByAllOffer)=>offerId === offerByAllOffer.id);
-          totalPrice = totalPrice + offer.price;
+          pointPrice = pointPrice + offer.price;
         });
-        totalPrice = totalPrice + point[1].basePrice;
-      });
+        pointPrice = pointPrice + point[1].basePrice;
+        return accumulator + pointPrice;
+      };
+
+      totalPrice = points.entries().reduce(getTotalPrice, 0);
 
 
-      result.startPlace.name = destinaions[points.get(minDateIndex).destination].name;
-      result.startPlace.date = points.get(minDateIndex).dateFrom;
-      result.finalPlace.name = destinaions[points.get(maxDateIndex).destination].name;
-      result.finalPlace.date = points.get(maxDateIndex).dateFrom;
-      result.middelPlace.name = '...';
+      result.destinaions.startPlace.name = destinaions[minDatePoint[1].destination].name;
+      result.destinaions.startPlace.date = minDatePoint[1].dateFrom;
+
+      result.destinaions.finalPlace.name = destinaions[maxDatePoint[1].destination].name;
+      result.destinaions.finalPlace.date = maxDatePoint[1].dateTo;
+
+      result.destinaions.middelPlace.name = '&mdash; ... &mdash;';
+
       result.totalPrice = totalPrice;
 
       if(points.size === 3) {
-        for(const point of points) {
-          if(point[0] !== minDateIndex && point[0] !== maxDateIndex){
-            result.middelPlace.name = destinaions[point[1].destination].name;
-            break;
-          }
-        }
+        const middelPlaceDestinationId = pointsArray[1][1].destination;
+        result.destinaions.middelPlace.name = `&mdash; ${destinaions[middelPlaceDestinationId].name} &mdash;`;
+      }
+      if(points.size === 2) {
+        result.destinaions.middelPlace.name = '&mdash;';
       }
     }
-
     return result;
   };
 
   renderInfo = () => {
     remove(this.#infoComponent);
+    const totalInfo = this.#getTotalTripInfo();
     this.#infoComponent = new InfoView({
-      destinations:this.#getTotalTripInfo()
+      destinations: totalInfo.destinaions,
+      totalPrice: totalInfo.totalPrice
     });
     render(this.#infoComponent, this.#tripHeaderContainer, RenderPosition.AFTERBEGIN);
   };

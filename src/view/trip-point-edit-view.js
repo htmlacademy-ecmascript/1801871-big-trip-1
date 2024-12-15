@@ -39,8 +39,6 @@ const createDeleteButtonTextTemplate = (isNewPoint, isDeleting) => {
   return 'Delete';
 };
 
-
-
 const createTripEditTemplate = ({point, isSaving, isDeleting, isDisabled}, offers, destinations, isNewPoint) =>
   `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
