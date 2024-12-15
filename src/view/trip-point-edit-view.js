@@ -108,7 +108,7 @@ const createTripEditTemplate = ({point, isSaving, isDeleting, isDisabled}, offer
           <label class="event__label  event__type-output" for="event-destination-1">
           ${point.type}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${point.destination !== 'new-point' ? destinations[point.destination].description : ''}" list="destination-list-1" ${isDisabled ? 'disabled' : ''}>
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${point.destination !== 'new-point' ? destinations[point.destination].name : ''}" list="destination-list-1" ${isDisabled ? 'disabled' : ''}>
           <datalist id="destination-list-1">
           ${Object.values(destinations).map((destinaion)=>`<option value="${destinaion.name}" '></option>`
   ).join('')}
