@@ -13,7 +13,8 @@ export default class TripPointsModel extends Observable {
     'dateTo': new Date(Date.now() + 100000).toISOString(),
     'isFavorite': false,
     'offers': [],
-    'type': 'taxi'
+    'type': 'taxi',
+    'destination':'new-point'
   }];
 
   constructor({
@@ -121,8 +122,5 @@ export default class TripPointsModel extends Observable {
     return this.#blankPoint;
   }
 
-  updateBlankPointDestination = (destination) => {
-    this.#blankPoint[1].destination = destination;
-  };
 
 }

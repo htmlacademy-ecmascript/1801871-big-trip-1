@@ -9,11 +9,9 @@ export default class DestinationsModel extends Observable {
 
   constructor({
     destinationsApiService,
-    tripPointsModel
   }) {
     super();
     this.#destinationsApiService = destinationsApiService;
-    this.#tripPointsModel = tripPointsModel;
   }
 
   getDestinations () {
@@ -31,7 +29,6 @@ export default class DestinationsModel extends Observable {
         };
       });
       this.#isReady = true;
-      this.#tripPointsModel.updateBlankPointDestination(destinations[0].id);
       this._notify('', UpdateType.INIT);
 
     } catch(err){

@@ -39,6 +39,8 @@ const createDeleteButtonTextTemplate = (isNewPoint, isDeleting) => {
   return 'Delete';
 };
 
+
+
 const createTripEditTemplate = ({point, isSaving, isDeleting, isDisabled}, offers, destinations, isNewPoint) =>
   `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -106,7 +108,7 @@ const createTripEditTemplate = ({point, isSaving, isDeleting, isDisabled}, offer
           <label class="event__label  event__type-output" for="event-destination-1">
           ${point.type}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destinations[point.destination].name}" list="destination-list-1" ${isDisabled ? 'disabled' : ''}>
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${point.destination !== 'new-point' ? destinations[point.destination].description : ''}" list="destination-list-1" ${isDisabled ? 'disabled' : ''}>
           <datalist id="destination-list-1">
           ${Object.values(destinations).map((destinaion)=>`<option value="${destinaion.name}" '></option>`
   ).join('')}
@@ -147,8 +149,8 @@ const createTripEditTemplate = ({point, isSaving, isDeleting, isDisabled}, offer
 
         <section class="event__section  event__section--destination">
           <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-          <p class="event__destination-description">${destinations[point.destination].description}</p>
-          ${createGaleryTemplate(destinations[point.destination])}
+          <p class="event__destination-description">${point.destination !== 'new-point' ? destinations[point.destination].description : ''}</p>
+          ${point.destination !== 'new-point' ? createGaleryTemplate(destinations[point.destination]) : ''}
         </section>
       </section>
     </form>
