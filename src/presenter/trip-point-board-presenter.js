@@ -155,6 +155,7 @@ export default class TripPointBoardPresenter{
           this.#filterPresenter.enableCatagory();
           this.#addNewTripButtonView.buttonOn();
           this.#renderBoard(this.points);
+          this.#filterPresenter.renderInfo();
         }
         break;
     }

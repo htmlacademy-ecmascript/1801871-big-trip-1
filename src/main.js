@@ -61,7 +61,9 @@ const filterPresenter = new FilterPresenter ({
 
   filterModel: filterModel,
   tripPointsModel: tripPointsModel,
-  sortModel:sortModel
+  sortModel:sortModel,
+  offersModel: offersModel,
+  destinationsModel: destinationsModel
 });
 
 

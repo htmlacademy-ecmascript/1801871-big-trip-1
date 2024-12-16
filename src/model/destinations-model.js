@@ -3,10 +3,13 @@ import { UpdateType } from '../const';
 
 export default class DestinationsModel extends Observable {
   #destinationsApiService = null;
+  #tripPointsModel = null;
   #convertedDestinations = {};
   #isReady = false;
 
-  constructor({destinationsApiService}) {
+  constructor({
+    destinationsApiService,
+  }) {
     super();
     this.#destinationsApiService = destinationsApiService;
   }
@@ -27,6 +30,7 @@ export default class DestinationsModel extends Observable {
       });
       this.#isReady = true;
       this._notify('', UpdateType.INIT);
+
     } catch(err){
       throw new Error('Can\'t download destinations');
     }
