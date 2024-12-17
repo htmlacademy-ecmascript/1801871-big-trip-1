@@ -113,12 +113,15 @@ export default class FilterPresenter{
 
       totalPrice = points.entries().reduce(getTotalPrice, 0);
 
+      if(minDatePoint) {
+        result.destinaions.startPlace.name = destinaions[minDatePoint[1].destination].name;
+        result.destinaions.startPlace.date = minDatePoint[1].dateFrom;
+      }
 
-      result.destinaions.startPlace.name = destinaions[minDatePoint[1].destination].name;
-      result.destinaions.startPlace.date = minDatePoint[1].dateFrom;
-
-      result.destinaions.finalPlace.name = destinaions[maxDatePoint[1].destination].name;
-      result.destinaions.finalPlace.date = maxDatePoint[1].dateTo;
+      if(maxDatePoint) {
+        result.destinaions.finalPlace.name = destinaions[maxDatePoint[1].destination].name;
+        result.destinaions.finalPlace.date = maxDatePoint[1].dateTo;
+      }
 
       result.destinaions.middelPlace.name = '&mdash; ... &mdash;';
 
@@ -130,6 +133,10 @@ export default class FilterPresenter{
       }
       if(points.size === 2) {
         result.destinaions.middelPlace.name = '&mdash;';
+      }
+      if(points.size === 1) {
+        result.destinaions.middelPlace.name = '';
+        result.destinaions.finalPlace.name = '';
       }
     }
     return result;
