@@ -3,7 +3,6 @@ import { UpdateType } from '../const';
 
 export default class DestinationsModel extends Observable {
   #destinationsApiService = null;
-  #tripPointsModel = null;
   #convertedDestinations = {};
   #isReady = false;
 
