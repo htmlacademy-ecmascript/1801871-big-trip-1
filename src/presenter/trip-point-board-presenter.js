@@ -153,6 +153,9 @@ export default class TripPointBoardPresenter{
         break;
       case UpdateType.MINOR:
       case UpdateType.MAJOR:
+        if(this.#currentNewPoint) {
+          this.#currentNewPoint.remove();
+        }
         this.#addNewTripButtonView.buttonOn();
         this.#renderBoard(this.points);
         break;

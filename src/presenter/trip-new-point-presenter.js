@@ -68,8 +68,6 @@ export default class TripNewPointPresenter{
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
-      // this.#addNewTripButtonView.buttonOn();
-      // this.remove();
       this.#handelPointChange('', UserAction.DELETE_POINT, UpdateType.MAJOR);
       document.removeEventListener('keydown', this.#escKeyDownHandler);
     }
