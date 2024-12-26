@@ -127,13 +127,21 @@ export default class TripPointBoardPresenter{
 
         break;
       case UserAction.DELETE_POINT:
-        this.#listPresernter.get(update[0]).setDeleting();
-        try {
-
-          await this.#tripPointsModel.deletePoint(update, updateType);
-        } catch(err) {
-          this.#listPresernter.get(update[0]).setAborting();
+        if(update) {
+          this.#listPresernter.get(update[0]).setDeleting();
+          try {
+            await this.#tripPointsModel.deletePoint(update, updateType);
+          } catch(err) {
+            this.#listPresernter.get(update[0]).setAborting();
+          }
+        } else {
+          this.#addNewTripButtonView.buttonOn();
+          this.#currentNewPoint.remove();
+          this.#currentNewPoint = null;
+          this.#addNewTripButtonView.buttonOn();
+          this.#renderBoard(this.points);
         }
+
     }
     this.#uiBlocker.unblock();
   };
