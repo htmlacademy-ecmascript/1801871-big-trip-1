@@ -55,47 +55,47 @@ const createTripEditTemplate = ({point, isSaving, isDeleting, isDisabled}, offer
               <legend class="visually-hidden">Event type</legend>
 
               <div class="event__type-item">
-                <input id="event-type-taxi-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="taxi">
+                <input id="event-type-taxi-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="taxi" ${point.type === 'taxi' ? 'checked' : ''}>
                 <label class="event__type-label  event__type-label--taxi" for="event-type-taxi-1">Taxi</label>
               </div>
 
               <div class="event__type-item">
-                <input id="event-type-bus-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="bus">
+                <input id="event-type-bus-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="bus" ${point.type === 'bus' ? 'checked' : ''}>
                 <label class="event__type-label  event__type-label--bus" for="event-type-bus-1">Bus</label>
               </div>
 
               <div class="event__type-item">
-                <input id="event-type-train-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="train">
+                <input id="event-type-train-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="train" ${point.type === 'train' ? 'checked' : ''}>
                 <label class="event__type-label  event__type-label--train" for="event-type-train-1">Train</label>
               </div>
 
               <div class="event__type-item">
-                <input id="event-type-ship-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="ship">
+                <input id="event-type-ship-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="ship" ${point.type === 'ship' ? 'checked' : ''}>
                 <label class="event__type-label  event__type-label--ship" for="event-type-ship-1">Ship</label>
               </div>
 
               <div class="event__type-item">
-                <input id="event-type-drive-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="drive">
+                <input id="event-type-drive-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="drive" ${point.type === 'drive' ? 'checked' : ''}>
                 <label class="event__type-label  event__type-label--drive" for="event-type-drive-1">Drive</label>
               </div>
 
               <div class="event__type-item">
-                <input id="event-type-flight-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="flight" checked>
+                <input id="event-type-flight-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="flight" ${point.type === 'flight' ? 'checked' : ''}>
                 <label class="event__type-label  event__type-label--flight" for="event-type-flight-1">Flight</label>
               </div>
 
               <div class="event__type-item">
-                <input id="event-type-check-in-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="check-in">
+                <input id="event-type-check-in-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="check-in" ${point.type === 'check-in' ? 'checked' : ''}>
                 <label class="event__type-label  event__type-label--check-in" for="event-type-check-in-1">Check-in</label>
               </div>
 
               <div class="event__type-item">
-                <input id="event-type-sightseeing-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="sightseeing">
+                <input id="event-type-sightseeing-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="sightseeing" ${point.type === 'sightseeing' ? 'checked' : ''}>
                 <label class="event__type-label  event__type-label--sightseeing" for="event-type-sightseeing-1">Sightseeing</label>
               </div>
 
               <div class="event__type-item">
-                <input id="event-type-restaurant-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="restaurant">
+                <input id="event-type-restaurant-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="restaurant" ${point.type === 'restaurant' ? 'checked' : ''}>
                 <label class="event__type-label  event__type-label--restaurant" for="event-type-restaurant-1">Restaurant</label>
               </div>
             </fieldset>
@@ -188,7 +188,6 @@ export default class TripPointEditView extends AbstractStatefulView {
     this._setState(TripPointEditView.convertDataToState(point));
 
     this._restoreHandlers();
-    console.log(this.#offers);
   }
 
   #setDatePickers() {
@@ -275,7 +274,6 @@ export default class TripPointEditView extends AbstractStatefulView {
 
   #submitHandler = (evt) => {
     evt.preventDefault();
-    this.#updateSelectedOffersInState();
     this.#updatePriceInState();
     this.#onSubmitPoint(TripPointEditView.convertStateToDate(this._state), this.#isNewPoint);
   };
@@ -338,6 +336,7 @@ export default class TripPointEditView extends AbstractStatefulView {
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#onDestinationChange);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#onTypeChange);
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#onDeletePoint);
+    this.element.querySelectorAll('.event__offer-checkbox').forEach((offer) => offer.addEventListener('change', this.#updateSelectedOffersInState));
     this.#setDatePickers();
   }
 
