@@ -145,7 +145,7 @@ const createTripEditTemplate = ({point, isSaving, isDeleting, isDisabled}, offer
 
         </section>
 
-        <section class="event__section  event__section--destination">
+        <section class="event__section  event__section--destination ${point.destination !== 'new-point' ? '' : 'disable'}">
           <h3 class="event__section-title  event__section-title--destination">Destination</h3>
           <p class="event__destination-description">${point.destination !== 'new-point' ? destinations[point.destination].description : ''}</p>
           ${point.destination !== 'new-point' ? createGaleryTemplate(destinations[point.destination]) : ''}

@@ -150,11 +150,13 @@ export default class TripPointBoardPresenter{
     switch (updateType) {
       case UpdateType.PATCH:
         this.#listPresernter.get(data[0]).replace(data);
+        this.#renderBoard(this.points);
         break;
       case UpdateType.MINOR:
       case UpdateType.MAJOR:
         if(this.#currentNewPoint) {
           this.#currentNewPoint.remove();
+          this.#currentNewPoint = null;
         }
         this.#addNewTripButtonView.buttonOn();
         this.#renderBoard(this.points);
