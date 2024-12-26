@@ -7,10 +7,12 @@ export default class TripPointsModel extends Observable {
   #points = new Map();
 
   #isReady = false;
+  // new Date(Date.now()).toISOString()
+  // new Date(Date.now() + 100000).toISOString()
   #blankPoint = ['',{
-    'basePrice': '1',
-    'dateFrom': new Date(Date.now()).toISOString(),
-    'dateTo': new Date(Date.now() + 100000).toISOString(),
+    'basePrice': '',
+    'dateFrom': '',
+    'dateTo': '',
     'isFavorite': false,
     'offers': [],
     'type': 'taxi',

@@ -115,10 +115,10 @@ const createTripEditTemplate = ({point, isSaving, isDeleting, isDisabled}, offer
 
         <div class="event__field-group  event__field-group--time">
           <label class="visually-hidden" for="event-start-time-1">From</label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${formatDate(point.dateFrom,'DD/MM/YY HH:mm')}" ${isDisabled ? 'disabled' : ''}>
+          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${point.dateFrom !== '' ? formatDate(point.dateFrom,'DD/MM/YY HH:mm') : ''}" ${isDisabled ? 'disabled' : ''}>
           &mdash;
           <label class="visually-hidden" for="event-end-time-1">To</label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${formatDate(point.dateTo,'DD/MM/YY HH:mm')}" ${isDisabled ? 'disabled' : ''}>
+          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${point.dateFrom !== '' ? formatDate(point.dateTo,'DD/MM/YY HH:mm') : ''}" ${isDisabled ? 'disabled' : ''}>
         </div>
 
         <div class="event__field-group  event__field-group--price">
@@ -126,7 +126,7 @@ const createTripEditTemplate = ({point, isSaving, isDeleting, isDisabled}, offer
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${point.basePrice}" ${isDisabled ? 'disabled' : ''}>
+          <input class="event__input  event__input--price" id="event-price-1" type="number" min='1' name="event-price" value="${point.basePrice}" ${isDisabled ? 'disabled' : ''}>
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">${isSaving ? 'Saving...' : 'Save'}</button>
@@ -136,7 +136,7 @@ const createTripEditTemplate = ({point, isSaving, isDeleting, isDisabled}, offer
         </button>
       </header>
       <section class="event__details">
-        <section class="event__section  event__section--offers">
+        <section class="event__section  event__section--offers ${offers[point.type].length === 0 ? 'disable' : ''}">
           <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
         <div class="event__available-offers">
@@ -188,6 +188,7 @@ export default class TripPointEditView extends AbstractStatefulView {
     this._setState(TripPointEditView.convertDataToState(point));
 
     this._restoreHandlers();
+    console.log(this.#offers);
   }
 
   #setDatePickers() {
@@ -203,7 +204,7 @@ export default class TripPointEditView extends AbstractStatefulView {
       enableTime: true,
       dateFormat: 'd/m/y H:i',
       altFormat: 'Y-m-d',
-      defaultDate: this._state.point.dateTo,
+      defaultDate: this._state.point.dateTo === '' ? this._state.point.dateFrom : this._state.point.dateTo,
       minDate: this._state.point.dateFrom,
       onClose: this.#updateSelecteDateToInState
     });
