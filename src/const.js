@@ -27,6 +27,19 @@ const UpdateType = {
   INIT: 'INIT'
 };
 
+const EventType = {
+  TAXI: 'taxi',
+  BUS: 'bus',
+  TRAIN: 'train',
+  SHIP: 'ship',
+  DRIVE: 'drive',
+  FLIGHT: 'flight',
+  CHECK_IN: 'check-in',
+  SIGHTSEEING: 'sightseeing',
+  RESTAURANT: 'restaurant',
+
+};
+
 const EmptyListPhrase = {
   [FilterType.EVERYTHING]: 'Click New Event to create your first point',
   [FilterType.PAST]: 'There are no past events now',
@@ -35,4 +48,4 @@ const EmptyListPhrase = {
 };
 
 
-export { FilterType, SortType, UserAction, UpdateType, EmptyListPhrase};
+export { FilterType, SortType, UserAction, UpdateType, EventType, EmptyListPhrase};
