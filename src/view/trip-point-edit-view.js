@@ -38,7 +38,7 @@ const createDeleteButtonTextTemplate = (isNewPoint, isDeleting) => {
   }
   return 'Delete';
 };
-
+// отрисовку типов добавить
 const createTripEditTemplate = ({point, isSaving, isDeleting, isDisabled}, offers, destinations, isNewPoint) =>
   `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -302,7 +302,7 @@ export default class TripPointEditView extends AbstractStatefulView {
 
   #onDestinationChange = (evt) => {
     if(Object.entries(this.#destinations).find((destinaion)=>destinaion[1].name === evt.target.value) === undefined){
-      evt.target.value = this.#destinations[this._state.point.destination].name;
+      evt.target.value = this._state.point.destination !== 'new-point' ? this.#destinations[this._state.point.destination].name : '';
     } else{
       const destinationId = Object.entries(this.#destinations).find((destinaion)=>destinaion[1].name === evt.target.value)[0];
 
@@ -336,7 +336,8 @@ export default class TripPointEditView extends AbstractStatefulView {
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#onDestinationChange);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#onTypeChange);
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#onDeletePoint);
-    this.element.querySelectorAll('.event__offer-checkbox').forEach((offer) => offer.addEventListener('change', this.#updateSelectedOffersInState));
+    // this.element.querySelectorAll('.event__section').forEach((offer) => offer.addEventListener('change', this.#updateSelectedOffersInState));
+    // Добавить всплытие
     this.#setDatePickers();
   }
 

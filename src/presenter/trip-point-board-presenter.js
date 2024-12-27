@@ -138,8 +138,8 @@ export default class TripPointBoardPresenter{
           this.#addNewTripButtonView.buttonOn();
           this.#currentNewPoint.remove();
           this.#currentNewPoint = null;
-          this.#addNewTripButtonView.buttonOn();
           this.#renderBoard(this.points);
+          // перенести в отдельный обработчик
         }
 
     }
@@ -151,6 +151,7 @@ export default class TripPointBoardPresenter{
       case UpdateType.PATCH:
         this.#listPresernter.get(data[0]).replace(data);
         this.#renderBoard(this.points);
+        // почистить патч, и добавить в мажор апдейт из эдита
         break;
       case UpdateType.MINOR:
       case UpdateType.MAJOR:

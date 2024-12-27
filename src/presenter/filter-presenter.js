@@ -93,6 +93,7 @@ export default class FilterPresenter{
 
 
       const pointsArray = Array.from(points.entries());
+      // сразу перевести сверху
 
 
       minDatePoint = pointsArray[0];
