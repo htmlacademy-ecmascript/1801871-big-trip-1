@@ -127,23 +127,23 @@ export default class TripPointBoardPresenter{
 
         break;
       case UserAction.DELETE_POINT:
-        if(update) {
-          this.#listPresernter.get(update[0]).setDeleting();
-          try {
-            await this.#tripPointsModel.deletePoint(update, updateType);
-          } catch(err) {
-            this.#listPresernter.get(update[0]).setAborting();
-          }
-        } else {
-          this.#addNewTripButtonView.buttonOn();
-          this.#currentNewPoint.remove();
-          this.#currentNewPoint = null;
-          this.#renderBoard(this.points);
-          // перенести в отдельный обработчик
+        this.#listPresernter.get(update[0]).setDeleting();
+        try {
+          await this.#tripPointsModel.deletePoint(update, updateType);
+        } catch(err) {
+          this.#listPresernter.get(update[0]).setAborting();
         }
+
 
     }
     this.#uiBlocker.unblock();
+  };
+
+  #cancelButtonClickHandler = () => {
+    this.#addNewTripButtonView.buttonOn();
+    this.#currentNewPoint.remove();
+    this.#currentNewPoint = null;
+    this.#renderBoard(this.points);
   };
 
   #handleModelEvent = (data, updateType) => {
@@ -188,6 +188,7 @@ export default class TripPointBoardPresenter{
         handelPointChange:this.#handleViewAction,
         handelTypeChange:this.#handleTypeChange,
         addNewTripButtonView: this.#addNewTripButtonView,
+        cancelButtonClickHandler: this.#cancelButtonClickHandler
       }
     );
     newPointPresenter.renderPoint(this.#tripPointsModel.blankPoint);
