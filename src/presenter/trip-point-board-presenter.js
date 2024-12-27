@@ -150,8 +150,6 @@ export default class TripPointBoardPresenter{
     switch (updateType) {
       case UpdateType.PATCH:
         this.#listPresernter.get(data[0]).replace(data);
-        this.#renderBoard(this.points);
-        // почистить патч, и добавить в мажор апдейт из эдита
         break;
       case UpdateType.MINOR:
       case UpdateType.MAJOR:

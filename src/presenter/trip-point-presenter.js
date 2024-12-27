@@ -59,7 +59,7 @@ export default class TripPointPresenter{
   };
 
   #onSubmitPoint = (point) => {
-    this.#handelPointChange(point, UserAction.UPDATE_POINT, UpdateType.PATCH);
+    this.#handelPointChange(point, UserAction.UPDATE_POINT, UpdateType.MINOR);
   };
 
   #escKeyDownHandler = (evt) => {
