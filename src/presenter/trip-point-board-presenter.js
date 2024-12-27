@@ -8,7 +8,7 @@ import TripNewPointPresenter from './trip-new-point-presenter';
 import AddNewTripButtonView from '../view/add-new-trip-button-view';
 
 
-import TripPointZeroView from '../view/zero-point-view';
+import ZeroPointView from '../view/zero-point-view';
 
 import LoadingView from '../view/loading-view';
 
@@ -89,7 +89,7 @@ export default class TripPointBoardPresenter{
     this.#filterModel.addObserver(this.#handleModelEvent);
 
     this.#addNewTripButtonView = new AddNewTripButtonView({handleAddNewPoin: this.#newPoinHandler});
-    this.#zeroPointsView = new TripPointZeroView({currentFilter: this.#filterModel.getFilter()});
+    this.#zeroPointsView = new ZeroPointView({currentFilter: this.#filterModel.getFilter()});
     this.#loadingView = new LoadingView();
 
 
@@ -252,7 +252,7 @@ export default class TripPointBoardPresenter{
     }
 
     if (points.size === 0 && this.#currentNewPoint === null) {
-      this.#zeroPointsView = new TripPointZeroView({currentFilter: this.#filterModel.getFilter()});
+      this.#zeroPointsView = new ZeroPointView({currentFilter: this.#filterModel.getFilter()});
       render(this.#zeroPointsView, this.#tripEventsListContainer);
     } else{
       remove(this.#zeroPointsView);

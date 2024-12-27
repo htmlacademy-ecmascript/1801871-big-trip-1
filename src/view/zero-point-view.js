@@ -5,7 +5,7 @@ const createZeroTemplate = (currentFilter) =>
   `<p class="trip-events__msg">${EmptyListPhrase[currentFilter]}</p>
   `;
 
-export default class TripPointZeroView extends AbstractView{
+export default class ZeroPointView extends AbstractView{
   #currentFilterType = null;
 
   constructor({currentFilter}) {

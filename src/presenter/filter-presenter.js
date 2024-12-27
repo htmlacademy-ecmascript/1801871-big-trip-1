@@ -64,7 +64,7 @@ export default class FilterPresenter{
   }
 
   #getTotalTripInfo = () => {
-    const points = this.#tripPointsModel.getPoints();
+    const points = Array.from(this.#tripPointsModel.getPoints().entries());
     const offers = this.#offersModel.getOffers();
     const destinaions = this.#destinationsModel.getDestinations();
     const result = {
@@ -92,12 +92,8 @@ export default class FilterPresenter{
     if(this.#tripPointsModel.isReady() && this.#offersModel.isReady() && this.#destinationsModel.isReady()){
 
 
-      const pointsArray = Array.from(points.entries());
-      // сразу перевести сверху
-
-
-      minDatePoint = pointsArray[0];
-      maxDatePoint = pointsArray[pointsArray.length - 1];
+      minDatePoint = points[0];
+      maxDatePoint = points[points.length - 1];
 
       const getTotalPrice = (accumulator, point) => {
         let pointPrice = 0;
@@ -112,7 +108,7 @@ export default class FilterPresenter{
         return accumulator + pointPrice;
       };
 
-      totalPrice = points.entries().reduce(getTotalPrice, 0);
+      totalPrice = points.reduce(getTotalPrice, 0);
 
       if(minDatePoint) {
         result.destinaions.startPlace.name = destinaions[minDatePoint[1].destination].name;
@@ -128,14 +124,14 @@ export default class FilterPresenter{
 
       result.totalPrice = totalPrice;
 
-      if(points.size === 3) {
-        const middelPlaceDestinationId = pointsArray[1][1].destination;
+      if(points.length === 3) {
+        const middelPlaceDestinationId = points[1][1].destination;
         result.destinaions.middelPlace.name = `&mdash; ${destinaions[middelPlaceDestinationId].name} &mdash;`;
       }
-      if(points.size === 2) {
+      if(points.length === 2) {
         result.destinaions.middelPlace.name = '&mdash;';
       }
-      if(points.size === 1) {
+      if(points.length === 1) {
         result.destinaions.middelPlace.name = '';
         result.destinaions.finalPlace.name = '';
       }
