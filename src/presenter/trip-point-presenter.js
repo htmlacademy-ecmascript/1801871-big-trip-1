@@ -54,8 +54,10 @@ export default class TripPointPresenter{
   };
 
   #onFavorieClick = (point) => {
-    point[1].isFavorite = !point[1].isFavorite;
-    this.#handelPointChange(point, UserAction.UPDATE_POINT, UpdateType.PATCH);
+    const newpoint = Array.from(point);
+    newpoint[1] = Object.assign({}, point[1]);
+    newpoint[1].isFavorite = !newpoint[1].isFavorite;
+    this.#handelPointChange(newpoint, UserAction.UPDATE_POINT, UpdateType.PATCH);
   };
 
   #onSubmitPoint = (point) => {
