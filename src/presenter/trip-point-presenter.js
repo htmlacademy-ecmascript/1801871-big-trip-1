@@ -166,15 +166,16 @@ export default class TripPointPresenter{
 
   setAborting() {
     const resetFormState = () => {
-      this.#currentComponent.updateElement(
-        {
-          isDeleting:false,
-          isDisabled:false,
-          isSaving:false
-        }
-      );
+      if(this.#currentComponentType === 'Edit') {
+        this.#currentComponent.updateElement(
+          {
+            isDeleting:false,
+            isDisabled:false,
+            isSaving:false
+          }
+        );
+      }
     };
-
     this.#currentComponent.shake(resetFormState);
 
   }
