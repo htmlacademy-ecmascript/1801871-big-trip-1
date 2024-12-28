@@ -7,11 +7,11 @@ const addNewButtonTemplate = () =>
 `;
 
 export default class AddNewTripButtonView extends AbstractView {
-  #handleAddNewPoin = null;
+  #handleAddNewPoint = null;
 
-  constructor({handleAddNewPoin}) {
+  constructor({handleAddNewPoint: handleAddNewPoint}) {
     super();
-    this.#handleAddNewPoin = handleAddNewPoin;
+    this.#handleAddNewPoint = handleAddNewPoint;
     this.element.addEventListener('click', this.#addNewPointClickHandler);
 
   }
@@ -22,7 +22,7 @@ export default class AddNewTripButtonView extends AbstractView {
 
 
   #addNewPointClickHandler = () => {
-    this.#handleAddNewPoin('',UserAction.ADD_POINT,'');
+    this.#handleAddNewPoint('',UserAction.ADD_POINT,'');
   };
 
   buttonOff = () => {

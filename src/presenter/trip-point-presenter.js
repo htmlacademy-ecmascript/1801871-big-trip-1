@@ -53,11 +53,11 @@ export default class TripPointPresenter{
     this.#handelPointChange(point, UserAction.DELETE_POINT, UpdateType.MINOR);
   };
 
-  #onFavorieClick = (point) => {
-    const newpoint = Array.from(point);
-    newpoint[1] = Object.assign({}, point[1]);
-    newpoint[1].isFavorite = !newpoint[1].isFavorite;
-    this.#handelPointChange(newpoint, UserAction.UPDATE_POINT, UpdateType.PATCH);
+  #onFavoriteClick = (point) => {
+    const newPoint = Array.from(point);
+    newPoint[1] = Object.assign({}, point[1]);
+    newPoint[1].isFavorite = !newPoint[1].isFavorite;
+    this.#handelPointChange(newPoint, UserAction.UPDATE_POINT, UpdateType.PATCH);
   };
 
   #onSubmitPoint = (point) => {
@@ -74,11 +74,11 @@ export default class TripPointPresenter{
 
 
   #replacePoint(point) {
-    let newPointComnponent;
+    let newPointComponent;
     this.#point = point;
     if(this.#currentComponentType === 'View') {
 
-      newPointComnponent = new TripPointEditView(
+      newPointComponent = new TripPointEditView(
         {point:point,
           offers:this.#offers,
           destinations:this.#destinations,
@@ -91,18 +91,18 @@ export default class TripPointPresenter{
       this.#handelTypeChange();
     }
     if(this.#currentComponentType === 'Edit') {
-      newPointComnponent = new TripPointView(
+      newPointComponent = new TripPointView(
         {point:point,
           offers:this.#offers,
           destinations:this.#destinations,
           onEditClick:this.#onEditClick,
-          onFavoriteClick:this.#onFavorieClick
+          onFavoriteClick:this.#onFavoriteClick
         });
       document.removeEventListener('keydown', this.#escKeyDownHandler);
     }
-    replace(newPointComnponent, this.#currentComponent);
+    replace(newPointComponent, this.#currentComponent);
     this.#currentComponent.removeElement();
-    this.#currentComponent = newPointComnponent;
+    this.#currentComponent = newPointComponent;
     this.#currentComponentType = this.#currentComponentType === 'View' ? 'Edit' : 'View';
   }
 
@@ -114,7 +114,7 @@ export default class TripPointPresenter{
         offers:this.#offers,
         destinations:this.#destinations,
         onEditClick:this.#onEditClick,
-        onFavoriteClick:this.#onFavorieClick
+        onFavoriteClick:this.#onFavoriteClick
       });
     this.#currentComponentType = 'View';
     this.#currentComponent = pointComponent;
@@ -128,7 +128,7 @@ export default class TripPointPresenter{
         offers:this.#offers,
         destinations:this.#destinations,
         onEditClick:this.#onEditClick,
-        onFavoriteClick:this.#onFavorieClick
+        onFavoriteClick:this.#onFavoriteClick
       });
 
     this.#currentComponentType = 'View';

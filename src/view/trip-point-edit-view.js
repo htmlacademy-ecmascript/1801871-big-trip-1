@@ -17,7 +17,7 @@ const createTripTypeTemplate = (point) =>
 `;
 
 
-const createOffesTemplate = (point, offers, isDisabled) =>
+const createOffersTemplate = (point, offers, isDisabled) =>
   `
   ${offers[point.type].map((offer) =>
     `<div class="event__offer-selector">
@@ -31,10 +31,10 @@ const createOffesTemplate = (point, offers, isDisabled) =>
       </div>`).join('')}
 `;
 
-const createGaleryTemplate = (destinaion) =>
+const createGalleryTemplate = (destination) =>
   `<div class="event__photos-container">
     <div class="event__photos-tape">
-    ${destinaion.pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">
+    ${destination.pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">
       `).join('')}
     </div>
   </div>
@@ -45,7 +45,7 @@ const createDeleteButtonTextTemplate = (isNewPoint, isDeleting) => {
     return 'Cancel';
   }
   if(isDeleting) {
-    return 'Deliting...';
+    return 'Deleting...';
   }
   return 'Delete';
 };
@@ -75,7 +75,7 @@ const createTripEditTemplate = ({point, isSaving, isDeleting, isDisabled}, offer
           </label>
           <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${point.destination !== 'new-point' ? destinations[point.destination].name : ''}" list="destination-list-1" ${isDisabled ? 'disabled' : ''}>
           <datalist id="destination-list-1">
-          ${Object.values(destinations).map((destinaion)=>`<option value="${destinaion.name}" '></option>`
+          ${Object.values(destinations).map((destination)=>`<option value="${destination.name}" '></option>`
   ).join('')}
           </datalist>
         </div>
@@ -107,7 +107,7 @@ const createTripEditTemplate = ({point, isSaving, isDeleting, isDisabled}, offer
           <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
         <div class="event__available-offers">
-          ${createOffesTemplate(point, offers, isDisabled)}
+          ${createOffersTemplate(point, offers, isDisabled)}
         </div>
 
         </section>
@@ -115,7 +115,7 @@ const createTripEditTemplate = ({point, isSaving, isDeleting, isDisabled}, offer
         <section class="event__section  event__section--destination ${point.destination !== 'new-point' ? '' : 'disable'}">
           <h3 class="event__section-title  event__section-title--destination">Destination</h3>
           <p class="event__destination-description">${point.destination !== 'new-point' ? destinations[point.destination].description : ''}</p>
-          ${point.destination !== 'new-point' ? createGaleryTemplate(destinations[point.destination]) : ''}
+          ${point.destination !== 'new-point' ? createGalleryTemplate(destinations[point.destination]) : ''}
         </section>
       </section>
     </form>
@@ -134,8 +134,8 @@ export default class TripPointEditView extends AbstractStatefulView {
   #destinations = null;
   #isNewPoint = null;
 
-  #dateFromFaltpicker = null;
-  #dateToFaltpicker = null;
+  #dateFromFlatpicker = null;
+  #dateToFlatpicker = null;
 
   constructor (
     {point, offers, destinations, onCloseClick, onSubmitPoint, onDeleteClick, isNewPoint = false}
@@ -158,26 +158,26 @@ export default class TripPointEditView extends AbstractStatefulView {
   }
 
   #setDatePickers() {
-    this.#dateFromFaltpicker = flatpickr(this.element.querySelector('#event-start-time-1'), {
+    this.#dateFromFlatpicker = flatpickr(this.element.querySelector('#event-start-time-1'), {
       enableTime: true,
       dateFormat: 'd/m/y H:i',
       altFormat: 'Y-m-d',
       defaultDate: this._state.point.dateFrom,
       maxDate: this._state.point.dateTo,
-      onClose: this.#updateSelecteDateFromInState
+      onClose: this.#updateSelectedDateFromInState
     });
-    this.#dateToFaltpicker = flatpickr(this.element.querySelector('#event-end-time-1'), {
+    this.#dateToFlatpicker = flatpickr(this.element.querySelector('#event-end-time-1'), {
       enableTime: true,
       dateFormat: 'd/m/y H:i',
       altFormat: 'Y-m-d',
       defaultDate: this._state.point.dateTo === '' ? this._state.point.dateFrom : this._state.point.dateTo,
       minDate: this._state.point.dateFrom,
-      onClose: this.#updateSelecteDateToInState
+      onClose: this.#updateSelectedDateToInState
     });
 
   }
 
-  #updateSelecteDateToInState = ([date]) => {
+  #updateSelectedDateToInState = ([date]) => {
     const updateDate = new Date(date).toISOString();
     this._setState({
       point: {
@@ -189,7 +189,7 @@ export default class TripPointEditView extends AbstractStatefulView {
     this.updateElement(this._state);
   };
 
-  #updateSelecteDateFromInState = ([date]) => {
+  #updateSelectedDateFromInState = ([date]) => {
     const updateDate = new Date(date).toISOString();
     this._setState({
       point: {
@@ -205,14 +205,14 @@ export default class TripPointEditView extends AbstractStatefulView {
   removeElement() {
     super.removeElement();
 
-    if (this.#dateToFaltpicker) {
-      this.#dateToFaltpicker.destroy();
-      this.#dateToFaltpicker = null;
+    if (this.#dateToFlatpicker) {
+      this.#dateToFlatpicker.destroy();
+      this.#dateToFlatpicker = null;
     }
 
-    if (this.#dateFromFaltpicker) {
-      this.#dateFromFaltpicker.destroy();
-      this.#dateFromFaltpicker = null;
+    if (this.#dateFromFlatpicker) {
+      this.#dateFromFlatpicker.destroy();
+      this.#dateFromFlatpicker = null;
     }
   }
 
@@ -227,12 +227,12 @@ export default class TripPointEditView extends AbstractStatefulView {
   });
 
   static convertStateToDate = (state) => {
-    const poinData = {};
-    Object.assign(poinData, state.point);
+    const pointData = {};
+    Object.assign(pointData, state.point);
     const point = state.point;
     const id = point.id;
-    delete poinData.id;
-    return [id, poinData];
+    delete pointData.id;
+    return [id, pointData];
   };
 
   #clickHandler = () => {
@@ -268,10 +268,10 @@ export default class TripPointEditView extends AbstractStatefulView {
   };
 
   #onDestinationChange = (evt) => {
-    if(Object.entries(this.#destinations).find((destinaion)=>destinaion[1].name === evt.target.value) === undefined){
+    if(Object.entries(this.#destinations).find((destination)=>destination[1].name === evt.target.value) === undefined){
       evt.target.value = this._state.point.destination !== 'new-point' ? this.#destinations[this._state.point.destination].name : '';
     } else{
-      const destinationId = Object.entries(this.#destinations).find((destinaion)=>destinaion[1].name === evt.target.value)[0];
+      const destinationId = Object.entries(this.#destinations).find((destination)=>destination[1].name === evt.target.value)[0];
 
       this.updateElement({
         point: {
