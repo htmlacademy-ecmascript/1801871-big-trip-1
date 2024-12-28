@@ -7,10 +7,11 @@ export default class TripPointsModel extends Observable {
   #points = new Map();
 
   #isReady = false;
+
   #blankPoint = ['',{
-    'basePrice': '1',
-    'dateFrom': new Date(Date.now()).toISOString(),
-    'dateTo': new Date(Date.now() + 100000).toISOString(),
+    'basePrice': '',
+    'dateFrom': '',
+    'dateTo': '',
     'isFavorite': false,
     'offers': [],
     'type': 'taxi',
@@ -84,10 +85,10 @@ export default class TripPointsModel extends Observable {
       const response = await this.#pointsApiService.updatePoint(this.#adaptPointToServer(update));
       const updatedPoint = this.#adaptPointToClient(response);
       this.#points.set(updatedPoint[0],updatedPoint[1]);
+      this._notify(update, updateType);
     }catch{
       throw new Error('Can\'t update points');
     }
-    this._notify(update, updateType);
   }
 
   update (update, updateType) {

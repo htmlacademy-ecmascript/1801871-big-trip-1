@@ -14,6 +14,7 @@ export default class TripNewPointPresenter{
   #handleTypeChange = null;
 
   #addNewTripButtonView = null;
+  #cancelButtonClickHandler = null;
 
 
   constructor({
@@ -22,7 +23,8 @@ export default class TripNewPointPresenter{
     tripEventsListContainer,
     handelPointChange,
     addNewTripButtonView,
-    handelTypeChange
+    handelTypeChange,
+    cancelButtonClickHandler
   }){
     this.#offers = offers;
     this.#destinations = destinations;
@@ -31,6 +33,7 @@ export default class TripNewPointPresenter{
     this.#handelPointChange = handelPointChange;
     this.#handleTypeChange = handelTypeChange;
     this.#addNewTripButtonView = addNewTripButtonView;
+    this.#cancelButtonClickHandler = cancelButtonClickHandler;
   }
 
 
@@ -57,8 +60,8 @@ export default class TripNewPointPresenter{
 
 
   #onDeleteClick = () =>{
-    this.#addNewTripButtonView.buttonOn();
-    this.remove();
+    this.#cancelButtonClickHandler();
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
   };
 
   remove = () => {
@@ -68,8 +71,7 @@ export default class TripNewPointPresenter{
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
-      this.#addNewTripButtonView.buttonOn();
-      this.remove();
+      this.#cancelButtonClickHandler();
       document.removeEventListener('keydown', this.#escKeyDownHandler);
     }
   };

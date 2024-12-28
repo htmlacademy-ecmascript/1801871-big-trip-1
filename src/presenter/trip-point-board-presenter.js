@@ -8,7 +8,7 @@ import TripNewPointPresenter from './trip-new-point-presenter';
 import AddNewTripButtonView from '../view/add-new-trip-button-view';
 
 
-import TripPointZeroView from '../view/zero-point-view';
+import ZeroPointView from '../view/zero-point-view';
 
 import LoadingView from '../view/loading-view';
 
@@ -24,7 +24,7 @@ export default class TripPointBoardPresenter{
   #tripEventsListContainer = null;
   #tripHeaderContainer = null;
 
-  #listPresernter = new Map();
+  #listPresenter = new Map();
 
   #zeroPointsView = null;
   #addNewTripButtonView = null;
@@ -88,8 +88,8 @@ export default class TripPointBoardPresenter{
     this.#sortModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
 
-    this.#addNewTripButtonView = new AddNewTripButtonView({handleAddNewPoin: this.#newPoinHandler});
-    this.#zeroPointsView = new TripPointZeroView({currentFilter: this.#filterModel.getFilter()});
+    this.#addNewTripButtonView = new AddNewTripButtonView({handleAddNewPoint: this.#newPointHandler});
+    this.#zeroPointsView = new ZeroPointView({currentFilter: this.#filterModel.getFilter()});
     this.#loadingView = new LoadingView();
 
 
@@ -108,12 +108,11 @@ export default class TripPointBoardPresenter{
     this.#uiBlocker.block();
     switch (actionType) {
       case UserAction.UPDATE_POINT:
-        this.#listPresernter.get(update[0]).setSaving();
+        this.#listPresenter.get(update[0]).setSaving();
         try {
-
           await this.#tripPointsModel.updatePoint(update, updateType);
         } catch(err) {
-          this.#listPresernter.get(update[0]).setAborting();
+          this.#listPresenter.get(update[0]).setAborting();
         }
         break;
       case UserAction.ADD_POINT:
@@ -127,24 +126,36 @@ export default class TripPointBoardPresenter{
 
         break;
       case UserAction.DELETE_POINT:
-        this.#listPresernter.get(update[0]).setDeleting();
+        this.#listPresenter.get(update[0]).setDeleting();
         try {
-
           await this.#tripPointsModel.deletePoint(update, updateType);
         } catch(err) {
-          this.#listPresernter.get(update[0]).setAborting();
+          this.#listPresenter.get(update[0]).setAborting();
         }
+
+
     }
     this.#uiBlocker.unblock();
+  };
+
+  #cancelButtonClickHandler = () => {
+    this.#addNewTripButtonView.buttonOn();
+    this.#currentNewPoint.remove();
+    this.#currentNewPoint = null;
+    this.#renderBoard(this.points);
   };
 
   #handleModelEvent = (data, updateType) => {
     switch (updateType) {
       case UpdateType.PATCH:
-        this.#listPresernter.get(data[0]).replace(data);
+        this.#listPresenter.get(data[0]).replace(data);
         break;
       case UpdateType.MINOR:
       case UpdateType.MAJOR:
+        if(this.#currentNewPoint) {
+          this.#currentNewPoint.remove();
+          this.#currentNewPoint = null;
+        }
         this.#addNewTripButtonView.buttonOn();
         this.#renderBoard(this.points);
         break;
@@ -152,7 +163,7 @@ export default class TripPointBoardPresenter{
         if(this.#tripPointsModel.isReady() && this.#offersModel.isReady() && this.#destinationsModel.isReady()){
           this.#isLoading = false;
           remove(this.#loadingView);
-          this.#filterPresenter.enableCatagory();
+          this.#filterPresenter.enableCategory();
           this.#addNewTripButtonView.buttonOn();
           this.#renderBoard(this.points);
           this.#filterPresenter.renderInfo();
@@ -161,7 +172,7 @@ export default class TripPointBoardPresenter{
     }
   };
 
-  #newPoinHandler = () => {
+  #newPointHandler = () => {
     this.#currentNewPoint = '';
     this.#tripPointsModel.update('',UpdateType.MAJOR);
     this.#renderNewPoint();
@@ -176,13 +187,14 @@ export default class TripPointBoardPresenter{
         handelPointChange:this.#handleViewAction,
         handelTypeChange:this.#handleTypeChange,
         addNewTripButtonView: this.#addNewTripButtonView,
+        cancelButtonClickHandler: this.#cancelButtonClickHandler
       }
     );
     newPointPresenter.renderPoint(this.#tripPointsModel.blankPoint);
     this.#currentNewPoint = newPointPresenter;
   };
 
-  #createPresernter = (point) => {
+  #createPresenter = (point) => {
     const pointPresenter = new TripPointPresenter(
       {
         offers:this.#offers,
@@ -193,18 +205,18 @@ export default class TripPointBoardPresenter{
       });
 
     pointPresenter.renderPoint(point);
-    this.#listPresernter.set(point[0],pointPresenter);
+    this.#listPresenter.set(point[0],pointPresenter);
   };
 
   removePoint (point) {
-    this.#listPresernter.get(point[0]).remove();
+    this.#listPresenter.get(point[0]).remove();
 
   }
 
   #handleTypeChange = () => {
     this.points.entries().forEach((point) => {
-      if (this.#listPresernter.has(point[0])){
-        this.#listPresernter.get(point[0]).resetView(point);
+      if (this.#listPresenter.has(point[0])){
+        this.#listPresenter.get(point[0]).resetView(point);
       }
     }
     );
@@ -224,10 +236,10 @@ export default class TripPointBoardPresenter{
 
   #clearBoard = () => {
 
-    this.#listPresernter.forEach((element) => element.remove());
+    this.#listPresenter.forEach((element) => element.remove());
     remove(this.#zeroPointsView);
     this.#addNewTripButtonView.buttonOn();
-    this.#listPresernter.clear();
+    this.#listPresenter.clear();
 
   };
 
@@ -240,12 +252,12 @@ export default class TripPointBoardPresenter{
     }
 
     if (points.size === 0 && this.#currentNewPoint === null) {
-      this.#zeroPointsView = new TripPointZeroView({currentFilter: this.#filterModel.getFilter()});
+      this.#zeroPointsView = new ZeroPointView({currentFilter: this.#filterModel.getFilter()});
       render(this.#zeroPointsView, this.#tripEventsListContainer);
     } else{
       remove(this.#zeroPointsView);
       for (const point of points.entries()) {
-        this.#createPresernter(point);
+        this.#createPresenter(point);
       }
     }
   };

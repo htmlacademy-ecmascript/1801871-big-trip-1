@@ -64,11 +64,11 @@ export default class FilterPresenter{
   }
 
   #getTotalTripInfo = () => {
-    const points = this.#tripPointsModel.getPoints();
+    const points = Array.from(this.#tripPointsModel.getPoints().entries());
     const offers = this.#offersModel.getOffers();
-    const destinaions = this.#destinationsModel.getDestinations();
+    const destinations = this.#destinationsModel.getDestinations();
     const result = {
-      destinaions: {
+      destinations: {
         startPlace: {
           name: 'loading..',
           date: '0'
@@ -92,11 +92,8 @@ export default class FilterPresenter{
     if(this.#tripPointsModel.isReady() && this.#offersModel.isReady() && this.#destinationsModel.isReady()){
 
 
-      const pointsArray = Array.from(points.entries());
-
-
-      minDatePoint = pointsArray[0];
-      maxDatePoint = pointsArray[pointsArray.length - 1];
+      minDatePoint = points[0];
+      maxDatePoint = points[points.length - 1];
 
       const getTotalPrice = (accumulator, point) => {
         let pointPrice = 0;
@@ -111,32 +108,32 @@ export default class FilterPresenter{
         return accumulator + pointPrice;
       };
 
-      totalPrice = points.entries().reduce(getTotalPrice, 0);
+      totalPrice = points.reduce(getTotalPrice, 0);
 
       if(minDatePoint) {
-        result.destinaions.startPlace.name = destinaions[minDatePoint[1].destination].name;
-        result.destinaions.startPlace.date = minDatePoint[1].dateFrom;
+        result.destinations.startPlace.name = destinations[minDatePoint[1].destination].name;
+        result.destinations.startPlace.date = minDatePoint[1].dateFrom;
       }
 
       if(maxDatePoint) {
-        result.destinaions.finalPlace.name = destinaions[maxDatePoint[1].destination].name;
-        result.destinaions.finalPlace.date = maxDatePoint[1].dateTo;
+        result.destinations.finalPlace.name = destinations[maxDatePoint[1].destination].name;
+        result.destinations.finalPlace.date = maxDatePoint[1].dateTo;
       }
 
-      result.destinaions.middelPlace.name = '&mdash; ... &mdash;';
+      result.destinations.middelPlace.name = '&mdash; ... &mdash;';
 
       result.totalPrice = totalPrice;
 
-      if(points.size === 3) {
-        const middelPlaceDestinationId = pointsArray[1][1].destination;
-        result.destinaions.middelPlace.name = `&mdash; ${destinaions[middelPlaceDestinationId].name} &mdash;`;
+      if(points.length === 3) {
+        const middelPlaceDestinationId = points[1][1].destination;
+        result.destinations.middelPlace.name = `&mdash; ${destinations[middelPlaceDestinationId].name} &mdash;`;
       }
-      if(points.size === 2) {
-        result.destinaions.middelPlace.name = '&mdash;';
+      if(points.length === 2) {
+        result.destinations.middelPlace.name = '&mdash;';
       }
-      if(points.size === 1) {
-        result.destinaions.middelPlace.name = '';
-        result.destinaions.finalPlace.name = '';
+      if(points.length === 1) {
+        result.destinations.middelPlace.name = '';
+        result.destinations.finalPlace.name = '';
       }
     }
     return result;
@@ -146,7 +143,7 @@ export default class FilterPresenter{
     remove(this.#infoComponent);
     const totalInfo = this.#getTotalTripInfo();
     this.#infoComponent = new InfoView({
-      destinations: totalInfo.destinaions,
+      destinations: totalInfo.destinations,
       totalPrice: totalInfo.totalPrice
     });
     render(this.#infoComponent, this.#tripHeaderContainer, RenderPosition.AFTERBEGIN);
@@ -229,7 +226,7 @@ export default class FilterPresenter{
 
     this.#renderFilterView();
     this.#renderSortView();
-    this.enableCatagory();
+    this.enableCategory();
   };
 
   #updateFilterSortView = (update, updateType) => {
@@ -241,7 +238,7 @@ export default class FilterPresenter{
 
     this.#renderFilterView();
     this.#renderSortView();
-    this.enableCatagory();
+    this.enableCategory();
   };
 
   #updateSortView = (update, updateType) => {
@@ -251,7 +248,7 @@ export default class FilterPresenter{
     this.#sortModel.reset();
     this.#removeSortView();
     this.#renderSortView();
-    this.enableCatagory();
+    this.enableCategory();
   };
 
   #removeSortView () {
@@ -286,7 +283,7 @@ export default class FilterPresenter{
     return points;
   };
 
-  enableCatagory = () => {
+  enableCategory = () => {
     this.#filterCategoryViewComponent.categoryOn();
   };
 }
