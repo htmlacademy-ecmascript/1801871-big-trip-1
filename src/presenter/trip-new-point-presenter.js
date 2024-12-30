@@ -65,6 +65,7 @@ export default class TripNewPointPresenter{
   };
 
   remove = () => {
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
     remove(this.#pointViewComponent);
   };
 
